@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeoAtlas 大学受験 地図型デジタル参考書 - プロトタイプ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', '"Noto Sans JP"', 'sans-serif'],
+          },
+          colors: {
+            atlas: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#475569',
+              100: '#f1f5f9',
+              50: '#f8fafc',
+              accent: '#2563eb',
+              warm: '#ea580c',
+              cold: '#0284c7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* カスタムスクロールバー */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* 赤シート用スタイル */
+    .red-sheet-active .cloze-term {
+      background-color: #dc2626;
+      color: transparent;
+      border-radius: 4px;
+      padding: 0 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 0 0 1px #b91c1c;
+    }
+    .red-sheet-active .cloze-term:hover,
+    .red-sheet-active .cloze-term.revealed {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      box-shadow: inset 0 0 0 1px #fca5a5;
+    }
+    .cloze-term {
+      font-weight: 700;
+      color: #1d4ed8;
+      background-color: #eff6ff;
+      padding: 0 4px;
+      border-radius: 3px;
+      transition: all 0.2s ease;
+    }
+
+    /* 地図アニメーション */
+    @keyframes pulseRing {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .pin-pulse {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: pulseRing 2s infinite ease-out;
+    }
+    .flow-arrow {
+      stroke-dasharray: 8 4;
+      animation: dashFlow 20s linear infinite;
+    }
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -240; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- ==================== 1. ヘッダー ==================== -->
+  <header class="bg-slate-900 text-white px-4 py-2.5 shadow-md flex flex-wrap items-center justify-between gap-3 z-30 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="bg-blue-600 p-2 rounded-lg shadow-inner">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-bold text-base sm:text-lg tracking-tight">GeoAtlas</h1>
+          <span class="text-xs bg-slate-700 text-blue-300 px-2 py-0.5 rounded font-medium border border-slate-600">大学受験 地図型デジタル参考書</span>
+        </div>
+        <p class="text-[11px] text-slate-400 hidden sm:block">レイヤー重ね合わせ × 因果ロジック × 共通テスト・二次対策プロトタイプ</p>
+      </div>
+    </div>
+
+    <!-- 中央・右コントロール群 -->
+    <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+      <!-- 表示モード切替 -->
+      <div class="bg-slate-800 p-1 rounded-lg flex items-center border border-slate-700">
+        <button id="btnModeNormal" onclick="setAppMode('normal')" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-blue-600 text-white shadow transition">
+          通常学習モード
+        </button>
+        <button id="btnModeCompare" onclick="setAppMode('compare')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          2地点比較モード
+        </button>
+      </div>
+
+      <!-- 赤シートトグル -->
+      <label class="flex items-center gap-2 bg-slate-800 hover:bg-slate-750 px-3 py-1.5 rounded-lg border border-slate-700 cursor-pointer transition">
+        <span class="w-3 h-3 rounded-full bg-red-500 inline-block shadow-sm"></span>
+        <span class="text-xs font-medium text-slate-200">赤シート</span>
+        <input type="checkbox" id="redSheetToggle" onchange="toggleRedSheet(this.checked)" class="sr-only peer">
+        <div class="w-8 h-4 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all relative peer-checked:bg-red-600"></div>
+      </label>
+
+      <!-- 作成者向け：データ追加/JSONボタン -->
+      <button onclick="openAuthorModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition" title="新しい学習スポットの追加やJSONデータのエクスポート">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <span class="hidden md:inline">地点追加 / JSON</span>
+        <span class="md:hidden">編集</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== 2. メインワークスペース（通常モード） ==================== -->
+  <main id="normalWorkspace" class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+    
+    <!-- 左側：インタラクティブ地図キャンバスエリア -->
+    <section class="flex-1 relative bg-[#dbeafe] overflow-hidden flex flex-col min-h-[45vh] lg:min-h-0">
+      
+      <!-- レイヤー切り替えパネル（左上オーバーレイ） -->
+      <div class="absolute top-3 left-3 z-20 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200 p-3 max-w-[270px] sm:max-w-xs">
+        <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+          <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            主題図レイヤー（重ね合わせ可）
+          </span>
+          <button onclick="resetLayers()" class="text-[10px] text-slate-400 hover:text-blue-600 underline">リセット</button>
+        </div>
+        <div class="space-y-1.5 text-xs">
+          <label class="flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+            <span class="flex items-center gap-2">
+              <input type="checkbox" id="layerTectonics" checked onchange="toggleLayer('layer-tectonics', this.checked)" class="rounded text-blue-600 focus:ring-blue-500">
+              <span class="font-medium text-slate-700">大地形・造山帯</span>
+            </span>
+            <span class="flex gap-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-600" title="新期造山帯"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-700" title="古期造山帯"></span>
+            </span>
+          </label>
+
+          <label class="flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+            <span class="flex items-center gap-2">
+              <input type="checkbox" id="layerClimate" checked onchange="toggleLayer('layer-climate', this.checked)" class="rounded text-blue-600 focus:ring-blue-500">
+              <span class="font-medium text-slate-700">気候帯・大気循環</span>
+            </span>
+            <span class="text-[10px] bg-orange-100 text-orange-700 px-1.5 rounded font-semibold">風系/乾燥帯</span>
+          </label>
+
+          <label class="flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+            <span class="flex items-center gap-2">
+              <input type="checkbox" id="layerCurrents" checked onchange="toggleLayer('layer-currents', this.checked)" class="rounded text-blue-600 focus:ring-blue-500">
+              <span class="font-medium text-slate-700">海流（暖流・寒流）</span>
+            </span>
+            <span class="flex gap-1 text-[10px] font-bold">
+              <span class="text-red-500">暖</span>/<span class="text-sky-600">寒</span>
+            </span>
+          </label>
+
+          <label class="flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer transition">
+            <span class="flex items-center gap-2">
+              <input type="checkbox" id="layerResources" onchange="toggleLayer('layer-resources', this.checked)" class="rounded text-blue-600 focus:ring-blue-500">
+              <span class="font-medium text-slate-700">主要資源・穀倉地帯</span>
+            </span>
+            <span class="text-[10px] bg-purple-100 text-purple-700 px-1.5 rounded font-semibold">資源/農牧</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 凡例バッジ（左下オーバーレイ） -->
+      <div class="absolute bottom-3 left-3 z-20 bg-white/90 backdrop-blur-sm rounded-lg shadow border border-slate-200 px-3 py-2 text-[11px] flex flex-wrap gap-x-4 gap-y-1 max-w-[90%]">
+        <span class="flex items-center gap-1"><span class="w-3 h-1.5 bg-amber-600 inline-block rounded"></span>新期造山帯</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-1.5 bg-emerald-700 inline-block rounded"></span>古期造山帯</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-2 bg-amber-200/80 border border-amber-400 inline-block rounded"></span>乾燥帯(BW/BS)</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-red-500 inline-block"></span>暖流</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-sky-600 inline-block"></span>寒流</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>学習スポット(クリック)</span>
+      </div>
+
+      <!-- ズーム・リセットコントロール（右上オーバーレイ） -->
+      <div class="absolute top-3 right-3 z-20 flex flex-col gap-1.5 bg-white/95 p-1.5 rounded-xl shadow-md border border-slate-200">
+        <button onclick="zoomMap(1.25)" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 font-bold text-base" title="拡大">+</button>
+        <button onclick="zoomMap(0.8)" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 font-bold text-base" title="縮小">−</button>
+        <button onclick="resetMapView()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 text-[10px] font-bold border-t border-slate-100" title="全体表示">全体</button>
+      </div>
+
+      <!-- インタラクティブSVG世界地図 -->
+      <div id="mapContainer" class="w-full h-full cursor-grab active:cursor-grabbing flex items-center justify-center">
+        <svg id="worldMapSvg" viewBox="0 0 1000 520" class="w-full h-full preserve-3d">
+          <defs>
+            <!-- 海のグラデーション -->
+            <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#e0f2fe" />
+              <stop offset="50%" stop-color="#bae6fd" />
+              <stop offset="100%" stop-color="#e0f2fe" />
+            </linearGradient>
+            <!-- 矢印マーカー（暖流） -->
+            <marker id="arrowWarm" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+            </marker>
+            <!-- 矢印マーカー（寒流） -->
+            <marker id="arrowCold" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+            </marker>
+            <!-- 矢印マーカー（風系） -->
+            <marker id="arrowWind" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+            </marker>
+          </defs>
+
+          <!-- パン・ズーム対象グループ -->
+          <g id="mapViewport" transform="translate(0,0) scale(1)">
+            <!-- 背景海 -->
+            <rect x="-200" y="-100" width="1400" height="720" fill="url(#oceanGrad)" />
+
+            <!-- 緯線・経線グリッド（赤道・回帰線・極圏） -->
+            <g id="layer-graticule" stroke="#93c5fd" stroke-width="0.7" fill="none">
+              <!-- 赤道 -->
+              <line x1="0" y1="290" x2="1000" y2="290" stroke="#3b82f6" stroke-width="1.2" />
+              <text x="12" y="286" fill="#2563eb" font-size="9" font-weight="bold" stroke="none">赤道 (0°)</text>
+              <!-- 北回帰線 -->
+              <line x1="0" y1="225" x2="1000" y2="225" stroke-dasharray="4 4" />
+              <text x="12" y="221" fill="#64748b" font-size="8" stroke="none">北回帰線 (23.4°N)</text>
+              <!-- 南回帰線 -->
+              <line x1="0" y1="355" x2="1000" y2="355" stroke-dasharray="4 4" />
+              <text x="12" y="351" fill="#64748b" font-size="8" stroke="none">南回帰線 (23.4°S)</text>
+              <!-- 北極圏 -->
+              <line x1="0" y1="95" x2="1000" y2="95" stroke-dasharray="2 4" />
+              <!-- 経線 -->
+              <line x1="485" y1="0" x2="485" y2="520" stroke-dasharray="3 3" />
+              <text x="488" y="18" fill="#64748b" font-size="8" stroke="none">本初子午線(0°)</text>
+            </g>
+
+            <!-- ベース大陸シルエット（デフォルメされた学習用世界地図） -->
+            <g id="layer-continents" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-linejoin="round">
+              <!-- 北アメリカ -->
+              <path d="M 95,85 L 175,65 L 265,75 L 295,115 L 260,155 L 245,195 L 210,225 L 185,250 L 155,220 L 135,175 L 110,125 Z" />
+              <!-- グリーンランド -->
+              <path d="M 305,40 L 365,35 L 380,75 L 330,95 Z" />
+              <!-- 南アメリカ -->
+              <path d="M 225,260 L 275,265 L 325,305 L 310,365 L 270,435 L 250,465 L 240,425 L 235,345 L 215,295 Z" />
+              <!-- ヨーロッパ -->
+              <path d="M 455,155 L 470,115 L 515,85 L 565,90 L 575,145 L 545,168 L 515,172 L 490,165 L 465,172 Z" />
+              <!-- イギリス・アイルランド -->
+              <path d="M 462,126 L 474,122 L 476,138 L 462,140 Z" />
+              <!-- アフリカ -->
+              <path d="M 455,185 L 515,182 L 565,205 L 585,255 L 560,335 L 525,390 L 495,380 L 485,305 L 445,265 L 440,215 Z" />
+              <!-- マダガスカル -->
+              <path d="M 575,335 L 588,330 L 585,365 L 572,365 Z" />
+              <!-- アジア・ユーラシア東部 -->
+              <path d="M 565,90 L 675,75 L 815,85 L 885,110 L 855,155 L 825,185 L 795,225 L 755,255 L 735,280 L 710,255 L 680,265 L 660,225 L 615,225 L 580,195 L 545,168 Z" />
+              <!-- 東南アジア島嶼部（スマトラ・ジャワ・ボルネオ・フィリピン） -->
+              <path d="M 725,290 L 755,310 L 750,320 L 720,300 Z" />
+              <path d="M 755,322 L 790,325 L 790,332 L 755,330 Z" />
+              <path d="M 765,280 L 795,280 L 795,308 L 765,308 Z" />
+              <path d="M 805,240 L 820,240 L 822,272 L 806,272 Z" />
+              <!-- 日本列島 -->
+              <path d="M 838,155 L 852,145 L 856,162 L 842,182 L 826,192 L 822,184 L 835,172 Z" />
+              <!-- オーストラリア・ニュージーランド -->
+              <path d="M 765,355 L 845,350 L 870,395 L 845,430 L 775,420 L 755,385 Z" />
+              <path d="M 895,435 L 912,425 L 915,450 L 892,455 Z" />
+            </g>
+
+            <!-- レイヤー1：大地形・造山帯 -->
+            <g id="layer-tectonics" class="transition-opacity duration-300">
+              <!-- 新期造山帯（環太平洋・アルプスヒマラヤ） -->
+              <path d="M 125,105 Q 155,175 195,235" stroke="#d97706" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.7" />
+              <path d="M 235,270 Q 245,365 252,455" stroke="#d97706" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.7" />
+              <path d="M 475,168 Q 535,165 605,185 T 715,235 T 775,315" stroke="#d97706" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.7" />
+              <path d="M 848,150 Q 835,180 815,255" stroke="#d97706" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.7" />
+              <text x="258" y="375" fill="#b45309" font-size="9" font-weight="bold">アンデス山脈(新期)</text>
+              <text x="645" y="205" fill="#b45309" font-size="9" font-weight="bold">ヒマラヤ(新期)</text>
+
+              <!-- 古期造山帯（アパラチア・ウラル・スカンディナビア・グレートディバイディング） -->
+              <path d="M 248,145 L 222,195" stroke="#15803d" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75" />
+              <path d="M 575,95 L 575,150" stroke="#15803d" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75" />
+              <path d="M 495,95 L 478,125" stroke="#15803d" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75" />
+              <path d="M 855,360 L 850,420" stroke="#15803d" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75" />
+              <text x="253" y="175" fill="#166534" font-size="8" font-weight="bold">アパラチア(古期)</text>
+            </g>
+
+            <!-- レイヤー2：気候帯・大気循環 -->
+            <g id="layer-climate" class="transition-opacity duration-300">
+              <!-- 乾燥帯（サハラ・アラビア・中央アジア・アタカマ・オーストラリア内陸） -->
+              <ellipse cx="505" cy="218" rx="52" ry="22" fill="#fde047" opacity="0.45" />
+              <ellipse cx="600" cy="215" rx="28" ry="18" fill="#fde047" opacity="0.45" />
+              <ellipse cx="675" cy="155" rx="45" ry="18" fill="#fde047" opacity="0.45" />
+              <ellipse cx="238" cy="355" rx="10" ry="32" fill="#fde047" opacity="0.55" />
+              <ellipse cx="810" cy="390" rx="35" ry="20" fill="#fde047" opacity="0.45" />
+              <text x="485" y="221" fill="#a16207" font-size="9" font-weight="bold">サハラ砂漠(BW)</text>
+
+              <!-- 偏西風の矢印（中緯度） -->
+              <path d="M 380,132 L 450,122" stroke="#d97706" stroke-width="2.2" marker-end="url(#arrowWind)" class="flow-arrow" />
+              <text x="382" y="116" fill="#b45309" font-size="9" font-weight="bold">偏西風</text>
+
+              <!-- 貿易風の矢印 -->
+              <path d="M 415,245 L 345,265" stroke="#d97706" stroke-width="2" marker-end="url(#arrowWind)" class="flow-arrow" />
+              <text x="355" y="245" fill="#b45309" font-size="8" font-weight="bold">北東貿易風</text>
+
+              <!-- アジア・モンスーン（季節風） -->
+              <path d="M 650,275 Q 675,250 695,235" stroke="#059669" stroke-width="2.2" fill="none" marker-end="url(#arrowWind)" class="flow-arrow" />
+              <path d="M 765,280 Q 755,250 740,235" stroke="#059669" stroke-width="2.2" fill="none" marker-end="url(#arrowWind)" class="flow-arrow" />
+              <text x="645" y="288" fill="#047857" font-size="8" font-weight="bold">夏:南西モンスーン</text>
+            </g>
+
+            <!-- レイヤー3：海流（暖流・寒流） -->
+            <g id="layer-currents" class="transition-opacity duration-300">
+              <!-- 北大西洋海流（暖流） -->
+              <path d="M 285,185 Q 375,155 455,130" stroke="#ef4444" stroke-width="2.8" fill="none" marker-end="url(#arrowWarm)" class="flow-arrow" />
+              <text x="340" y="152" fill="#dc2626" font-size="9" font-weight="bold">北大西洋海流(暖)</text>
+
+              <!-- 黒潮（暖流） -->
+              <path d="M 815,230 Q 832,195 855,165" stroke="#ef4444" stroke-width="2.5" fill="none" marker-end="url(#arrowWarm)" class="flow-arrow" />
+              <text x="858" y="185" fill="#dc2626" font-size="8" font-weight="bold">黒潮(暖)</text>
+
+              <!-- ペルー海流（寒流） -->
+              <path d="M 232,435 Q 222,365 224,300" stroke="#0284c7" stroke-width="2.8" fill="none" marker-end="url(#arrowCold)" class="flow-arrow" />
+              <text x="155" y="375" fill="#0369a1" font-size="9" font-weight="bold">ペルー海流(寒)</text>
+
+              <!-- カリフォルニア海流（寒流） -->
+              <path d="M 135,145 Q 150,185 172,220" stroke="#0284c7" stroke-width="2.5" fill="none" marker-end="url(#arrowCold)" class="flow-arrow" />
+            </g>
+
+            <!-- レイヤー4：主要資源・穀倉地帯（初期OFF） -->
+            <g id="layer-resources" class="opacity-0 transition-opacity duration-300 pointer-events-none">
+              <!-- 北海油田 -->
+              <circle cx="485" cy="118" r="10" fill="#7e22ce" opacity="0.25" stroke="#7e22ce" stroke-width="1.5" />
+              <text x="488" y="106" fill="#6b21a8" font-size="8" font-weight="bold">北海油田</text>
+              <!-- 五大湖鉄鉱石・石炭 -->
+              <rect x="205" y="138" width="42" height="22" rx="4" fill="#7e22ce" opacity="0.2" stroke="#7e22ce" />
+              <text x="195" y="133" fill="#6b21a8" font-size="8" font-weight="bold">鉄鉱石・石炭</text>
+              <!-- チリ銅鉱 -->
+              <circle cx="242" cy="350" r="10" fill="#ea580c" opacity="0.3" stroke="#ea580c" stroke-width="1.5" />
+              <text x="255" y="348" fill="#c2410c" font-size="8" font-weight="bold">世界最大の銅産出</text>
+              <!-- アジア稲作地帯 -->
+              <ellipse cx="735" cy="245" rx="45" ry="25" fill="#16a34a" opacity="0.25" stroke="#15803d" stroke-dasharray="3 2" />
+              <text x="710" y="275" fill="#166534" font-size="8" font-weight="bold">アジアの稲作地帯</text>
+            </g>
+
+            <!-- 学習スポット（JSから動的にピンを描画） -->
+            <g id="mapPinsLayer"></g>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 右側：3段階深掘り解説サイドパネル -->
+    <aside class="w-full lg:w-[460px] xl:w-[500px] bg-white border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col shadow-xl z-20 h-[55vh] lg:h-full">
+      
+      <!-- スポット選択ドロップダウン＆ナビゲーション -->
+      <div class="p-4 bg-slate-50 border-b border-slate-200 shrink-0">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200" id="spotRegionBadge">ヨーロッパ</span>
+          <div class="flex items-center gap-1">
+            <button onclick="navigateSpot(-1)" class="p-1 rounded hover:bg-slate-200 text-slate-600 text-xs" title="前の地点">◀ 前へ</button>
+            <span id="spotCounter" class="text-xs text-slate-400 font-mono">1 / 7</span>
+            <button onclick="navigateSpot(1)" class="p-1 rounded hover:bg-slate-200 text-slate-600 text-xs" title="次の地点">次へ ▶</button>
+          </div>
+        </div>
+
+        <!-- スポット切替セレクト -->
+        <select id="spotSelector" onchange="selectSpot(this.value)" class="w-full font-bold text-base text-slate-900 bg-white border border-slate-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <!-- JSで動的生成 -->
+        </select>
+
+        <!-- 系統ジャンルタグ -->
+        <div id="spotTags" class="flex flex-wrap gap-1.5 mt-2.5">
+          <!-- JSで動的生成 -->
+        </div>
+      </div>
+
+      <!-- 3つの学習タブ -->
+      <div class="grid grid-cols-3 border-b border-slate-200 bg-white shrink-0 text-xs font-bold">
+        <button id="tabBtn-basic" onclick="switchTab('basic')" class="py-3 px-2 border-b-2 border-blue-600 text-blue-600 bg-blue-50/40 transition flex items-center justify-center gap-1">
+          <span>① 基礎・雨温図</span>
+        </button>
+        <button id="tabBtn-logic" onclick="switchTab('logic')" class="py-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1">
+          <span>② 因果ロジック</span>
+        </button>
+        <button id="tabBtn-exam" onclick="switchTab('exam')" class="py-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1">
+          <span>③ 入試演習</span>
+        </button>
+      </div>
+
+      <!-- タブコンテンツ表示領域 -->
+      <div id="tabContentArea" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 select-text">
+        <!-- JSで動的にレンダリング -->
+      </div>
+    </aside>
+  </main>
+
+  <!-- ==================== 3. 2地点比較モード画面 ==================== -->
+  <section id="compareWorkspace" class="hidden flex-1 overflow-y-auto bg-slate-100 p-4 sm:p-6">
+    <div class="max-w-6xl mx-auto space-y-4">
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <span class="bg-indigo-600 text-white text-xs px-2 py-1 rounded">比較学習モード</span>
+            共通テスト頻出「似ているがここが違う！」地域比較
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">2つの地域を並べて、気候グラフ・自然条件の成因・産業構造の違いを比較できます。</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="applyPresetCompare('london', 'napoli')" class="text-xs bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-300 px-3 py-1.5 rounded-lg font-medium transition">
+            例1: 西岸海洋性(ロンドン) vs 地中海性(ナポリ)
+          </button>
+          <button onclick="applyPresetCompare('atacama', 'setouchi')" class="text-xs bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-300 px-3 py-1.5 rounded-lg font-medium transition">
+            例2: 少雨地域の比較(アタカマ vs 瀬戸内)
+          </button>
+          <button onclick="applyPresetCompare('greatlakes', 'india')" class="text-xs bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-300 px-3 py-1.5 rounded-lg font-medium transition">
+            例3: 工業の転換(五大湖 vs インド)
+          </button>
+        </div>
+      </div>
+
+      <!-- 左右2カラム比較カード -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- 左カード -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+          <div class="bg-slate-800 text-white p-3 flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-300">比較地点 A</span>
+            <select id="compareSelectA" onchange="renderCompareView()" class="bg-slate-700 text-white text-sm font-bold rounded px-2.5 py-1 border border-slate-600 focus:outline-none"></select>
+          </div>
+          <div id="compareBodyA" class="p-4 space-y-4"></div>
+        </div>
+
+        <!-- 右カード -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+          <div class="bg-slate-800 text-white p-3 flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-300">比較地点 B</span>
+            <select id="compareSelectB" onchange="renderCompareView()" class="bg-slate-700 text-white text-sm font-bold rounded px-2.5 py-1 border border-slate-600 focus:outline-none"></select>
+          </div>
+          <div id="compareBodyB" class="p-4 space-y-4"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. 作成者向け：地点データ追加＆JSON出力モーダル ==================== -->
+  <div id="authorModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-base">教材データ管理（新しい学習スポット追加 / JSON出力）</h3>
+          <p class="text-xs text-slate-400">プロトタイプに新しいピンを仮追加したり、現在の全データをJSONで書き出せます。</p>
+        </div>
+        <button onclick="closeAuthorModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">×</button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-6 text-sm">
+        <!-- 新規スポット追加フォーム -->
+        <form id="addSpotForm" onsubmit="handleAddSpot(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="font-bold text-slate-800 text-sm border-b border-slate-200 pb-1.5">＋ 新しい地点ピンを地図にテスト追加</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">地点・都市名 *</label>
+              <input type="text" id="newSpotName" required placeholder="例：ブラジル高原（サンパウロ）" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">地域区分 *</label>
+              <input type="text" id="newSpotRegion" required placeholder="例：ラテンアメリカ" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">ケッペン気候区分</label>
+              <input type="text" id="newSpotClimate" placeholder="例：温帯夏雨気候 (Cw)" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">地図X座標 (0〜1000)</label>
+              <input type="number" id="newSpotX" value="295" min="20" max="980" required class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">地図Y座標 (0〜520)</label>
+              <input type="number" id="newSpotY" value="355" min="20" max="500" required class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">タグ（カンマ区切り）</label>
+              <input type="text" id="newSpotTags" value="サバナ気候, テラローシャ, コーヒー" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">要点まとめ（[[語句]] で囲むと赤シート対象になります）</label>
+            <textarea id="newSpotSummary" rows="2" required placeholder="例：玄武岩が風化した肥沃な間帯土壌である[[テラローシャ]]が分布し、[[コーヒー]]栽培が盛ん。" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">因果① 自然条件(原因)</label>
+              <input type="text" id="newCause" placeholder="例：標高が高く冷涼・乾季と雨季" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">因果② 現象・土壌</label>
+              <input type="text" id="newProcess" placeholder="例：テラローシャの形成" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">因果③ 人間活動(結果)</label>
+              <input type="text" id="newResult" placeholder="例：プランテーション農業の発達" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 text-xs">
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition">
+              地図にピンを追加して確認する
+            </button>
+          </div>
+        </form>
+
+        <!-- JSONデータエクスポート確認 -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <h4 class="font-bold text-slate-800 text-xs">現在の全スポットデータ（GEO_SPOTS JSON構造）</h4>
+            <button onclick="copyJsonData()" id="copyJsonBtn" class="bg-slate-800 hover:bg-slate-700 text-white text-xs px-3 py-1 rounded-md font-medium transition">
+              JSONをクリップボードにコピー
+            </button>
+          </div>
+          <textarea id="jsonPreviewBox" readonly rows="7" class="w-full font-mono text-[11px] bg-slate-900 text-emerald-300 p-3 rounded-xl border border-slate-700 focus:outline-none"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- トースト通知（alert代替） -->
+  <div id="toastMsg" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-xl border border-slate-700 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    通知メッセージ
+  </div>
+
+  <!-- ==================== JavaScript ロジック＆データベース ==================== -->
+  <script>
+    /**
+     * 大学受験地理 学習スポットデータベース (GEO_SPOTS)
+     * テキスト内の [[キーワード]] は赤シート機能で自動的にマスク対象になります。
+     */
+    const GEO_SPOTS = [
+      {
+        id: 'london',
+        name: '西ヨーロッパ（ロンドン・北海沿岸）',
+        region: 'ヨーロッパ地誌',
+        x: 472,
+        y: 132,
+        climateCode: '西岸海洋性気候 (Cfb)',
+        tags: ['気候・海流', '混合農業・酪農', '北海油田'],
+        summary: '高緯度（北緯50度付近）に位置するが、[[偏西風]]と暖流の[[北大西洋海流]]の影響で冬の寒さが和らぎ、年較差の小さい[[西岸海洋性気候]]となる。冷涼な気候と氷河地形（削剥）のため土壌が痩せており、[[混合農業]]や[[酪農]]が営まれる。',
+        stats: [
+          { label: '年平均気温', value: '10.6 ℃' },
+          { label: '年降水量', value: '601 mm' },
+          { label: '代表土壌', value: '褐色森林土' }
+        ],
+        // 1月〜12月の月別気温(℃)と降水量(mm)
+        climateData: {
+          temps: [4.3, 4.5, 6.9, 9.1, 12.5, 15.6, 17.9, 17.6, 14.9, 11.2, 7.2, 4.7],
+          precips: [55, 41, 42, 44, 49, 45, 45, 50, 49, 69, 59, 55]
+        },
+        logic: {
+          cause: '中緯度高圧帯から吹く【偏西風】＋ 暖流【北大西洋海流】の卓越',
+          process: '冬でも海面水温が高く、暖かく湿った空気が大陸西岸へ運ばれる（高緯度の割に温暖・年較差小）',
+          result: '夏が冷涼で小麦栽培に不向きな地域では、飼料作物と家畜を組み合わせた【混合農業】や【酪農】、北海では【北海油田】が発達'
+        },
+        exam: {
+          question: 'ロンドン（北緯51度）の1月平均気温が、ほぼ同緯度のイルクーツク（ロシア・シベリア内陸）より約20℃も高い主因として最も適切なものはどれか。',
+          choices: [
+            'A. 亜熱帯高圧帯の勢力が一年を通じて強く、下降気流が卓越するため。',
+            'B. 偏西風と暖流である北大西洋海流の影響で、海洋からの熱輸送が大きいため。',
+            'C. アルプス山脈が北極からの寒気を完全に遮断する壁となっているため。',
+            'D. 都市化によるヒートアイランド現象がシベリアより極端に大きいため。'
+          ],
+          correctIndex: 1,
+          explanation: '【正解：B】大陸西岸のヨーロッパは、年中吹く偏西風が暖流の北大西洋海流の上を通過して暖められるため、高緯度でも冬に港が凍結しない（不凍港）ほど温暖になります。一方、イルクーツクは大陸内部で放射冷却が強く厳寒となります。',
+          essayPoint: '「偏西風」「北大西洋海流（暖流）」「比熱の大きい海洋の影響」の3語を必ず因果関係でつなげて記述すること。'
+        }
+      },
+      {
+        id: 'napoli',
+        name: '地中海沿岸（ナポリ・南イタリア）',
+        region: 'ヨーロッパ地誌',
+        x: 512,
+        y: 162,
+        climateCode: '地中海性気候 (Cs)',
+        tags: ['大気循環', '地中海式農業', '観光業'],
+        summary: '夏は[[亜熱帯高圧帯]]に覆われて晴天が続き乾燥し、冬は[[偏西風]]帯に入り前線や低気圧の影響で温暖湿潤となる[[地中海性気候]]（夏乾燥・冬湿潤）を示す。夏の乾燥に耐える[[オリーブ]]やブドウなどの樹木作物と、冬の雨を利用する[[冬小麦]]を組み合わせた[[地中海式農業]]が伝統的。',
+        stats: [
+          { label: '年平均気温', value: '16.5 ℃' },
+          { label: '年降水量', value: '1006 mm' },
+          { label: '特徴', value: '夏乾燥・冬湿潤' }
+        ],
+        climateData: {
+          temps: [8.7, 9.1, 11.2, 14.1, 18.4, 22.3, 25.0, 25.2, 21.8, 17.6, 13.1, 9.8],
+          precips: [104, 98, 86, 76, 50, 34, 24, 42, 80, 130, 162, 120]
+        },
+        logic: {
+          cause: '太陽の回帰に伴う気圧帯の季節移動（夏：亜熱帯高圧帯 / 冬：偏西風帯）',
+          process: '夏は下降気流により少雨・高温乾燥（硬葉樹林帯）、冬は低気圧の通過で温暖湿潤',
+          result: '夏の乾燥に強い【オリーブ・ブドウ・オレンジ】＋冬の雨で育つ【冬小麦】の農業、および夏の晴天を求めた【バカンス観光】が発達'
+        },
+        exam: {
+          question: '地中海性気候（Cs）の農業や生活文化に関する記述として、誤っているものはどれか。',
+          choices: [
+            'A. 夏の強い日差しを反射し、室温の上昇を防ぐため、白壁の石造り家屋が多くみられる。',
+            'B. 夏の乾燥に耐えるため、根を深く張るオリーブやコルクガシなどの硬葉樹が栽培される。',
+            'C. 夏の豊富な降水量を利用して水田稲作が広く行われ、主食は米である。',
+            'D. 近年はEU域内の市場向けに、灌漑施設を整えた野菜や花卉の園芸農業も盛んである。'
+          ],
+          correctIndex: 2,
+          explanation: '【正解：C】地中海性気候は「夏に少雨（乾燥）」であるため、夏に大量の水を必要とする水田稲作は不向きです（ポー川流域など一部で灌漑稲作はあるが一般的ではない）。夏乾燥・冬湿潤の逆転パターンを見抜くのが鉄則です。',
+          essayPoint: '「夏は亜熱帯高圧帯で乾燥」「冬は偏西風帯で湿潤」という季節ごとの気圧帯移動を明確に書き分けること。'
+        }
+      },
+      {
+        id: 'atacama',
+        name: 'チリ北部・アタカマ砂漠（アントファガスタ）',
+        region: 'ラテンアメリカ',
+        x: 242,
+        y: 352,
+        climateCode: '砂漠気候 (BW)',
+        tags: ['寒流・湧昇流', '新期造山帯', '銅鉱山'],
+        summary: '南回帰線付近の[[亜熱帯高圧帯]]の影響に加え、沖合を北上する寒流の[[ペルー海流]]により大気が下層から冷やされて上昇気流が抑えられ、沿岸部まで極端な[[海岸砂漠]]（アタカマ砂漠）が形成される。また[[アンデス山脈]]（新期造山帯）に位置し、[[チュキカマタ]]など世界最大級の[[銅鉱山]]が分布する。',
+        stats: [
+          { label: '年平均気温', value: '16.8 ℃' },
+          { label: '年降水量', value: '4 mm' },
+          { label: '主要資源', value: '銅（世界1位）' }
+        ],
+        climateData: {
+          temps: [20.5, 20.4, 19.2, 17.2, 15.5, 14.1, 13.7, 14.2, 15.1, 16.4, 17.9, 19.4],
+          precips: [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0]
+        },
+        logic: {
+          cause: '亜熱帯高圧帯の下降気流 ＋ 寒流【ペルー海流】による下層大気の冷却（逆転層の形成）',
+          process: '海面付近が冷やされ雲が発達せず、年間降水量数mmの極端な乾燥環境（海岸砂漠）と好漁場（湧昇流）が成立',
+          result: '降水による流失が少なく【チリ硝石】などが保存されるほか、新期造山帯のマグマ活動に伴う【銅】の採掘が経済を支える'
+        },
+        exam: {
+          question: 'チリ北部沿岸に世界有数の乾燥地域（アタカマ砂漠）が形成される要因の組み合わせとして最も適切なものはどれか。',
+          choices: [
+            'A. 亜熱帯高圧帯の下降気流 ＋ 寒流（ペルー海流）の影響',
+            'B. 赤道低圧帯の上昇気流 ＋ 暖流（ブラジル海流）の影響',
+            'C. 偏西風の風上側斜面 ＋ 地形性降雨の影響',
+            'D. 亜寒帯低圧帯の停滞前線 ＋ 季節風の影響'
+          ],
+          correctIndex: 0,
+          explanation: '【正解：A】大陸西岸の回帰線付近にできる砂漠（アタカマ砂漠、ナミブ砂漠など）は、「亜熱帯高圧帯」と「寒流」のダブル要因で雲が発生しにくくなる典型パターンです。',
+          essayPoint: '寒流によって下層大気が冷やされ、上空の暖かい空気との間で「大気が安定（逆転層）」し上昇気流が起こらない点を説明すると二次試験で高得点になる。'
+        }
+      },
+      {
+        id: 'india',
+        name: 'インド・デカン高原／ガンジス流域（ムンバイ・コルカタ）',
+        region: '南アジア地誌',
+        x: 685,
+        y: 235,
+        climateCode: 'サバナ気候 (Aw) / 温帯冬季少雨 (Cw)',
+        tags: ['モンスーン', 'レグール土・綿花', 'ICT産業'],
+        summary: '夏はインド洋から吹く湿潤な[[南西モンスーン]]により多雨となり、冬は大陸からの乾燥した[[北東モンスーン]]により乾季となる。デカン高原北西部には玄武岩が風化した肥沃な黒色土壌[[レグール土]]が分布し、[[綿花]]栽培が盛ん。近年は[[ベンガルール]]を中心に[[ICT産業]]が急成長している。',
+        stats: [
+          { label: '年平均気温', value: '27.2 ℃' },
+          { label: '年降水量', value: '2160 mm' },
+          { label: '特徴', value: 'モンスーンによる乾季・雨季' }
+        ],
+        climateData: {
+          temps: [24.5, 25.2, 27.2, 28.8, 30.1, 29.2, 27.6, 27.4, 27.7, 28.2, 27.2, 25.4],
+          precips: [2, 1, 1, 2, 18, 520, 790, 510, 310, 85, 15, 4]
+        },
+        logic: {
+          cause: 'ユーラシア大陸とインド洋の比熱差による【季節風（モンスーン）】の交替',
+          process: '6〜9月は南西季節風が大量の水蒸気をもたらし集中豪雨（雨季）、11〜3月は北東季節風で晴天乾燥（乾季）',
+          result: '降水量に応じた適地適作（多雨のガンジス下流で【稲作・ジュート】、少雨のデカン高原【レグール土】で【綿花】）と、英語力・理数教育を活かした【ICT産業】の発展'
+        },
+        exam: {
+          question: 'インドの農業と土壌に関する記述として、最も適切なものはどれか。',
+          choices: [
+            'A. ガンジス川下流域のベンガル地方では、年間降水量が少ないため小麦の企業的栽培が中心である。',
+            'B. デカン高原北西部では、溶岩が風化した黒色のレグール土が分布し、綿花栽培が盛んである。',
+            'C. パンジャブ地方では、タール砂漠の冷涼な気候を活かして茶のプランテーションが発達している。',
+            'D. 緑の革命によって米や小麦の生産が激減し、現在も食糧の大部分を輸入に頼っている。'
+          ],
+          correctIndex: 1,
+          explanation: '【正解：B】デカン高原北西部の「玄武岩（溶岩）風化土壌＝レグール土＝綿花」は超頻出セットです。Aは逆（多雨で稲作・ジュート）、Cは茶がアッサム地方（北東部）、Dは緑の革命で自給を達成しました。',
+          essayPoint: 'インドの農作物分布は「年降水量1000mmの等値線」を境に、東・西岸の多雨地域＝稲作、内陸の少雨地域＝小麦・綿花・雑穀と整理する。'
+        }
+      },
+      {
+        id: 'greatlakes',
+        name: 'アメリカ五大湖周辺（シカゴ・デトロイト）',
+        region: 'アングロアメリカ',
+        x: 215,
+        y: 148,
+        climateCode: '亜寒帯湿潤気候 (Df)',
+        tags: ['資源立地', '自動車工業', 'ラストベルト'],
+        summary: 'スペリオル湖岸の[[メサビ鉄山]]（安定陸塊）の鉄鉱石と、[[アパラチア炭田]]（古期造山帯）の石炭を[[五大湖水運]]で安価に輸送できたため、ピッツバーグやシカゴで鉄鋼業、デトロイトで[[自動車工業]]が発達した。1970年代以降は日本車との競争や工場移転により[[ラストベルト]]（錆びついた工業地帯）と呼ばれ、先端産業への転換が進む。',
+        stats: [
+          { label: '年平均気温', value: '9.8 ℃' },
+          { label: '年降水量', value: '910 mm' },
+          { label: '工業変化', value: '重厚長大→先端産業' }
+        ],
+        climateData: {
+          temps: [-4.6, -2.5, 3.2, 9.4, 15.3, 20.8, 23.5, 22.6, 18.3, 11.6, 4.5, -2.1],
+          precips: [44, 42, 65, 88, 92, 96, 94, 102, 85, 72, 74, 56]
+        },
+        logic: {
+          cause: '安定陸塊の【鉄鉱石（メサビ）】＋ 古期造山帯の【石炭（アパラチア）】＋ 【五大湖の水運】',
+          process: '重量物の原料輸送コストが抑えられ、19世紀末〜20世紀半ばに世界最大の重化学工業地帯を形成',
+          result: 'グローバル化とエネルギー転換で競争力が低下（【ラストベルト】化）し、近年は知識集約型産業やロボット・医療などへ構造転換'
+        },
+        exam: {
+          question: '五大湖周辺から北東部にかけての工業地域の変遷に関する説明として、最も適切なものはどれか。',
+          choices: [
+            'A. 原料輸送に不便な内陸部であるため、創業当初からICや航空機などの先端技術産業のみが立地した。',
+            'B. メサビ鉄山の鉄鉱石とアパラチア炭田の石炭を五大湖水運で結びつけ、鉄鋼業や自動車工業が発展した。',
+            'C. 北緯37度以南の温暖な気候を求めて企業が集中したため、サンベルトと呼ばれている。',
+            'D. 氷河の侵食を全く受けていないため、五大湖はすべて人工的に掘削された運河である。'
+          ],
+          correctIndex: 1,
+          explanation: '【正解：B】資源立地型工業の典型例です。Cの「サンベルト」は北緯37度以南（カリフォルニアやテキサスなど）を指し、ラストベルトと対比して出題されます。',
+          essayPoint: '「メサビ鉄山（先カンブリア時代）」「アパラチア炭田（古生代）」「五大湖水運（氷河湖）」と地形・地質時代まで関連づけると二次対策として盤石。'
+        }
+      },
+      {
+        id: 'mekong',
+        name: '東南アジア・メコン川デルタ（ホーチミン）',
+        region: '東南アジア地誌',
+        x: 752,
+        y: 268,
+        climateCode: '熱帯モンスーン気候 (Am)',
+        tags: ['沖積平野・デルタ', '米の二期作', 'コーヒー輸出'],
+        summary: '国際河川である[[メコン川]]の下流に広がる広大な[[三角州（デルタ）]]に位置し、高温多雨の気候を活かした[[稲作]]（二期作・三期作）が極めて盛んで、ベトナムは世界有数の[[米の輸出国]]となっている。また中部高原では[[コーヒー]]栽培（ロブスタ種・世界2位）などの商品作物も拡大している。',
+        stats: [
+          { label: '年平均気温', value: '27.6 ℃' },
+          { label: '年降水量', value: '1930 mm' },
+          { label: '農業特徴', value: '米・コーヒー輸出大国' }
+        ],
+        climateData: {
+          temps: [26.0, 26.8, 28.0, 29.2, 28.8, 27.8, 27.5, 27.4, 27.4, 27.2, 26.8, 26.0],
+          precips: [14, 4, 11, 50, 218, 311, 294, 270, 327, 266, 116, 48]
+        },
+        logic: {
+          cause: '国際河川【メコン川】が運ぶ肥沃な土砂の堆積 ＋ 高温多雨な【熱帯モンスーン気候】',
+          process: '広大な低平地（デルタ）と豊富な河川水・雨季の降水により水田耕作に最適な条件が整う',
+          result: '【ドイモイ（刷新）政策】による市場経済化も後押しし、米（二期作）やコーヒー豆の世界的な輸出拠点へと成長'
+        },
+        exam: {
+          question: 'ベトナムの農業および経済に関する記述として、誤っているものはどれか。',
+          choices: [
+            'A. 南部のメコン川デルタや北部のホン川デルタを中心に稲作が盛んで、米の主要輸出国となっている。',
+            'B. 1986年に導入されたドイモイ（刷新）政策以降、外資導入が進み工業化と農産物輸出が拡大した。',
+            'C. コーヒー豆の生産量が急増し、ブラジルに次ぐ世界第2位の生産国となっている。',
+            'D. 乾燥したステップ気候が広がるため、遊牧や企業的牧羊が農業生産額の大部分を占める。'
+          ],
+          correctIndex: 3,
+          explanation: '【正解：D】ベトナムは熱帯モンスーン気候（Am）や温帯冬季少雨気候（Cw）で湿潤なため、乾燥帯の遊牧・企業的牧羊は行われません。',
+          essayPoint: '東南アジアの大河（メコン川・チャオプラヤ川・エーヤワディー川）の河口デルタは、近代の運河開発によって世界的な米輸出地域になった歴史的経緯も押さえる。'
+        }
+      },
+      {
+        id: 'setouchi',
+        name: '日本・瀬戸内地方（高松・瀬戸内海沿岸）',
+        region: '日本の地域性',
+        x: 834,
+        y: 178,
+        climateCode: '温暖湿潤気候 (Cfa・瀬戸内式)',
+        tags: ['地形性少雨', 'ため池・果樹', '太平洋ベルト'],
+        summary: '北の[[中国山地]]と南の[[四国山地]]に挟まれているため、夏の南東季節風も冬の北西季節風も山地に遮られ、一年を通じて降水量が少ない[[瀬戸内式気候]]となる。かつては水不足を補う[[ため池]]の築造や晴天を活かした[[製塩業]]が発達し、高度経済成長期以降は臨海部の埋立地に[[石油化学コンビナート]]や鉄鋼業が集積した。',
+        stats: [
+          { label: '年平均気温', value: '16.1 ℃' },
+          { label: '年降水量', value: '1120 mm' },
+          { label: '特徴', value: '日本有数の少雨・晴天' }
+        ],
+        climateData: {
+          temps: [5.5, 5.8, 8.9, 14.3, 19.2, 23.0, 27.1, 28.2, 24.3, 18.4, 12.8, 7.8],
+          precips: [44, 48, 78, 84, 102, 148, 152, 92, 145, 98, 56, 38]
+        },
+        logic: {
+          cause: '北を【中国山地】、南を【四国山地】に挟まれた盆地状の地形配置',
+          process: '季節風が山地を越える際に湿気を失う（フェーン現象・雨陰効果）ため、年間降水量約1100mmの少雨・多照となる',
+          result: '農業用水確保のための【ため池】と【みかん・オリーブ】栽培、かつての塩田跡地を活用した【臨海工業地域（太平洋ベルト）】が形成'
+        },
+        exam: {
+          question: '瀬戸内地方の自然環境と人間活動の結びつきに関する説明として、最も適切なものはどれか。',
+          choices: [
+            'A. 冬の北西季節風が日本海から直接吹き込むため、日本有数の豪雪地帯となっている。',
+            'B. 中国山地と四国山地に挟まれ季節風が遮られるため少雨であり、古くからため池が多く作られた。',
+            'C. 急峻なリアス海岸が全域に広がり、大規模な埋立地の造成が不可能であるため工業化が遅れた。',
+            'D. 亜寒帯に属するため、夏でも冷涼で酪農やてんさいの栽培が中心である。'
+          ],
+          correctIndex: 1,
+          explanation: '【正解：B】地形（山地の配列）が気候（少雨）を生み、それが人間活動（ため池・塩田・果樹）につながる、日本の自然環境と生活の因果関係を問う定番問題です。',
+          essayPoint: '「夏は四国山地、冬は中国山地が湿った季節風を遮るため」と2つの山地の役割をセットで記述すること。'
+        }
+      }
+    ];
+
+    // アプリ状態管理
+    let state = {
+      currentSpotId: 'london',
+      currentTab: 'basic',
+      appMode: 'normal', // 'normal' | 'compare'
+      redSheet: false,
+      zoom: 1,
+      panX: 0,
+      panY: 0,
+      isDragging: false,
+      dragStartX: 0,
+      dragStartY: 0,
+      selectedQuizChoice: null
+    };
+
+    // ==================== 初期化処理 ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      populateSpotSelectors();
+      renderMapPins();
+      selectSpot(state.currentSpotId);
+      setupMapPanZoom();
+      applyPresetCompare('london', 'napoli');
+    });
+
+    // ==================== 赤シート用テキスト変換 ====================
+    function formatWithCloze(text) {
+      if (!text) return '';
+      // [[語句]] を <span class="cloze-term" onclick="this.classList.toggle('revealed')">語句</span> に変換
+      return text.replace(/\[\[(.*?)\]\]/g, (match, p1) => {
+        return `<span class="cloze-term" onclick="this.classList.toggle('revealed')" title="クリックで表示/非表示切替">${p1}</span>`;
+      });
+    }
+
+    function toggleRedSheet(enabled) {
+      state.redSheet = enabled;
+      if (enabled) {
+        document.body.classList.add('red-sheet-active');
+        showToast('赤シートON：赤いマスクをクリックすると個別に確認できます');
+      } else {
+        document.body.classList.remove('red-sheet-active');
+        document.querySelectorAll('.cloze-term.revealed').forEach(el => el.classList.remove('revealed'));
+      }
+    }
+
+    // ==================== モード切替（通常 / 比較） ====================
+    function setAppMode(mode) {
+      state.appMode = mode;
+      const normalWs = document.getElementById('normalWorkspace');
+      const compareWs = document.getElementById('compareWorkspace');
+      const btnNormal = document.getElementById('btnModeNormal');
+      const btnCompare = document.getElementById('btnModeCompare');
+
+      if (mode === 'normal') {
+        normalWs.classList.remove('hidden');
+        compareWs.classList.add('hidden');
+        btnNormal.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-blue-600 text-white shadow transition';
+        btnCompare.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition flex items-center gap-1';
+      } else {
+        normalWs.classList.add('hidden');
+        compareWs.classList.remove('hidden');
+        btnCompare.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white shadow transition flex items-center gap-1';
+        btnNormal.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition';
+        renderCompareView();
+      }
+    }
+
+    // ==================== 地図レイヤー・ピン描画 ====================
+    function toggleLayer(layerId, visible) {
+      const el = document.getElementById(layerId);
+      if (!el) return;
+      if (visible) {
+        el.classList.remove('opacity-0', 'pointer-events-none');
+      } else {
+        el.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function resetLayers() {
+      document.getElementById('layerTectonics').checked = true;
+      document.getElementById('layerClimate').checked = true;
+      document.getElementById('layerCurrents').checked = true;
+      document.getElementById('layerResources').checked = false;
+      toggleLayer('layer-tectonics', true);
+      toggleLayer('layer-climate', true);
+      toggleLayer('layer-currents', true);
+      toggleLayer('layer-resources', false);
+      showToast('地図レイヤーを初期状態に戻しました');
+    }
+
+    function renderMapPins() {
+      const pinsLayer = document.getElementById('mapPinsLayer');
+      pinsLayer.innerHTML = '';
+
+      GEO_SPOTS.forEach((spot, idx) => {
+        const isSelected = spot.id === state.currentSpotId;
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('transform', `translate(${spot.x}, ${spot.y})`);
+        g.setAttribute('class', 'cursor-pointer group');
+        g.onclick = (e) => {
+          e.stopPropagation();
+          selectSpot(spot.id);
+        };
+
+        // 選択中のパルス輪
+        if (isSelected) {
+          const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          pulse.setAttribute('r', '10');
+          pulse.setAttribute('fill', '#2563eb');
+          pulse.setAttribute('class', 'pin-pulse');
+          g.appendChild(pulse);
+        }
+
+        // ピン本体
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', isSelected ? '8.5' : '6.5');
+        circle.setAttribute('fill', isSelected ? '#dc2626' : '#2563eb');
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '2');
+        g.appendChild(circle);
+
+        // 番号テキスト
+        const numText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        numText.setAttribute('y', '3');
+        numText.setAttribute('text-anchor', 'middle');
+        numText.setAttribute('fill', '#ffffff');
+        numText.setAttribute('font-size', '8');
+        numText.setAttribute('font-weight', 'bold');
+        numText.textContent = idx + 1;
+        g.appendChild(numText);
+
+        // ラベル背景＋テキスト
+        const shortName = spot.name.split('（')[0];
+        const labelGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        labelGroup.setAttribute('transform', 'translate(0, -14)');
+
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const textWidth = shortName.length * 8.5 + 10;
+        rect.setAttribute('x', -textWidth / 2);
+        rect.setAttribute('y', -10);
+        rect.setAttribute('width', textWidth);
+        rect.setAttribute('height', '14');
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', isSelected ? '#1e293b' : 'rgba(255,255,255,0.92)');
+        rect.setAttribute('stroke', isSelected ? '#dc2626' : '#94a3b8');
+        rect.setAttribute('stroke-width', '0.8');
+        labelGroup.appendChild(rect);
+
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('y', '0');
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('fill', isSelected ? '#ffffff' : '#0f172a');
+        label.setAttribute('font-size', '8.5');
+        label.setAttribute('font-weight', 'bold');
+        label.textContent = shortName;
+        labelGroup.appendChild(label);
+
+        g.appendChild(labelGroup);
+        pinsLayer.appendChild(g);
+      });
+    }
+
+    // ==================== 地図パン＆ズーム ====================
+    function setupMapPanZoom() {
+      const container = document.getElementById('mapContainer');
+      const svg = document.getElementById('worldMapSvg');
+
+      container.addEventListener('mousedown', (e) => {
+        state.isDragging = true;
+        state.dragStartX = e.clientX - state.panX;
+        state.dragStartY = e.clientY - state.panY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!state.isDragging) return;
+        state.panX = e.clientX - state.dragStartX;
+        state.panY = e.clientY - state.dragStartY;
+        updateMapTransform();
+      });
+
+      window.addEventListener('mouseup', () => {
+        state.isDragging = false;
+      });
+
+      // タッチ対応
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          state.isDragging = true;
+          state.dragStartX = e.touches[0].clientX - state.panX;
+          state.dragStartY = e.touches[0].clientY - state.panY;
+        }
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        if (!state.isDragging || e.touches.length !== 1) return;
+        state.panX = e.touches[0].clientX - state.dragStartX;
+        state.panY = e.touches[0].clientY - state.dragStartY;
+        updateMapTransform();
+      }, { passive: true });
+
+      container.addEventListener('touchend', () => {
+        state.isDragging = false;
+      });
+
+      // ホイールズーム
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.15 : 0.87;
+        zoomMap(factor);
+      }, { passive: false });
+    }
+
+    function zoomMap(factor) {
+      state.zoom = Math.min(Math.max(state.zoom * factor, 0.8), 3.5);
+      updateMapTransform();
+    }
+
+    function resetMapView() {
+      state.zoom = 1;
+      state.panX = 0;
+      state.panY = 0;
+      updateMapTransform();
+    }
+
+    function updateMapTransform() {
+      const vp = document.getElementById('mapViewport');
+      // 中心基準のズーム＋パン
+      const cx = 500 * (1 - state.zoom) + state.panX * 0.8;
+      const cy = 260 * (1 - state.zoom) + state.panY * 0.8;
+      vp.setAttribute('transform', `translate(${cx}, ${cy}) scale(${state.zoom})`);
+    }
+
+    // ==================== スポット選択＆右パネル描画 ====================
+    function populateSpotSelectors() {
+      const selectors = ['spotSelector', 'compareSelectA', 'compareSelectB'];
+      selectors.forEach(selId => {
+        const sel = document.getElementById(selId);
+        if (!sel) return;
+        const prevVal = sel.value;
+        sel.innerHTML = '';
+        GEO_SPOTS.forEach((spot, i) => {
+          const opt = document.createElement('option');
+          opt.value = spot.id;
+          opt.textContent = `${i + 1}. ${spot.name}`;
+          sel.appendChild(opt);
+        });
+        if (prevVal && GEO_SPOTS.some(s => s.id === prevVal)) {
+          sel.value = prevVal;
+        }
+      });
+    }
+
+    function selectSpot(spotId) {
+      state.currentSpotId = spotId;
+      state.selectedQuizChoice = null;
+
+      const idx = GEO_SPOTS.findIndex(s => s.id === spotId);
+      const spot = GEO_SPOTS[idx];
+      if (!spot) return;
+
+      document.getElementById('spotSelector').value = spotId;
+      document.getElementById('spotRegionBadge').textContent = spot.region;
+      document.getElementById('spotCounter').textContent = `${idx + 1} / ${GEO_SPOTS.length}`;
+
+      // タグ描画
+      const tagsContainer = document.getElementById('spotTags');
+      tagsContainer.innerHTML = `
+        <span class="text-[11px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md border border-amber-200">${spot.climateCode}</span>
+        ${spot.tags.map(t => `<span class="text-[11px] font-medium bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded-md">#${t}</span>`).join('')}
+      `;
+
+      renderMapPins();
+      renderTabContent();
+    }
+
+    function navigateSpot(delta) {
+      const idx = GEO_SPOTS.findIndex(s => s.id === state.currentSpotId);
+      const nextIdx = (idx + delta + GEO_SPOTS.length) % GEO_SPOTS.length;
+      selectSpot(GEO_SPOTS[nextIdx].id);
+    }
+
+    function switchTab(tabName) {
+      state.currentTab = tabName;
+      ['basic', 'logic', 'exam'].forEach(t => {
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (t === tabName) {
+          btn.className = 'py-3 px-2 border-b-2 border-blue-600 text-blue-600 bg-blue-50/40 transition flex items-center justify-center gap-1';
+        } else {
+          btn.className = 'py-3 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1';
+        }
+      });
+      renderTabContent();
+    }
+
+    function renderTabContent() {
+      const spot = GEO_SPOTS.find(s => s.id === state.currentSpotId);
+      const container = document.getElementById('tabContentArea');
+      if (!spot || !container) return;
+
+      if (state.currentTab === 'basic') {
+        container.innerHTML = `
+          <!-- 要点解説カード -->
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">地理的特徴・重要ポイント</h3>
+              <span class="text-[11px] text-slate-400">赤シートで青字を隠せます</span>
+            </div>
+            <p class="text-sm leading-relaxed text-slate-800">
+              ${formatWithCloze(spot.summary)}
+            </p>
+          </div>
+
+          <!-- 基本データグリッド -->
+          <div class="grid grid-cols-3 gap-2.5">
+            ${spot.stats.map(st => `
+              <div class="bg-white border border-slate-200 rounded-xl p-2.5 text-center shadow-2xs">
+                <div class="text-[10px] text-slate-400 font-semibold">${st.label}</div>
+                <div class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">${st.value}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- 簡易雨温図（SVG描画） -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                ハイサーグラフ／雨温図（月別気温・降水量）
+              </h4>
+              <div class="flex items-center gap-3 text-[10px] font-semibold">
+                <span class="text-red-600 flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-500 inline-block"></span>気温(℃)</span>
+                <span class="text-blue-600 flex items-center gap-1"><span class="w-2.5 h-2.5 bg-blue-400/70 inline-block rounded-2xs"></span>降水量(mm)</span>
+              </div>
+            </div>
+            ${generateClimographSVG(spot.climateData)}
+            <p class="text-[11px] text-slate-500 mt-2 bg-slate-50 p-2 rounded-lg border border-slate-100">
+              💡 <strong>雨温図読解の着眼点：</strong>最暖月と最寒月の気温差（年較差）と、降水量が増える季節（夏雨型か冬雨型か）に注目しよう。
+            </p>
+          </div>
+        `;
+      } else if (state.currentTab === 'logic') {
+        container.innerHTML = `
+          <div class="space-y-3">
+            <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3 text-xs text-blue-900">
+              <strong>二次論述・共通テスト思考問題の鉄則：</strong><br>
+              地理は「自然条件（なぜ？）」→「気候・地形の形成」→「人間活動・産業（だからどうなる？）」の因果の鎖で理解します。
+            </div>
+
+            <!-- ステップ1：原因 -->
+            <div class="bg-white border-l-4 border-amber-500 rounded-r-xl p-3.5 shadow-xs border-y border-r border-slate-200">
+              <div class="text-[11px] font-bold text-amber-700 mb-1">STEP 1｜自然的要因・位置条件（原因）</div>
+              <div class="text-sm font-bold text-slate-800 leading-snug">${spot.logic.cause}</div>
+            </div>
+
+            <div class="flex justify-center text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+            </div>
+
+            <!-- ステップ2：プロセス -->
+            <div class="bg-white border-l-4 border-sky-500 rounded-r-xl p-3.5 shadow-xs border-y border-r border-slate-200">
+              <div class="text-[11px] font-bold text-sky-700 mb-1">STEP 2｜気候・土壌・地形の形成（メカニズム）</div>
+              <div class="text-sm text-slate-800 leading-relaxed">${spot.logic.process}</div>
+            </div>
+
+            <div class="flex justify-center text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+            </div>
+
+            <!-- ステップ3：結果 -->
+            <div class="bg-white border-l-4 border-emerald-600 rounded-r-xl p-3.5 shadow-xs border-y border-r border-slate-200">
+              <div class="text-[11px] font-bold text-emerald-700 mb-1">STEP 3｜人間活動・農牧業・鉱工業（結果）</div>
+              <div class="text-sm font-semibold text-slate-800 leading-relaxed">${spot.logic.result}</div>
+            </div>
+          </div>
+        `;
+      } else if (state.currentTab === 'exam') {
+        const q = spot.exam;
+        container.innerHTML = `
+          <div class="space-y-4">
+            <!-- 共通テスト風一問一答 -->
+            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="bg-slate-800 text-white text-[11px] font-bold px-2.5 py-0.5 rounded">共通テスト形式 演習</span>
+                <span class="text-[11px] text-slate-400">選択肢をクリックして解答</span>
+              </div>
+              <p class="text-sm font-bold text-slate-800 leading-relaxed">${q.question}</p>
+
+              <div class="space-y-2">
+                ${q.choices.map((choice, i) => {
+                  let btnStyle = 'bg-slate-50 hover:bg-blue-50 border-slate-200 text-slate-700';
+                  if (state.selectedQuizChoice !== null) {
+                    if (i === q.correctIndex) {
+                      btnStyle = 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold ring-1 ring-emerald-500';
+                    } else if (i === state.selectedQuizChoice) {
+                      btnStyle = 'bg-red-50 border-red-400 text-red-900';
+                    } else {
+                      btnStyle = 'bg-slate-50 border-slate-200 text-slate-400 opacity-70';
+                    }
+                  }
+                  return `
+                    <button onclick="answerQuiz(${i})" class="w-full text-left text-xs sm:text-sm p-3 rounded-lg border transition ${btnStyle}">
+                      ${choice}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+
+              ${state.selectedQuizChoice !== null ? `
+                <div class="mt-3 p-3.5 rounded-xl ${state.selectedQuizChoice === q.correctIndex ? 'bg-emerald-50/90 border border-emerald-200' : 'bg-amber-50/90 border border-amber-200'} text-xs leading-relaxed text-slate-800 space-y-1.5">
+                  <div class="font-bold text-sm ${state.selectedQuizChoice === q.correctIndex ? 'text-emerald-700' : 'text-red-600'}">
+                    ${state.selectedQuizChoice === q.correctIndex ? '⭕ 正解！素晴らしい理解です。' : '❌ 不正解… 解説を確認しよう！'}
+                  </div>
+                  <p>${q.explanation}</p>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- 二次試験 論述対策ポイント -->
+            <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-4 space-y-1.5">
+              <div class="text-xs font-bold text-indigo-800 flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                国公立二次試験・論述キーワード指針
+              </div>
+              <p class="text-xs text-slate-700 leading-relaxed">${q.essayPoint}</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function answerQuiz(choiceIdx) {
+      state.selectedQuizChoice = choiceIdx;
+      renderTabContent();
+    }
+
+    // ==================== SVG簡易雨温図ジェネレーター ====================
+    function generateClimographSVG(climateData) {
+      const temps = climateData?.temps || [10,10,12,15,18,21,23,23,20,16,13,10];
+      const precips = climateData?.precips || [50,50,50,50,50,50,50,50,50,50,50,50];
+
+      const w = 360;
+      const h = 155;
+      const padL = 28;
+      const padR = 32;
+      const padT = 14;
+      const padB = 22;
+      const chartW = w - padL - padR;
+      const chartH = h - padT - padB;
+
+      // 気温スケール: -10℃ 〜 35℃
+      const minT = -10;
+      const maxT = 35;
+      const getTempY = (t) => padT + chartH - ((t - minT) / (maxT - minT)) * chartH;
+
+      // 降水量スケール: 0mm 〜 最大値(最低300mm以上)
+      const maxP = Math.max(300, Math.ceil(Math.max(...precips) / 100) * 100);
+      const getPrecipH = (p) => (p / maxP) * chartH;
+
+      const stepX = chartW / 12;
+      let barsSvg = '';
+      let linePoints = [];
+      let dotsSvg = '';
+      let monthsSvg = '';
+
+      for (let i = 0; i < 12; i++) {
+        const cx = padL + stepX * i + stepX / 2;
+        const barW = stepX * 0.58;
+        const pH = getPrecipH(precips[i]);
+        const pY = padT + chartH - pH;
+
+        barsSvg += `<rect x="${cx - barW / 2}" y="${pY}" width="${barW}" height="${pH}" fill="#60a5fa" opacity="0.7" rx="1.5" />`;
+
+        const tY = getTempY(temps[i]);
+        linePoints.push(`${cx},${tY}`);
+        dotsSvg += `<circle cx="${cx}" cy="${tY}" r="2.6" fill="#dc2626" stroke="#fff" stroke-width="1" />`;
+
+        monthsSvg += `<text x="${cx}" y="${h - 6}" text-anchor="middle" font-size="8.5" fill="#64748b">${i + 1}</text>`;
+      }
+
+      const zeroTY = getTempY(0);
+
+      return `
+        <svg viewBox="0 0 ${w} ${h}" class="w-full h-auto bg-slate-50/70 rounded-lg border border-slate-100">
+          <!-- グリッド横線 -->
+          <line x1="${padL}" y1="${padT}" x2="${w - padR}" y2="${padT}" stroke="#e2e8f0" stroke-width="0.8" />
+          <line x1="${padL}" y1="${padT + chartH / 2}" x2="${w - padR}" y2="${padT + chartH / 2}" stroke="#e2e8f0" stroke-width="0.8" />
+          <line x1="${padL}" y1="${padT + chartH}" x2="${w - padR}" y2="${padT + chartH}" stroke="#94a3b8" stroke-width="1" />
+          <!-- 0℃ライン -->
+          <line x1="${padL}" y1="${zeroTY}" x2="${w - padR}" y2="${zeroTY}" stroke="#fca5a5" stroke-width="0.8" stroke-dasharray="2 2" />
+
+          <!-- 左軸ラベル（気温） -->
+          <text x="${padL - 4}" y="${padT + 4}" text-anchor="end" font-size="8" fill="#dc2626">35℃</text>
+          <text x="${padL - 4}" y="${zeroTY + 3}" text-anchor="end" font-size="8" fill="#dc2626">0℃</text>
+          <text x="${padL - 4}" y="${padT + chartH}" text-anchor="end" font-size="8" fill="#dc2626">-10</text>
+
+          <!-- 右軸ラベル（降水量） -->
+          <text x="${w - padR + 4}" y="${padT + 4}" text-anchor="start" font-size="8" fill="#2563eb">${maxP}mm</text>
+          <text x="${w - padR + 4}" y="${padT + chartH / 2 + 3}" text-anchor="start" font-size="8" fill="#2563eb">${maxP / 2}</text>
+          <text x="${w - padR + 4}" y="${padT + chartH}" text-anchor="start" font-size="8" fill="#2563eb">0</text>
+
+          <!-- 降水量バー -->
+          ${barsSvg}
+          <!-- 気温折れ線 -->
+          <polyline points="${linePoints.join(' ')}" fill="none" stroke="#ef4444" stroke-width="2" stroke-linejoin="round" />
+          ${dotsSvg}
+          <!-- 月ラベル -->
+          ${monthsSvg}
+        </svg>
+      `;
+    }
+
+    // ==================== 2地点比較モード描画 ====================
+    function applyPresetCompare(idA, idB) {
+      document.getElementById('compareSelectA').value = idA;
+      document.getElementById('compareSelectB').value = idB;
+      renderCompareView();
+    }
+
+    function renderCompareView() {
+      const idA = document.getElementById('compareSelectA').value;
+      const idB = document.getElementById('compareSelectB').value;
+      const spotA = GEO_SPOTS.find(s => s.id === idA) || GEO_SPOTS[0];
+      const spotB = GEO_SPOTS.find(s => s.id === idB) || GEO_SPOTS[1];
+
+      document.getElementById('compareBodyA').innerHTML = buildCompareCardHTML(spotA);
+      document.getElementById('compareBodyB').innerHTML = buildCompareCardHTML(spotB);
+    }
+
+    function buildCompareCardHTML(spot) {
+      return `
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">${spot.climateCode}</span>
+          <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded">${spot.region}</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          ${spot.stats.map(st => `
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-2 text-center">
+              <div class="text-[10px] text-slate-400">${st.label}</div>
+              <div class="text-xs font-bold text-slate-800">${st.value}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div>
+          <div class="text-xs font-bold text-slate-600 mb-1">雨温図の比較</div>
+          ${generateClimographSVG(spot.climateData)}
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1.5">
+          <div class="font-bold text-slate-700">因果ロジック要約：</div>
+          <p class="text-slate-600"><span class="font-bold text-amber-700">[原因]</span> ${spot.logic.cause}</p>
+          <p class="text-slate-600"><span class="font-bold text-emerald-700">[産業]</span> ${spot.logic.result}</p>
+        </div>
+
+        <div class="text-xs leading-relaxed text-slate-700">
+          ${formatWithCloze(spot.summary)}
+        </div>
+      `;
+    }
+
+    // ==================== 作成者向けモーダル（データ追加＆JSON出力） ====================
+    function openAuthorModal() {
+      document.getElementById('jsonPreviewBox').value = JSON.stringify(GEO_SPOTS, null, 2);
+      document.getElementById('authorModal').classList.remove('hidden');
+    }
+
+    function closeAuthorModal() {
+      document.getElementById('authorModal').classList.add('hidden');
+    }
+
+    function handleAddSpot(e) {
+      e.preventDefault();
+      const name = document.getElementById('newSpotName').value.trim();
+      const region = document.getElementById('newSpotRegion').value.trim();
+      const climateCode = document.getElementById('newSpotClimate').value.trim() || '温帯・熱帯';
+      const x = Number(document.getElementById('newSpotX').value) || 500;
+      const y = Number(document.getElementById('newSpotY').value) || 260;
+      const tagsRaw = document.getElementById('newSpotTags').value;
+      const tags = tagsRaw.split(/[,、]/).map(t => t.trim()).filter(Boolean);
+      const summary = document.getElementById('newSpotSummary').value.trim();
+      const cause = document.getElementById('newCause').value.trim() || '緯度・地形・海流の複合条件';
+      const process = document.getElementById('newProcess').value.trim() || '特有の気候帯と土壌の形成';
+      const result = document.getElementById('newResult').value.trim() || '地域特性に応じた農牧業・鉱工業の発達';
+
+      const newId = 'custom_' + Date.now();
+      const newSpot = {
+        id: newId,
+        name,
+        region,
+        x,
+        y,
+        climateCode,
+        tags: tags.length ? tags : ['新規追加'],
+        summary,
+        stats: [
+          { label: '区分', value: region },
+          { label: '気候', value: climateCode },
+          { label: 'ステータス', value: 'テスト追加' }
+        ],
+        climateData: {
+          temps: [18, 19, 20, 21, 22, 23, 24, 24, 22, 21, 19, 18],
+          precips: [140, 120, 110, 80, 50, 30, 25, 35, 65, 110, 135, 150]
+        },
+        logic: { cause, process, result },
+        exam: {
+          question: `${name}の地理的特徴に関する演習問題（作成中サンプル）`,
+          choices: [
+            'A. 自然環境と産業の結びつきを正しく説明した選択肢',
+            'B. 異なる気候帯の特徴を混同した誤りの選択肢',
+            'C. 資源の分布地域を逆にした誤りの選択肢',
+            'D. 歴史的背景を誤って記述した選択肢'
+          ],
+          correctIndex: 0,
+          explanation: '【正解：A】新しく追加された学習スポットのテスト問題です。JSONデータを編集して本格的な設問を登録できます。',
+          essayPoint: '原因（自然条件）と結果（産業・生活）の因果関係を明確に記述しよう。'
+        }
+      };
+
+      GEO_SPOTS.push(newSpot);
+      populateSpotSelectors();
+      selectSpot(newId);
+      document.getElementById('jsonPreviewBox').value = JSON.stringify(GEO_SPOTS, null, 2);
+      closeAuthorModal();
+      showToast(`新しい地点「${name}」を地図に追加しました！`);
+    }
+
+    function copyJsonData() {
+      const textarea = document.getElementById('jsonPreviewBox');
+      textarea.select();
+      document.execCommand('copy');
+      showToast('全スポットのJSONデータをクリップボードにコピーしました');
+    }
+
+    // ==================== トースト通知 ====================
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = msg;
+      toast.classList.remove('opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
