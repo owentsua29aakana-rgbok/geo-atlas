@@ -10,12 +10,13 @@
   --text:#e8f1f8; --muted:#8fa8bd; --dim:#5c7690;
   --amber:#ffb347; --cyan:#38d6e0; --coral:#ff5a4e; --green:#4ade80;
   --blue:#38a3e0; --ice:#cfe8ff; --violet:#a78bfa; --warn:#ffd166;
-  --rs:#ff5a4e; --shadow:0 10px 40px rgba(0,0,0,.5);
+  --water:#3f8fd4; --rs:#ff5a4e; --shadow:0 10px 40px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0;scrollbar-width:thin;scrollbar-color:var(--line2) #0c1a2a}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:#0c1a2a}
 ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px;border:2px solid #0c1a2a}
+::-webkit-scrollbar-thumb:hover{background:#3a6a8a}
 html,body{height:100%}
 body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -29,14 +30,14 @@ header{height:64px;display:flex;align-items:center;gap:14px;padding:0 18px;backg
 .tbtn{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:9px;font-size:12.5px;font-weight:700;background:var(--surface2);border:1px solid var(--line2);transition:.18s;white-space:nowrap}
 .tbtn:hover{transform:translateY(-1px);border-color:var(--cyan)}
 .tbtn.red-on{background:var(--rs);border-color:var(--rs);color:#fff}
-#appMain{display:grid;grid-template-columns:300px 1fr 384px;height:calc(100vh - 64px);height:calc(100dvh - 64px)}
+#appMain{display:grid;grid-template-columns:308px 1fr 384px;height:calc(100vh - 64px);height:calc(100dvh - 64px)}
 .panel{background:var(--surface);overflow-y:auto;overflow-x:hidden;position:relative;z-index:20}
 .panel.left{border-right:1px solid var(--line)}
 .panel.right{border-left:1px solid var(--line);display:flex;flex-direction:column}
 .psec{padding:16px 16px 6px}
 .psec h2{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;margin-bottom:4px}
 .badge{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;background:linear-gradient(90deg,var(--amber),#ff8a47);color:#3a2200}
-.psub{font-size:10.5px;color:var(--dim);margin-bottom:10px}
+.psub{font-size:10.5px;color:var(--dim);margin-bottom:10px;line-height:1.6}
 .lrow{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 11px;margin-bottom:9px}
 .lrow .top{display:flex;align-items:center;gap:9px}
 .lrow .name{font-size:12.5px;font-weight:700;flex:1;line-height:1.3}
@@ -52,12 +53,17 @@ header{height:64px;display:flex;align-items:center;gap:14px;padding:0 18px;backg
 .oprow output{font-size:10.5px;color:var(--cyan);font-weight:700;width:38px;text-align:right}
 input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--blue));cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid var(--cyan);cursor:pointer}
-.legend{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0 8px}
-.chip{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;padding:5px 9px;border-radius:20px;background:var(--surface2);border:1px solid var(--line);color:var(--text)}
-.chip .dot{width:11px;height:11px;border-radius:3px;flex:none}
+.legend{display:flex;flex-wrap:wrap;gap:5px;padding:2px 0 8px}
+.chip{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 8px;border-radius:20px;background:var(--surface2);border:1px solid var(--line);color:var(--text)}
+.chip .dot{width:10px;height:10px;border-radius:3px;flex:none}
+.chip .dot.mesh{background-image:repeating-linear-gradient(45deg,#e0559a 0 2px,transparent 2px 4px);background-color:#3a1030}
 .chip.active{border-color:var(--amber);background:#2a2410}
 .chip.clear{color:var(--warn);border-style:dashed}
-.legend .grp{width:100%;font-size:9.5px;color:var(--dim);font-weight:700;margin:4px 0 1px}
+.legend .grp{width:100%;font-size:9.5px;color:var(--dim);font-weight:700;margin:5px 0 1px;letter-spacing:.04em}
+.freqlegend{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:8px;flex-wrap:wrap}
+.freqlegend .t{font-size:10px;color:var(--muted);font-weight:700}
+.freqlegend .fd{border-radius:50%;background:#8f2b23;border:1px solid #fff}
+.freqlegend .dd{width:11px;height:11px;background:var(--amber);transform:rotate(45deg);border:1px solid #fff}
 .ctl{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:12px}
 .ctl .zrow{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .ctl .zrow label{font-size:11px;color:var(--muted)}
@@ -68,45 +74,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .zbtn.reset{font-size:11.5px}
 .stat{font-size:10.5px;color:var(--dim);margin-top:12px;line-height:1.7}
 .stat b{color:var(--cyan)}
-#mapwrap{position:relative;overflow:hidden;min-height:300px;background:radial-gradient(1200px 700px at 20% -10%,rgba(56,214,224,.10),transparent 60%),radial-gradient(900px 600px at 90% 110%,rgba(56,163,224,.12),transparent 60%),linear-gradient(160deg,#0a1a2c,#0e2a44)}
+#mapwrap{position:relative;overflow:hidden;min-height:300px;background:#000}
 #viewport{position:absolute;top:0;left:0;right:0;bottom:0;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden}
 #viewport.grabbing{cursor:grabbing}
-#mapsvg{position:absolute;transform-origin:0 0;will-change:transform;backface-visibility:hidden;display:block}
-.coast{fill:url(#landGrad);stroke:rgba(190,230,190,.55);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round}
-.country-border{fill:none;stroke:rgba(205,232,214,.30);stroke-width:.8;vector-effect:non-scaling-stroke;stroke-linejoin:round;pointer-events:none}
-.grat{stroke:rgba(140,190,230,.16);stroke-width:1;vector-effect:non-scaling-stroke;fill:none}
-.grat.strong{stroke:rgba(140,190,230,.34)}
-.clim,.soil{transition:opacity .25s}
-.dim{opacity:.10!important}
-.lit{filter:drop-shadow(0 0 5px currentColor)}
-.current{fill:none;stroke-width:2.4;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:9 7;animation:flow 1.4s linear infinite}
-.current.warm{stroke:#ff7a59}
-.current.cold{stroke:#4fc3f7;animation-duration:1.9s}
-.current-hit{fill:none;stroke:transparent;stroke-width:16;vector-effect:non-scaling-stroke;stroke-linecap:round;cursor:pointer}
-@keyframes flow{to{stroke-dashoffset:-32}}
+#viewCanvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
 .labellayer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:4;overflow:hidden}
 .pinlayer{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:6;overflow:hidden}
-.pin{position:absolute;left:0;top:0;width:11px;height:15px;pointer-events:auto;cursor:pointer;z-index:6;will-change:transform}
-.pin::before{content:"";position:absolute;left:50%;bottom:0;width:26px;height:26px;transform:translate(-50%,50%)}
-.pin svg{display:block;width:100%;height:100%;overflow:visible}
-.pin .body{filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
-.pin:hover svg{transform:scale(1.2)}
-.pin.selected svg{transform:scale(1.12)}
-.pin .tip{position:absolute;left:50%;bottom:100%;transform:translateX(-50%) translateY(-2px);background:#0a1626;border:1px solid var(--line2);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;transition:.15s;pointer-events:none;box-shadow:var(--shadow)}
+.pin{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;z-index:6;will-change:transform}
+.pin svg{display:block;overflow:visible;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+.pin:hover svg{transform:scale(1.25)}
+.pin.selected svg{transform:scale(1.3)}
+.pin .tip{position:absolute;left:50%;bottom:100%;transform:translateX(-50%) translateY(-4px);background:#0a1626;border:1px solid var(--line2);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;transition:.15s;pointer-events:none;box-shadow:var(--shadow)}
 .pin:hover .tip,.pin.selected .tip{opacity:1}
-.maplabel{position:absolute;left:0;top:0;font-size:12px;font-weight:700;color:#dcebf7;text-shadow:0 1px 3px #000,0 0 6px #000;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;will-change:transform}
+.maplabel{position:absolute;left:0;top:0;font-weight:700;color:#dcebf7;text-shadow:0 1px 3px #000,0 0 6px #000;white-space:nowrap;opacity:0;pointer-events:none;will-change:transform}
 .maplabel.t1{font-size:13px;color:#fff}
-.labellayer[data-tier="1"] .maplabel.t1{opacity:.92}
-.labellayer[data-tier="2"] .maplabel.t1,.labellayer[data-tier="2"] .maplabel.t2{opacity:.92}
-.hud{position:absolute;top:12px;left:12px;z-index:15;display:flex;gap:8px;align-items:center;font-size:11px;flex-wrap:wrap;max-width:calc(100% - 90px)}
-.hud .pill{background:rgba(10,22,38,.88);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.maplabel.t2{font-size:12px}
+.maplabel.t3{font-size:11px;color:#bcd3e6}
+.maplabel.river{color:#7fd3f7;font-style:italic}
+.maplabel.lake{color:#7fd3f7}
+.maplabel.mtn{color:#ffd166}
+.maplabel.desert{color:#ffb347}
+.hud{position:absolute;top:12px;left:12px;z-index:15;display:flex;gap:8px;align-items:center;font-size:11px;flex-wrap:wrap;max-width:calc(100% - 110px)}
+.hud .pill{background:rgba(10,22,38,.9);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color:var(--muted);font-variant-numeric:tabular-nums}
 .hud .pill b{color:var(--cyan)}
 #lodPill{cursor:pointer}
 #lodPill.loading b{color:var(--warn)}
+#climPill b{color:#ffd166}
+#climPill .stn{color:#8fa8bd;font-size:10px}
 .zoomctl{position:absolute;right:14px;bottom:16px;z-index:15;display:flex;flex-direction:column;gap:7px}
 .zoomctl button{width:42px;height:42px;border-radius:10px;background:rgba(15,30,48,.92);border:1px solid var(--line2);font-size:20px;font-weight:800;box-shadow:var(--shadow)}
 .zoomctl button:hover{border-color:var(--cyan);color:var(--cyan)}
-.hint{position:absolute;left:14px;bottom:16px;z-index:14;font-size:11px;color:var(--muted);background:rgba(10,22,38,.8);border:1px solid var(--line);border-radius:8px;padding:6px 11px;max-width:60%}
+.hint{position:absolute;left:14px;bottom:16px;z-index:14;font-size:11px;color:var(--muted);background:rgba(10,22,38,.8);border:1px solid var(--line);border-radius:8px;padding:6px 11px;max-width:58%}
 .curinfo{position:absolute;left:14px;bottom:52px;z-index:15;max-width:270px;background:rgba(10,22,38,.94);border:1px solid var(--line2);border-radius:10px;padding:11px 13px;box-shadow:var(--shadow);font-size:12px;display:none}
 .curinfo.show{display:block}
 .curinfo h4{font-size:13px;margin-bottom:3px}
@@ -132,25 +130,34 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .empty p.sub{font-size:11px;color:var(--dim);margin-top:8px}
 .spotcard{animation:fadeUp .35s}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.spotcard .nm{font-size:21px;font-weight:800;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.spotcard .nm{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .kbadge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:7px;color:#04121e}
+.fbadge{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:7px;background:#8f2b23;color:#fff}
+.dbadge{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:7px;background:var(--amber);color:#3a2200}
 .spotcard .meta{font-size:11px;color:var(--muted);margin-top:5px;display:flex;gap:12px;flex-wrap:wrap}
 .spotcard .meta .mono{font-variant-numeric:tabular-nums;color:var(--cyan)}
-.graphwrap{margin:15px 0;background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:12px}
-.graphwrap .gt{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
-.graphwrap .gt .hemi{color:var(--amber)}
+.chartgrid{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+.graphwrap{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px}
+.graphwrap .gt{font-size:11px;font-weight:700;color:#333;margin-bottom:4px;display:flex;justify-content:space-between}
+.graphwrap .gt .hemi{color:#a05a00}
 .cbar{transform-box:fill-box;transform-origin:bottom;animation:grow .5s cubic-bezier(.2,.8,.3,1) backwards}
 @keyframes grow{from{transform:scaleY(0)}}
 .no-anim .cbar{animation:none}
-.tline{fill:none;stroke:var(--coral);stroke-width:2;stroke-linejoin:round}
-.tdot{fill:var(--coral)}
-.ax{fill:var(--dim);font-size:8.5px}
-.axl{fill:var(--muted);font-size:8px}
-.grid-l{stroke:rgba(140,190,230,.12);stroke-width:1}
+.tline{fill:none;stroke:#1f5fa8;stroke-width:2;stroke-linejoin:round}
+.tdot{fill:#1f5fa8}
+.hline{fill:none;stroke:#1f5fa8;stroke-width:1.6;stroke-linejoin:round}
+.ax{fill:#444;font-size:8.5px}
+.axl{fill:#666;font-size:8px}
+.grid-l{stroke:#ddd;stroke-width:1}
 .facts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
 .fact{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 11px}
 .fact .k{font-size:9.5px;color:var(--dim);font-weight:700}
 .fact .v{font-size:12.5px;font-weight:700;margin-top:4px;line-height:1.4}
+.causecard{background:linear-gradient(135deg,#2a2410,#1a2438);border:1px solid #4a3a10;border-left:4px solid var(--amber);border-radius:10px;padding:13px 14px;margin:12px 0}
+.causecard .ct{font-size:11px;font-weight:800;color:var(--amber);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.causecard .cb{font-size:12.5px;line-height:1.8;color:#e8f1f8}
+.causecard .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.causecard .tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:14px;background:rgba(255,179,71,.15);color:var(--amber);border:1px solid rgba(255,179,71,.3)}
 .summary{font-size:12.5px;line-height:1.85;color:#cfe0ee;background:var(--surface2);border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:9px;padding:12px 13px;margin-top:6px}
 .rs{border-radius:4px;padding:0 3px;font-weight:700;transition:.15s;cursor:default}
 body.rs-on .rs{color:transparent;background:var(--rs);cursor:pointer}
@@ -185,7 +192,7 @@ body.rs-on .rs.rs-open{color:#fff;background:transparent;box-shadow:0 0 0 1px va
 .qresult p{font-size:12.5px;color:var(--muted);margin:8px 0 18px}
 .scrim{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(3,8,15,.72);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .scrim.show{display:flex}
-.modal{background:var(--surface);border:1px solid var(--line2);border-radius:16px;width:100%;max-width:860px;max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.modal{background:var(--surface);border:1px solid var(--line2);border-radius:16px;width:100%;max-width:900px;max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .modal .mh{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
 .modal .mh h3{font-size:15px;font-weight:800;flex:1}
 .modal .mh .x{width:32px;height:32px;border-radius:8px;background:var(--surface2);border:1px solid var(--line);font-size:16px;color:var(--muted)}
@@ -225,7 +232,7 @@ body.rs-on .rs.rs-open{color:#fff;background:transparent;box-shadow:0 0 0 1px va
 .sheetHandle{display:none}
 @media (max-width:1100px){
   #appMain{grid-template-columns:1fr}
-  .panel.left{position:fixed;left:0;top:64px;bottom:0;width:290px;z-index:70;transform:translateX(-105%);transition:transform .28s;box-shadow:var(--shadow)}
+  .panel.left{position:fixed;left:0;top:64px;bottom:0;width:300px;z-index:70;transform:translateX(-105%);transition:transform .28s;box-shadow:var(--shadow)}
   body.drawer-open .panel.left{transform:none}
   .panel.right{position:fixed;left:0;right:0;bottom:0;top:auto;height:58vh;z-index:65;border-left:none;border-top:1px solid var(--line2);border-radius:18px 18px 0 0;transform:translateY(105%);transition:transform .3s}
   body.sheet-open .panel.right{transform:none}
@@ -255,73 +262,49 @@ body.rs-on .rs.rs-open{color:#fff;background:transparent;box-shadow:0 0 0 1px va
   <aside class="panel left">
     <div class="psec">
       <h2>🗺️ レイヤー重ね合わせ <span class="badge">共通テスト対応</span></h2>
-      <p class="psub">スイッチで地図の色塗り・表示を切替</p>
-      <div class="lrow"><div class="top"><div class="name">ケッペンの気候区分<small>陸地を気候帯で色塗り</small></div><label class="switch"><input type="checkbox" id="lyClim" checked><span class="track"></span></label></div>
-        <div class="oprow"><label>透過度</label><input type="range" id="opClim" min="0" max="100" value="70"><output id="opClimV">70%</output></div></div>
-      <div class="lrow"><div class="top"><div class="name">世界土壌帯<small>成帯・間帯／農業連動</small></div><label class="switch"><input type="checkbox" id="lySoil"><span class="track"></span></label></div>
-        <div class="oprow"><label>透過度</label><input type="range" id="opSoil" min="0" max="100" value="70"><output id="opSoilV">70%</output></div></div>
-      <div class="lrow"><div class="top"><div class="name">海流（暖流・寒流）<small>流向アニメ表示</small></div><label class="switch"><input type="checkbox" id="lyCur" checked><span class="track"></span></label></div>
-        <div class="oprow"><label>流向アニメ</label><label class="switch" style="margin-left:auto"><input type="checkbox" id="curAnim" checked><span class="track"></span></label></div></div>
-      <div class="lrow"><div class="top"><div class="name">主要国名<small>ズーム連動表示</small></div><label class="switch"><input type="checkbox" id="lyLabel" checked><span class="track"></span></label></div></div>
+      <p class="psub">雨温図は<b style="color:#ffd166">全地点共通スケール</b>（降水0–300mm・気温-20–40℃）で比較可能。ハイサーグラフ併記。土壌は写真準拠の8分類。砂漠ピンで成因、河川・湖は水域を描画。</p>
+      <div class="lrow"><div class="top"><div class="name">ケッペンの気候区分<small>国際配色・30サブクラス＋H</small></div><label class="switch"><input type="checkbox" id="lyClim" checked><span class="track"></span></label></div>
+        <div class="oprow"><label>透過度</label><input type="range" id="opClim" min="0" max="100" value="80"><output id="opClimV">80%</output></div></div>
+      <div class="lrow"><div class="top"><div class="name">世界土壌帯<small>写真準拠・8分類（成帯土壌）</small></div><label class="switch"><input type="checkbox" id="lySoil"><span class="track"></span></label></div>
+        <div class="oprow"><label>透過度</label><input type="range" id="opSoil" min="0" max="100" value="75"><output id="opSoilV">75%</output></div></div>
+      <div class="lrow"><div class="top"><div class="name">河川・湖（水域）<small>名称表示中の河川・湖を実描画</small></div><label class="switch"><input type="checkbox" id="lyWater" checked><span class="track"></span></label></div></div>
+      <div class="lrow"><div class="top"><div class="name">海流（暖流・寒流）<small>破線表示トグル</small></div><label class="switch"><input type="checkbox" id="lyCur" checked><span class="track"></span></label></div>
+        <div class="oprow"><label>破線表示</label><label class="switch" style="margin-left:auto"><input type="checkbox" id="curAnim" checked><span class="track"></span></label></div></div>
+      <div class="lrow"><div class="top"><div class="name">国名ラベル<small>等倍=主要国／×2.5=中規模／×4=全世界</small></div><label class="switch"><input type="checkbox" id="lyLabel" checked><span class="track"></span></label></div></div>
+      <div class="lrow"><div class="top"><div class="name">地形ラベル<small>河川・山脈・湖・砂漠（ズーム連動）</small></div><label class="switch"><input type="checkbox" id="lyFeature" checked><span class="track"></span></label></div></div>
       <div class="lrow"><div class="top"><div class="name">緯度・経度グリッド<small>30°間隔</small></div><label class="switch"><input type="checkbox" id="lyGrid"><span class="track"></span></label></div></div>
+      <div class="freqlegend"><span class="t">出題回数</span>
+        <span class="fd" style="width:6px;height:6px;background:#f2c9c4"></span><span class="t">1</span>
+        <span class="fd" style="width:9px;height:9px;background:#e08e86"></span><span class="t">2</span>
+        <span class="fd" style="width:12px;height:12px;background:#c05a50"></span><span class="t">3</span>
+        <span class="fd" style="width:15px;height:15px;background:#8f2b23"></span><span class="t">4</span>
+        <span class="fd" style="width:18px;height:18px;background:#5a120c"></span><span class="t">5</span>
+        <span class="dd"></span><span class="t">砂漠（成因）</span>
+      </div>
     </div>
-    <div class="psec"><h2>凡例ハイライト</h2><p class="psub">クリックで該当色を強調（他を減光）</p><div class="legend" id="legend"></div></div>
+    <div class="psec"><h2>凡例ハイライト</h2><p class="psub">クリックで該当分類のみを強調（他を減光）</p><div class="legend" id="legend"></div></div>
     <div class="psec" style="padding-bottom:20px"><h2>表示コントロール</h2>
       <div class="ctl">
-        <div class="zrow"><label>表示倍率</label><input type="range" id="zoomSlider" min="0" max="3.6" step="0.01" value="0"><output id="zoomVal">×1.0</output></div>
+        <div class="zrow"><label>表示倍率</label><input type="range" id="zoomSlider" min="0" max="6" step="0.01" value="0"><output id="zoomVal">×1.0</output></div>
         <div class="zbtns"><button class="zbtn" id="zOut">−</button><button class="zbtn" id="zIn">＋</button><button class="zbtn reset" id="zReset">⌂ リセット</button></div>
-        <div class="stat">登録スポット <b id="spotCount">0</b> 件／カスタム <b id="customCount">0</b> 件<br>×1で北極・南極が上下端に一致／横は周回</div>
+        <div class="stat">雨温図都市 <b id="cityCount">0</b>／砂漠 <b id="desertCount">0</b><br>河川 <b id="riverCount">0</b>／湖 <b id="lakeCount">0</b>／土壌 <b>8</b> 分類<br>メルカトル図法・横周回</div>
       </div>
     </div>
   </aside>
   <section id="mapwrap">
     <div id="viewport">
-      <svg id="mapsvg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <defs>
-          <pattern id="pat-lat" patternUnits="userSpaceOnUse" width="10" height="10"><rect width="10" height="10" fill="#e05d3d" fill-opacity=".55"/><circle cx="2.5" cy="2.5" r="1.2" fill="#e05d3d"/><circle cx="7.5" cy="7.5" r="1.2" fill="#e05d3d"/></pattern>
-          <pattern id="pat-des" patternUnits="userSpaceOnUse" width="10" height="10"><rect width="10" height="10" fill="#d9b36a" fill-opacity=".55"/><path d="M0 10L10 0" stroke="#d9b36a" stroke-width="1.4"/></pattern>
-          <pattern id="pat-brn" patternUnits="userSpaceOnUse" width="10" height="10"><rect width="10" height="10" fill="#8a6f4d" fill-opacity=".55"/></pattern>
-          <pattern id="pat-che" patternUnits="userSpaceOnUse" width="10" height="10"><rect width="10" height="10" fill="#5a4a3a" fill-opacity=".6"/><path d="M0 5H10M5 0V10" stroke="#2a2018" stroke-width="1.2"/></pattern>
-          <pattern id="pat-pod" patternUnits="userSpaceOnUse" width="10" height="10"><rect width="10" height="10" fill="#9fb4c7" fill-opacity=".55"/><path d="M0 3H10M0 8H10" stroke="#5a7a94" stroke-width="1.2"/></pattern>
-          <pattern id="pat-tun" patternUnits="userSpaceOnUse" width="10" height="10"><rect width="10" height="10" fill="#d7e6f2" fill-opacity=".55"/><circle cx="5" cy="5" r="1" fill="#9ab8d0"/></pattern>
-          <clipPath id="landClip"><path id="landClipPath" d="" clip-rule="nonzero"/></clipPath>
-          <linearGradient id="landGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" stop-color="#466850"/><stop offset="1" stop-color="#33503d"/></linearGradient>
-        </defs>
-        <g class="mapcopy" transform="translate(-2000,0)">
-          <g class="js-grid"></g>
-          <path class="coast js-land" d="" fill-rule="nonzero"/>
-          <path class="country-border js-border" d=""/>
-          <g class="js-clim" clip-path="url(#landClip)" style="opacity:.7"></g>
-          <g class="js-soil" clip-path="url(#landClip)" style="display:none;opacity:.7"></g>
-          <g class="js-cur"></g>
-        </g>
-        <g class="mapcopy">
-          <g class="js-grid"></g>
-          <path class="coast js-land" d="" fill-rule="nonzero"/>
-          <path class="country-border js-border" d=""/>
-          <g class="js-clim" clip-path="url(#landClip)" style="opacity:.7"></g>
-          <g class="js-soil" clip-path="url(#landClip)" style="display:none;opacity:.7"></g>
-          <g class="js-cur"></g>
-        </g>
-        <g class="mapcopy" transform="translate(2000,0)">
-          <g class="js-grid"></g>
-          <path class="coast js-land" d="" fill-rule="nonzero"/>
-          <path class="country-border js-border" d=""/>
-          <g class="js-clim" clip-path="url(#landClip)" style="opacity:.7"></g>
-          <g class="js-soil" clip-path="url(#landClip)" style="display:none;opacity:.7"></g>
-          <g class="js-cur"></g>
-        </g>
-      </svg>
+      <canvas id="viewCanvas"></canvas>
       <div class="labellayer" id="labelLayer"></div>
       <div class="pinlayer" id="pinLayer"></div>
     </div>
     <button id="layerFab">🗺️</button>
     <div class="hud">
       <div class="pill" id="coordPill">緯度 <b>--</b> 経度 <b>--</b></div>
+      <div class="pill" id="climPill">気候 <b>--</b></div>
       <button class="pill" id="lodPill">詳細 <b>簡易</b></button>
     </div>
     <div class="curinfo" id="curInfo"><button class="x" id="curInfoX">✕</button><h4 id="ciName"></h4><p id="ciNote"></p></div>
-    <div class="hint">💡 ドラッグで移動（横は周回）、ホイールで拡大縮小、ピンをクリックして解説を表示</div>
+    <div class="hint">💡 ドラッグで移動、ホイールで拡大縮小。丸ピン=都市（雨温図・ハイサーグラフ）、◆ピン=砂漠（成因）。</div>
     <div class="zoomctl"><button id="mzIn">＋</button><button id="mzOut">−</button><button id="mzReset">⌂</button></div>
     <div id="errBanner"></div>
     <noscript><div style="position:absolute;top:40%;left:0;right:0;text-align:center;color:#ffd166;font-size:14px;z-index:50">JavaScript を有効にしてください。</div></noscript>
@@ -377,15 +360,512 @@ body.rs-on .rs.rs-open{color:#fff;background:transparent;box-shadow:0 0 0 1px va
 function showErr(msg){var b=document.getElementById('errBanner');if(b){b.style.display='block';b.textContent='⚠️ '+msg;}}
 window.addEventListener('error',function(e){showErr('スクリプトエラー: '+(e&&e.message?e.message:e));});
 
-var W=2000,H=1000;
-var OSX=1.6,OSY=1.3; /* オーバースキャン倍率 */
-function proj(lon,lat){return [(lon+180)/360*W,(90-lat)/180*H];}
-function unproj(x,y){return [x/W*360-180,90-y/H*180];}
+var WS=2000,MAXLAT=85.051129;
+function mercX(lon){return (lon+180)/360*WS;}
+function mercY(lat){lat=clamp(lat,-MAXLAT,MAXLAT);var s=Math.sin(lat*Math.PI/180);return (0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*WS;}
+function proj(lon,lat){return [mercX(lon),mercY(lat)];}
+function unproj(x,y){var lon=x/WS*360-180;var n=Math.PI*(1-2*y/WS);var lat=Math.atan(Math.sinh(n))*180/Math.PI;return [lon,lat];}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-var SVGNS='http://www.w3.org/2000/svg';
-function svgEl(tag,attrs,parent){var el=document.createElementNS(SVGNS,tag);for(var k in attrs){el.setAttribute(k,attrs[k]);}if(parent)parent.appendChild(el);return el;}
 function qsa(sel){return Array.prototype.slice.call(document.querySelectorAll(sel));}
+function hex2rgb(h){h=h.replace('#','');return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
+function mixHex(a,b,t){var A=hex2rgb(a),B=hex2rgb(b);return 'rgb('+Math.round(A[0]+(B[0]-A[0])*t)+','+Math.round(A[1]+(B[1]-A[1])*t)+','+Math.round(A[2]+(B[2]-A[2])*t)+')';}
 
+/* ===== 国際標準 Köppen-Geiger 配色 ===== */
+var CLIM_META={
+Af:{c:'#0000FF',n:'Af 熱帯雨林',g:'A'},Am:{c:'#0078FF',n:'Am 熱帯モンスーン',g:'A'},Aw:{c:'#46AAFA',n:'Aw サバナ',g:'A'},
+BWh:{c:'#FF0000',n:'BWh 砂漠(高温)',g:'B'},BWk:{c:'#FF9696',n:'BWk 砂漠(低温)',g:'B'},BSh:{c:'#F5A500',n:'BSh ステップ(高温)',g:'B'},BSk:{c:'#FFDC64',n:'BSk ステップ(低温)',g:'B'},
+Csa:{c:'#FFFF00',n:'Csa 地中海(高温夏)',g:'C'},Csb:{c:'#C8C800',n:'Csb 地中海(温暖夏)',g:'C'},Csc:{c:'#969600',n:'Csc 地中海(冷涼夏)',g:'C'},
+Cwa:{c:'#96FF96',n:'Cwa 温帯冬乾(高温夏)',g:'C'},Cwb:{c:'#64C864',n:'Cwb 温帯冬乾(温暖夏)',g:'C'},Cwc:{c:'#329632',n:'Cwc 温帯冬乾(冷涼夏)',g:'C'},
+Cfa:{c:'#C8FF50',n:'Cfa 温暖湿潤',g:'C'},Cfb:{c:'#64FF50',n:'Cfb 西岸海洋性',g:'C'},Cfc:{c:'#32C800',n:'Cfc 西岸海洋性(冷涼)',g:'C'},
+Dsa:{c:'#FF00FF',n:'Dsa 冷帯夏乾(高温夏)',g:'D'},Dsb:{c:'#C800C8',n:'Dsb 冷帯夏乾(温暖夏)',g:'D'},Dsc:{c:'#963296',n:'Dsc 冷帯夏乾(冷涼夏)',g:'D'},Dsd:{c:'#966496',n:'Dsd 冷帯夏乾(極寒)',g:'D'},
+Dwa:{c:'#ABB4FF',n:'Dwa 冷帯冬乾(高温夏)',g:'D'},Dwb:{c:'#5A78DB',n:'Dwb 冷帯冬乾(温暖夏)',g:'D'},Dwc:{c:'#3250B4',n:'Dwc 冷帯冬乾(冷涼夏)',g:'D'},Dwd:{c:'#193278',n:'Dwd 冷帯冬乾(極寒)',g:'D'},
+Dfa:{c:'#00FFFF',n:'Dfa 冷帯湿潤(高温夏)',g:'D'},Dfb:{c:'#38C8FF',n:'Dfb 冷帯湿潤(温暖夏)',g:'D'},Dfc:{c:'#007E7D',n:'Dfc 冷帯湿潤(冷涼夏)',g:'D'},Dfd:{c:'#00465F',n:'Dfd 冷帯湿潤(極寒)',g:'D'},
+ET:{c:'#B2B2B2',n:'ET ツンドラ',g:'E'},EF:{c:'#686868',n:'EF 氷雪',g:'E'},
+H:{c:'#E0559A',n:'H 高山(メッシュ)',g:'H'}
+};
+var CLIM_CLASSES=Object.keys(CLIM_META);
+var CLIM_INDEX={};CLIM_CLASSES.forEach(function(c,i){CLIM_INDEX[c]=i;});
+var CLIM_GROUPS=[['A','熱帯 A'],['B','乾燥帯 B'],['C','温帯 C'],['D','冷帯 D'],['E','寒帯 E'],['H','高山 H']];
+var GROUP_NAME={A:'熱帯',B:'乾燥帯',C:'温帯',D:'冷帯',E:'寒帯',H:'高山'};
+var FREQ_FILL={1:'#f2c9c4',2:'#e08e86',3:'#c05a50',4:'#8f2b23',5:'#5a120c'};
+var FREQ_R={1:4,2:5.5,3:7,4:8.5,5:10};
+
+/* ===== 土壌帯（写真準拠・8分類） ===== */
+var SOIL_META={
+lat:{c:'#E8927C',n:'ラトソル・赤黄色土'},
+blk:{c:'#6E6E6E',n:'黒土（チェルノーゼム・プレーリー土など）'},
+che:{c:'#F0D040',n:'栗色土'},
+des:{c:'#D8CCB0',n:'砂漠土'},
+brn:{c:'#B8DC90',n:'褐色森林土'},
+pod:{c:'#D8B0F0',n:'ポドゾル'},
+tun:{c:'#A0C8F8',n:'ツンドラ土'},
+mtn:{c:'#D8D8D8',n:'山岳土'}
+};
+var SOIL_ORDER=['tun','pod','brn','lat','che','blk','des','mtn'];
+
+/* ===== 雨温図都市（48都市・共通スケール） ===== */
+var CITY_DATA=[
+['リヤド','サウジアラビア','アジア',24.71,46.68,'BWh',5,[14,17,21,26,32,35,36,36,33,28,21,16],[12,8,20,25,10,0,0,0,0,2,10,15],'亜熱帯高圧帯に支配され一年中極端に乾燥。夏は40℃近い酷暑。'],
+['イルクーツク','ロシア','アジア',52.29,104.28,'Dwb',4,[-18,-14,-6,3,11,17,19,17,10,2,-8,-16],[12,8,10,18,35,75,105,95,55,25,18,15],'シベリア内陸。厳冬と短い夏、降水は夏に集中する典型的大陸性気候。'],
+['ウルムチ','中国','アジア',43.83,87.58,'BSk',4,[-13,-10,-1,10,17,22,24,23,17,8,-2,-10],[12,15,25,40,45,40,35,30,30,30,25,18],'天山北麓の内陸盆地。年較差が極めて大きく降水は少ないが夏季にやや多い。'],
+['ケープタウン','南アフリカ','アフリカ',-33.92,18.42,'Csb',4,[22,22,21,18,16,14,13,14,15,17,19,21],[15,17,20,41,69,93,82,77,40,30,14,17],'南半球の地中海性。冬（6-8月）に偏西風が雨をもたらし夏は乾燥。'],
+['シドニー','オーストラリア','オセアニア',-33.87,151.21,'Cfa',4,[23.5,23.4,22.1,19.5,16.6,14.2,13.4,14.5,17,19,20.7,22.4],[102,118,129,128,117,132,98,81,69,77,84,78],'東岸の温暖湿潤。南半球のため1月が夏。降水は一年中比較的多い。'],
+['パース','オーストラリア','オセアニア',-31.95,115.86,'Csa',4,[24.5,24.7,23,19.5,16,13.5,12.5,13,15,17.5,20.5,23],[10,15,20,40,90,100,105,90,55,30,15,10],'南西岸の地中海性。冬雨・夏乾でぶどう・柑橘に適す。'],
+['ブエノスアイレス','アルゼンチン','南アメリカ',-34.6,-58.4,'Cfa',4,[25,24,22,18,15,12,11,12,14,17,20,23],[100,100,100,100,80,70,70,70,80,110,100,90],'パンパの温暖湿潤。一年中降水があり小麦・牧畜が盛ん。'],
+['ムンバイ','インド','アジア',19.07,72.83,'Am',4,[24.5,25,27,29,30.5,29,27.5,27.5,27.5,28.5,27.5,26],[0,0,0,1,15,420,636,477,300,60,10,2],'西ガーツ風上側。南西モンスーンが6-9月に集中豪雨をもたらす。'],
+['ラサ','中国','アジア',29.66,91.13,'Dwb',4,[-2,1,5,8,12,16,16,15,13,8,2,-2],[1,2,3,8,25,70,120,110,60,10,2,1],'チベット高原（約3,650m）。高地のため冷涼で夏に降水が集中。'],
+['ロサンゼルス','アメリカ合衆国','北アメリカ',34.05,-118.2,'Csa',4,[14,14.5,15.5,17,19,21,23,23.5,23,21,17,14],[80,85,60,20,5,2,0,2,5,10,30,60],'カリフォルニア沿岸の地中海性。夏は亜熱帯高圧帯で乾燥。'],
+['ローマ','イタリア','ヨーロッパ',41.9,12.5,'Csa',4,[8,9,11,14,18,22,25,25,22,17,12,9],[70,70,65,65,45,30,20,25,70,110,120,90],'地中海沿岸。夏乾・冬雨でオリーブ・ぶどうが典型。'],
+['北京','中国','アジア',39.9,116.4,'BSk',4,[-4,-1,6,14,20,25,27,26,20,13,4,-2],[3,5,10,25,35,75,170,140,50,25,10,3],'華北平原。冬はシベリア気団で寒冷乾燥、夏に降水が集中。'],
+['東京','日本','アジア',35.69,139.69,'Cfa',4,[5.2,5.7,8.7,13.9,18.2,21.4,25.3,26.7,23.3,18,12.6,7.7],[52,56,118,125,138,168,154,168,210,198,93,51],'大陸東岸の温暖湿潤。梅雨と台風で降水の山が2つ。'],
+['イスタンブール','トルコ','アジア',41.01,29.06,'Csa',3,[6,6,8,12,17,22,24,24,21,16,12,8],[90,70,65,50,40,30,25,25,50,70,80,100],'ボスポラス海峡沿岸。地中海性と湿潤気候の移行帯。'],
+['ウランバートル','モンゴル','アジア',47.92,106.91,'BSk',3,[-22,-17,-7,2,10,16,18,16,9,0,-12,-19],[2,2,3,6,12,28,76,51,23,7,5,3],'モンゴル高原の寒冷ステップ。遊牧が伝統的産業。'],
+['カラチ','パキスタン','アジア',24.86,67.01,'BWh',3,[19,21,25,29,31,31,30,29,29,28,24,20],[8,10,8,4,2,10,80,60,15,2,3,5],'インド川河口の砂漠気候。モンスーン末端で降水はわずか。'],
+['ダブリン','アイルランド','ヨーロッパ',53.35,-6.26,'Cfb',3,[5,5,6,8,11,14,16,15,13,10,7,5],[65,55,55,55,60,60,60,70,70,80,75,75],'偏西風と北大西洋海流で一年中温和湿潤。牧畜が盛ん。'],
+['ニューヨーク','アメリカ合衆国','北アメリカ',40.7,-74.0,'Dfa',3,[0,1,5,11,17,22,25,24,20,14,8,3],[90,80,100,95,100,105,110,100,95,90,90,100],'大陸東岸の冷帯湿潤（高温夏）。一年中降水がある。'],
+['マドリード','スペイン','ヨーロッパ',40.42,-3.7,'BSk',3,[6,7,10,12,16,22,25,25,21,15,9,6],[35,35,30,40,45,25,12,10,25,50,55,45],'イベリア内陸メセタの寒冷ステップ。夏は乾燥し冬は寒い。'],
+['マナウス','ブラジル','南アメリカ',-3.1,-60.0,'Af',3,[26.7,26.6,26.6,26.6,26.9,27.2,27.6,28.4,28.8,28.6,28,27.2],[280,290,375,363,260,110,90,60,85,130,180,220],'アマゾン盆地の熱帯雨林。一年中高温多雨で年較差が極めて小さい。'],
+['ラパス','ボリビア','南アメリカ',-16.5,-68.15,'ET',3,[9,9,9,9,8,7,7,8,9,10,10,9],[130,110,90,40,15,8,10,20,40,50,60,110],'アンデス高地（約3,600m）。高地ツンドラで夏に雨・冬は乾燥。'],
+['リマ','ペルー','南アメリカ',-12.0,-77.0,'BWh',3,[22,23,22.5,21,19,17.5,16.5,16.5,17,18,19.5,21],[2,3,3,1,1,2,3,3,2,1,1,1],'ペルー寒流で大気が安定し極端に乾燥。多霧（ガルーア）。'],
+['昆明','中国','アジア',25.04,102.71,'Cwb',3,[9,11,14,17,19,20,20,20,18,15,11,8],[12,15,20,28,95,180,280,270,120,80,40,12],'雲貴高原（約1,900m）。「春城」と呼ばれ夏雨・冬乾。'],
+['アリススプリングス','オーストラリア','オセアニア',-23.7,133.88,'BWh',2,[28,27.5,25,20,15,12,11.5,14,18,22,25,27],[40,45,30,20,15,12,10,10,10,20,25,35],'豪州中央部の砂漠。年降水量250mm前後で日較差が大きい。'],
+['イスファハーン','イラン','アジア',32.65,51.67,'BSk',2,[3,6,11,17,23,28,31,30,26,19,11,5],[20,20,25,15,8,2,1,1,2,8,15,20],'イラン高原の寒冷ステップ。山脈に囲まれ降水が少ない。'],
+['ウェリントン','ニュージーランド','オセアニア',-41.29,174.78,'Cfb',2,[17,17.5,16,14,12,10,9,9.5,11,12.5,14,16],[70,70,80,90,100,120,130,120,100,90,80,75],'偏西風の島嶼。一年中温和で風が強い。'],
+['キーウ','ウクライナ','ヨーロッパ',50.45,30.52,'Dfb',2,[-4,-3,2,9,16,19,21,20,15,8,2,-2],[40,40,40,50,60,70,80,70,55,45,45,45],'東欧平原の冷帯湿潤。黒土（チェルノーゼム）地帯。'],
+['クライストチャーチ','ニュージーランド','オセアニア',-43.53,172.64,'Cfb',2,[17,17,15.5,13,10,8,7,8,10,12,14,16],[45,45,50,55,60,65,65,60,50,50,45,50],'南島東岸。山脈の雨影側で比較的降水が少ない西岸海洋性。'],
+['コーク','アイルランド','ヨーロッパ',51.9,-8.47,'Cfb',2,[6,6,7,9,11,14,16,15,14,11,8,6],[110,80,80,70,70,65,65,75,90,110,100,110],'アイルランド南西岸。北大西洋の湿潤気候で牧草が育つ。'],
+['サンティアゴ','チリ','南アメリカ',-33.45,-70.65,'Csb',2,[21,20,18,15,12,9,8,9,11,14,17,20],[2,3,5,15,40,80,90,70,40,15,8,3],'中央チリの地中海性。冬雨型でぶどう・ワインが盛ん。'],
+['シンガポール','シンガポール','アジア',1.35,103.85,'Af',2,[26.5,27,27.5,28,28.3,28.3,27.9,27.9,27.6,27.6,27,26.6],[235,113,171,155,171,131,145,143,177,167,259,318],'赤道直下。対流雨（スコール）が卓越し乾季がない。'],
+['スクレ','ボリビア','南アメリカ',-19.03,-65.26,'Cwb',2,[16,16,16,15.5,15,14,14,15,16,17,17,16.5],[200,180,140,40,10,5,5,15,40,70,90,150],'アンデス高地の温帯冬乾。夏（12-2月）に雨が集中。'],
+['ソウル','韓国','アジア',37.57,126.98,'Dwa',2,[-2.4,0.4,5.7,12.5,17.8,22.2,24.9,25.7,21.2,14.8,7.2,0.4],[20,25,45,65,105,130,320,300,140,50,50,25],'大陸東岸の冷帯冬乾。夏のモンスーンと台風で7-8月に集中豪雨。'],
+['タシケント','ウズベキスタン','アジア',41.31,69.28,'Dsa',2,[1,4,10,16,22,27,29,27,21,14,8,3],[55,60,75,95,60,20,8,5,10,40,55,60],'中央アジアのオアシス都市。夏は乾燥し冬春に降水が多い。'],
+['タリン','エストニア','ヨーロッパ',59.44,24.66,'Dfb',2,[-3,-4,0,6,12,16,19,18,13,7,2,-1],[45,35,35,40,50,65,75,80,70,65,55,50],'バルト海沿岸の冷帯湿潤。夏が短く冬は寒い。'],
+['ヴェリア','ギリシャ','ヨーロッパ',40.52,22.2,'Csa',2,[4,6,9,14,19,24,26,26,22,16,10,5],[40,45,50,55,50,35,25,25,35,60,70,60],'ギリシャ北部の地中海性。夏乾・冬雨で桃・綿花が栽培される。'],
+['バンコク','タイ','アジア',13.75,100.5,'Aw',2,[27,28,29.5,30.5,30,29.5,29,28.7,28.3,28,27.5,26.5],[10,20,40,65,190,150,155,190,320,240,50,10],'チャオプラヤデルタのサバナ。雨季（5-10月）と乾季が明瞭。'],
+['パリ','フランス','ヨーロッパ',48.86,2.35,'Cfb',2,[4.5,5,8,11,15,18,20,20,17,13,8,5],[50,45,50,50,60,55,60,55,50,60,55,60],'パリ盆地の西岸海洋性。一年中降水が均等で年較差が小さい。'],
+['ベルリン','ドイツ','ヨーロッパ',52.52,13.4,'Cfb',2,[0,1,4,9,14,17,19,19,15,10,5,1],[45,35,40,40,55,65,75,60,45,40,45,50],'北ドイツ平原の西岸海洋性。海洋性と大陸性の移行帯。'],
+['メキシコシティ','メキシコ','北アメリカ',19.43,-99.13,'Cwb',2,[14,15,17,18,19,18,17,17,17,16,15,14],[10,8,12,25,55,140,160,160,130,60,15,8],'メキシコ高原（約2,200m）。高地のため一年中春のような気候。'],
+['リスボン','ポルトガル','ヨーロッパ',38.72,-9.14,'Csa',2,[11.5,12.5,14,15.5,17.5,20.5,22.5,23,21.5,18,14.5,12],[100,80,60,65,45,15,5,8,35,90,110,110],'イベリア西岸の地中海性。夏は乾燥し冬に大西洋から雨。'],
+['ロンドン','イギリス','ヨーロッパ',51.51,-0.13,'Cfb',2,[5.2,5.3,7.6,9.9,13.3,16.5,18.7,18.5,15.7,12,8,5.5],[55,41,42,44,49,45,45,50,49,69,59,55],'偏西風と北大西洋海流で温和湿潤。年較差が小さい。'],
+['台北','台湾','アジア',25.03,121.5,'Cfa',2,[16,16.5,18.5,21.5,24.5,27,29,28.7,27,24,21,17.5],[85,140,170,175,230,320,240,300,280,120,70,70],'亜熱帯の温暖湿潤。台風と梅雨で夏に降水が多い。'],
+['札幌','日本','アジア',43.06,141.35,'Dfb',2,[-3.6,-3.1,0.6,7.1,12.4,16.7,20.5,22.3,18.1,11.8,4.9,-0.9],[110,95,75,55,55,65,90,120,135,110,105,110],'北海道の冷帯湿潤。冬は日本海側から雪、夏は冷涼。'],
+['西安','中国','アジア',34.26,108.94,'BSk',2,[-1,2,8,15,20,25,27,26,20,14,6,0],[5,10,25,45,60,55,140,120,90,60,25,5],'黄土高原南縁の寒冷ステップ。夏に降水が集中し冬は乾燥。'],
+['釜山','韓国','アジア',35.18,129.08,'Cfa',2,[3,4.5,8,13,17.5,21,24.5,26,22,17,11,5],[35,50,80,120,140,220,230,180,140,60,50,30],'朝鮮半島南東岸の温暖湿潤。夏にモンスーン・台風で多雨。'],
+['鞍山','中国','アジア',41.11,122.99,'Dwa',2,[-9,-5,2,11,18,23,25,24,18,10,0,-7],[5,8,15,30,50,80,160,150,60,30,15,8],'満洲の冷帯冬乾。鉄鋼業で知られ夏に降水が集中。'],
+['香港','香港','アジア',22.32,114.17,'Cwa',2,[16.5,17,19.5,23,26,28,28.8,28.5,27.5,25.5,21.5,18],[25,50,70,170,300,310,300,310,280,140,40,30],'華南沿岸の温帯冬乾。夏はモンスーンと台風で非常に多雨。']
+];
+
+/* ===== 砂漠（成因ピン） ===== */
+var DESERT_DATA=[
+['サハラ砂漠','アフリカ',23.0,10.0,'BWh',['亜熱帯高圧帯','大陸性'],'北回帰線付近の亜熱帯高圧帯による下降気流が卓越し、雲ができず一年中極端に乾燥。世界最大の砂漠。',[22,25,29,33,37,40,41,40,37,32,27,23],[2,1,1,0,0,0,0,1,1,1,1,2]],
+['アラビア砂漠','アジア',22.0,45.0,'BWh',['亜熱帯高圧帯','大陸性'],'亜熱帯高圧帯に支配され、紅海・ペルシャ湾に囲まれても水汽が凝結せず乾燥。ルブアルハリ砂漠などを含む。',[17,20,25,30,35,38,39,38,35,30,24,19],[8,6,8,5,2,0,0,0,0,1,4,7]],
+['ゴビ砂漠','アジア',43.0,105.0,'BWk',['内陸大陸性','雨影'],'海洋から遠く離れた内陸部で水汽が届かず、ヒマラヤ・チベット高原がインド洋の湿気を遮る雨影効果も加わる低温砂漠。',[-12,-8,0,9,17,22,24,22,15,6,-4,-10],[2,3,5,8,15,25,35,30,15,6,3,2]],
+['タクラマカン砂漠','アジア',39.0,82.0,'BWk',['内陸大陸性','雨影'],'タリム盆地を天山・パミール・チベット高原が囲み、海洋の水汽が完全に遮断される。流砂が広がる低温砂漠。',[-9,-4,5,14,20,24,26,24,18,9,-1,-7],[2,2,3,4,6,8,10,8,5,3,2,1]],
+['アタカマ砂漠','南アメリカ',-24.0,-69.5,'BWk',['寒流','亜熱帯高圧帯','雨影'],'ペルー（フンボルト）寒流が大気を安定化し、亜熱帯高圧帯とアンデスの雨影が重なる。世界有数の無降水地帯。',[19,19,18,16,14,12,11,12,13,15,17,18],[0,0,0,0,0,0,0,0,0,0,0,0]],
+['ナミブ砂漠','アフリカ',-25.0,15.0,'BWk',['寒流'],'ベンゲラ寒流が沿岸を北上し大気を冷却・安定化。霧は多いが降雨は極めて少ない海岸砂漠。',[17,18,18,17,16,14,13,13,14,15,16,17],[1,1,2,1,0,0,0,0,0,0,1,1]],
+['カラハリ砂漠','アフリカ',-24.0,21.0,'BSh',['亜熱帯高圧帯','内陸大陸性'],'南回帰線付近の高圧帯と内陸性が乾燥をもたらす。完全な砂漠ではなく草原が残る半砂漠（ステップ的）。',[25,24,23,20,16,13,13,16,20,23,24,25],[60,55,45,25,10,3,2,3,8,25,45,55]],
+['タール砂漠','アジア',27.0,71.0,'BWh',['亜熱帯高圧帯','雨影'],'南西モンスーンがアラバリ山脈と平行に吹くため地形雨が生じず、亜熱帯高圧帯も加わり乾燥。インド・パキスタン国境の砂漠。',[16,19,25,31,35,36,34,32,31,27,21,17],[5,5,4,3,5,15,60,55,25,5,3,3]],
+['オーストラリア砂漠','オセアニア',-25.0,130.0,'BWh',['亜熱帯高圧帯','寒流'],'南回帰線付近の亜熱帯高圧帯が卓越し、西岸の西オーストラリア寒流も乾燥を強める。グレートビクトリア砂漠などを含む。',[30,29,27,22,17,14,13,16,20,24,27,29],[20,25,20,12,10,8,6,6,6,10,15,20]],
+['パタゴニア砂漠','南アメリカ',-45.0,-68.0,'BWk',['雨影'],'アンデス山脈が偏西風を遮る雨影効果。山脈東側の台地は年間200mm以下の低温砂漠・ステップとなる。',[14,14,11,8,5,2,2,3,6,9,12,14],[15,12,15,18,20,18,15,12,12,10,12,14]],
+['ソノラ砂漠','北アメリカ',30.0,-112.0,'BWh',['亜熱帯高圧帯','雨影'],'北米南西部の亜熱帯高圧帯と、シエラネバダ・カリフォルニア山脈の雨影。サボテン（サワロ）が自生。',[12,14,17,21,26,31,34,33,30,24,17,12],[15,15,12,5,3,2,25,30,20,12,12,18]],
+['カラクム砂漠','アジア',39.0,60.0,'BWk',['内陸大陸性'],'ユーラシア大陸内部で海洋から遠く、カスピ海東岸に広がる低温砂漠。アムダリヤ・シルダリヤのオアシス農業が発達。',[-2,1,8,16,23,28,30,28,21,12,4,-1],[10,12,18,20,12,4,2,2,4,10,14,12]]
+];
+
+/* ===== 河川・湖（水域描画用ジオメトリ） ===== */
+var RIVERS=[
+{n:'ナイル川',pts:[[33.0,-1.0],[32.5,0.5],[31.5,2.0],[31.0,4.0],[30.5,6.0],[31.0,8.0],[32.0,10.0],[32.5,12.0],[33.0,14.0],[32.5,16.0],[32.0,18.0],[31.5,20.0],[31.0,22.0],[30.5,24.0],[30.0,26.0],[30.5,28.0],[31.0,30.0],[31.2,31.2]]},
+{n:'アマゾン川',pts:[[-71.5,-15.0],[-70.0,-12.0],[-68.0,-10.0],[-66.0,-8.0],[-64.0,-6.0],[-62.0,-4.0],[-60.0,-3.2],[-58.0,-3.0],[-56.0,-2.5],[-54.0,-2.0],[-52.0,-1.5],[-50.0,-0.5],[-48.5,-1.4]]},
+{n:'長江',pts:[[94.0,33.0],[97.0,32.0],[99.0,30.0],[101.0,28.0],[103.0,29.0],[104.5,29.5],[106.5,29.6],[108.0,30.5],[110.0,30.5],[111.5,30.3],[113.0,30.0],[114.3,30.6],[116.0,30.0],[117.5,30.5],[118.8,32.0],[120.0,31.5],[121.5,31.4]]},
+{n:'ミシシッピ川',pts:[[-94.5,47.5],[-93.3,45.0],[-92.0,44.0],[-91.0,42.5],[-90.5,41.0],[-91.0,39.5],[-90.2,38.6],[-89.5,37.0],[-89.5,35.5],[-90.0,34.0],[-90.5,32.5],[-91.0,31.0],[-91.2,29.5],[-89.5,29.0]]},
+{n:'ガンジス川',pts:[[79.0,30.5],[80.5,29.5],[82.0,28.0],[83.0,27.0],[84.5,26.0],[85.5,25.5],[86.5,25.3],[87.5,25.0],[88.3,24.5],[89.0,24.0],[89.5,23.5],[90.0,23.0]]},
+{n:'メコン川',pts:[[94.0,33.0],[97.0,31.0],[99.0,28.0],[100.0,25.0],[100.5,22.0],[101.5,20.0],[102.6,18.0],[104.0,16.0],[105.0,14.0],[105.5,12.0],[106.0,11.0],[106.5,10.0]]},
+{n:'コンゴ川',pts:[[26.0,-10.0],[25.5,-8.0],[25.0,-6.0],[24.5,-4.0],[24.0,-2.0],[23.0,-0.5],[21.5,0.5],[20.0,1.0],[18.5,0.5],[17.0,-0.5],[16.0,-2.0],[15.5,-3.5],[15.0,-4.3],[13.5,-4.5],[12.5,-5.5]]},
+{n:'ヴォルガ川',pts:[[33.0,57.0],[35.0,56.5],[37.5,56.0],[40.0,55.5],[43.0,55.5],[46.0,55.0],[49.0,54.5],[50.0,53.2],[49.0,51.5],[47.5,50.0],[46.0,48.5],[45.0,47.0],[47.0,46.0],[48.0,46.3]]},
+{n:'ドナウ川',pts:[[8.5,48.0],[10.0,48.5],[12.0,48.8],[14.0,48.3],[16.4,48.2],[17.1,48.1],[19.0,47.5],[19.0,46.0],[20.5,44.8],[22.0,44.0],[24.0,43.7],[26.0,44.0],[28.0,44.5],[29.5,45.2]]},
+{n:'ライン川',pts:[[9.5,46.8],[8.5,47.5],[7.6,48.0],[7.8,49.0],[8.3,50.0],[7.0,51.0],[6.0,51.8],[4.5,52.0]]},
+{n:'黄河',pts:[[96.0,35.0],[99.0,35.5],[101.5,36.0],[103.8,36.1],[105.0,37.0],[106.5,38.5],[107.5,40.0],[110.0,40.5],[111.0,39.5],[110.5,37.5],[110.5,35.5],[112.0,35.0],[114.0,35.5],[116.0,36.5],[118.0,37.5],[119.0,37.8]]},
+{n:'インダス川',pts:[[81.0,32.0],[79.0,33.0],[77.0,34.0],[75.0,35.0],[73.5,34.0],[72.0,32.0],[71.0,30.0],[70.0,28.0],[69.0,26.0],[68.0,24.5],[67.5,24.0]]},
+{n:'ニジェール川',pts:[[-10.5,10.5],[-9.0,11.5],[-7.5,12.5],[-6.0,13.5],[-4.2,14.5],[-3.0,15.5],[-1.5,16.0],[0.0,16.3],[1.5,16.0],[3.0,15.0],[4.5,13.5],[5.5,12.0],[6.5,10.5],[7.0,9.0],[7.0,7.5],[6.5,6.0],[6.0,4.5]]},
+{n:'ザンベジ川',pts:[[24.0,-13.0],[25.5,-14.5],[27.0,-16.0],[28.5,-16.5],[30.0,-16.0],[32.0,-16.5],[34.0,-17.5],[35.5,-18.5],[36.5,-19.5]]},
+{n:'マレー・ダーリング川',pts:[[150.5,-28.0],[148.5,-30.0],[146.5,-32.0],[144.5,-34.0],[143.0,-35.0],[141.5,-35.5],[139.5,-35.5]]},
+{n:'オビ川',pts:[[66.0,52.0],[68.0,54.0],[70.0,56.0],[72.0,58.0],[74.0,60.0],[75.0,62.0],[74.0,64.0],[72.0,66.0],[70.0,66.5]]},
+{n:'エニセイ川',pts:[[94.0,52.0],[93.0,54.0],[92.5,56.0],[92.0,58.0],[91.0,60.0],[90.0,62.0],[88.0,64.0],[86.0,66.0],[84.0,68.0],[82.0,70.0]]},
+{n:'レナ川',pts:[[105.0,54.0],[107.0,56.0],[110.0,58.0],[113.0,60.0],[116.0,62.0],[120.0,63.0],[124.0,64.0],[127.0,66.0],[128.0,68.0],[127.0,70.0],[126.0,72.0]]},
+{n:'アムール川',pts:[[116.0,50.0],[119.0,50.5],[122.0,51.0],[125.0,51.5],[128.0,50.5],[131.0,49.5],[134.0,48.5],[137.0,48.0],[140.0,48.5],[141.0,50.0],[140.5,52.0]]},
+{n:'ユーフラテス川',pts:[[38.5,38.5],[38.0,37.0],[38.5,35.5],[40.0,34.5],[41.5,33.5],[43.0,32.5],[44.5,31.5],[46.0,31.0],[47.5,31.0]]},
+{n:'チグリス川',pts:[[40.0,38.5],[41.0,37.5],[42.5,36.5],[43.5,35.0],[44.5,33.5],[45.5,32.5],[46.5,31.5],[47.5,31.0]]},
+{n:'コロラド川',pts:[[-109.0,40.0],[-110.5,39.0],[-111.5,38.0],[-112.5,37.0],[-113.5,36.5],[-114.5,36.0],[-114.7,35.0],[-114.5,34.0],[-114.5,32.7]]},
+{n:'リオグランデ川',pts:[[-106.5,37.5],[-106.0,35.5],[-105.5,33.5],[-104.5,31.5],[-103.0,29.5],[-101.5,28.0],[-99.5,26.5],[-97.5,25.9]]},
+{n:'パラナ川',pts:[[-51.0,-20.0],[-52.5,-22.0],[-54.0,-24.0],[-55.5,-26.0],[-57.0,-28.0],[-58.5,-30.0],[-59.5,-32.0],[-58.5,-34.0]]},
+{n:'オリノコ川',pts:[[-63.0,3.0],[-64.5,4.5],[-66.0,6.0],[-67.5,7.0],[-66.0,8.0],[-64.0,8.5],[-62.0,9.0],[-60.5,9.5]]},
+{n:'サンフランシスコ川',pts:[[-45.5,-20.0],[-44.5,-18.0],[-43.5,-16.0],[-42.5,-14.0],[-41.5,-12.0],[-40.5,-10.5],[-39.0,-9.5],[-37.0,-10.0]]},
+{n:'イラワジ川',pts:[[97.5,27.0],[97.0,25.0],[96.5,23.0],[96.0,21.5],[95.5,20.0],[95.2,18.0],[95.0,16.0]]},
+{n:'サルウィン川',pts:[[98.5,28.0],[98.5,26.0],[98.0,24.0],[97.8,22.0],[97.6,20.0],[97.6,18.0],[97.6,16.5]]},
+{n:'ブラマプトラ川',pts:[[85.0,29.5],[88.0,29.0],[91.0,29.0],[94.0,29.0],[95.5,28.0],[94.5,26.5],[92.5,26.0],[90.5,25.0],[89.7,24.0]]},
+{n:'珠江',pts:[[104.0,24.0],[106.0,23.5],[108.0,23.0],[110.0,23.0],[112.0,23.0],[113.2,23.1],[113.5,22.5]]},
+{n:'ドン川',pts:[[38.5,54.0],[40.0,52.5],[41.5,51.0],[43.0,49.5],[42.0,48.0],[40.5,47.5],[39.0,47.2]]},
+{n:'ドニエプル川',pts:[[33.0,55.0],[32.0,53.5],[31.5,52.0],[33.0,50.5],[35.0,49.0],[35.5,47.5],[34.0,46.5],[32.5,46.5]]},
+{n:'エルベ川',pts:[[15.5,50.5],[14.0,51.0],[12.5,51.8],[11.0,52.5],[9.5,53.5],[8.8,53.9]]},
+{n:'ロワール川',pts:[[4.0,45.0],[3.0,46.0],[2.0,47.0],[0.5,47.5],[-1.0,47.3],[-2.0,47.3]]},
+{n:'テージョ川',pts:[[-1.5,40.5],[-3.0,40.0],[-5.0,39.7],[-7.0,39.5],[-8.8,38.8]]},
+{n:'ポー川',pts:[[7.5,44.8],[9.0,45.0],[10.5,45.0],[12.0,44.9],[12.5,44.9]]}
+];
+var LAKES=[
+{n:'カスピ海',pts:[[50.5,44.5],[52.5,44.0],[53.5,42.0],[53.0,40.0],[52.0,38.5],[50.5,37.0],[49.5,37.5],[49.0,39.5],[49.5,41.5],[50.0,43.0]]},
+{n:'スペリオル湖',pts:[[-92.0,46.7],[-89.5,47.5],[-87.0,47.8],[-84.8,47.0],[-85.5,46.5],[-88.0,46.4],[-90.5,46.4]]},
+{n:'ビクトリア湖',pts:[[32.0,-0.5],[33.5,-0.5],[34.0,-1.5],[33.5,-2.5],[32.5,-2.8],[31.8,-2.0],[31.8,-1.0]]},
+{n:'バイカル湖',pts:[[104.0,51.8],[106.0,52.5],[108.0,53.5],[109.5,54.5],[109.0,55.5],[107.5,54.5],[105.5,53.0],[104.0,52.2]]},
+{n:'ヒューロン湖',pts:[[-84.5,45.8],[-82.5,45.5],[-81.0,44.5],[-82.0,43.5],[-83.5,44.0],[-84.5,45.0]]},
+{n:'ミシガン湖',pts:[[-87.5,45.5],[-86.0,45.0],[-85.5,43.5],[-86.0,42.0],[-87.0,41.7],[-87.8,43.0],[-87.8,44.5]]},
+{n:'タンガニーカ湖',pts:[[29.2,-3.5],[30.0,-4.5],[30.5,-6.0],[30.0,-7.5],[29.5,-8.5],[29.0,-7.0],[29.0,-5.0]]},
+{n:'マラウイ湖',pts:[[34.0,-9.5],[34.8,-10.5],[35.0,-12.0],[34.5,-13.5],[34.0,-14.0],[33.8,-12.5],[33.8,-10.5]]},
+{n:'グレートベア湖',pts:[[-123.0,65.5],[-120.0,66.0],[-118.0,66.0],[-119.0,65.0],[-122.0,65.0]]},
+{n:'グレートスレーブ湖',pts:[[-117.0,61.5],[-114.0,61.5],[-112.0,61.5],[-113.0,60.8],[-116.0,60.8]]},
+{n:'エリー湖',pts:[[-83.0,42.0],[-81.0,42.3],[-79.0,42.7],[-80.0,41.8],[-82.0,41.5]]},
+{n:'オンタリオ湖',pts:[[-79.5,43.5],[-77.5,43.6],[-76.2,43.8],[-77.0,43.2],[-79.0,43.2]]},
+{n:'チチカカ湖',pts:[[-70.0,-15.5],[-69.0,-15.5],[-68.8,-16.2],[-69.5,-16.5],[-70.0,-16.0]]},
+{n:'チャド湖',pts:[[13.5,12.5],[14.5,13.0],[15.0,13.5],[14.5,14.0],[13.5,13.5],[13.0,13.0]]},
+{n:'アラル海',pts:[[58.5,45.0],[60.0,45.5],[61.0,45.0],[60.5,44.0],[59.0,44.0]]},
+{n:'バルハシ湖',pts:[[73.5,45.5],[75.5,46.0],[77.5,46.5],[78.5,46.0],[76.5,45.5],[74.5,45.0]]},
+{n:'エア湖',pts:[[136.5,-28.0],[137.5,-28.0],[138.0,-28.8],[137.0,-29.2],[136.3,-28.7]]},
+{n:'マラカイボ湖',pts:[[-71.5,9.0],[-71.0,9.5],[-71.0,10.5],[-71.5,10.8],[-72.0,10.0],[-71.8,9.3]]},
+{n:'ウィニペグ湖',pts:[[-98.5,50.5],[-97.0,51.5],[-96.5,53.0],[-97.5,53.5],[-98.5,52.0]]},
+{n:'アサバスカ湖',pts:[[-111.0,58.5],[-108.0,59.0],[-106.0,59.0],[-108.0,58.5],[-110.0,58.3]]},
+{n:'レンディア湖',pts:[[-103.0,56.5],[-101.0,57.0],[-100.0,57.5],[-101.5,57.8],[-103.0,57.2]]}
+];
+
+/* ===== 観測点 ===== */
+var CLIM_ANCHORS=[];
+CITY_DATA.forEach(function(c){CLIM_ANCHORS.push([c[4],c[3],c[5],c[0]]);});
+DESERT_DATA.forEach(function(d){CLIM_ANCHORS.push([d[3],d[2],d[4],d[0]]);});
+var EXTRA_ANCHORS=[
+[131.89,43.12,'Dwb','ウラジオストク'],[135.07,48.48,'Dwb','ハバロフスク'],[129.73,62.03,'Dwd','ヤクーツク'],
+[133.39,67.55,'Dwd','ベルホヤンスク'],[143.24,64.28,'Dwd','オイミャコン'],[113.5,52.03,'Dwc','チタ'],
+[107.6,51.83,'BSk','ウランウデ'],[92.87,56.01,'Dfb','クラスノヤルスク'],[82.92,55.03,'Dfb','ノヴォシビルスク'],
+[73.37,54.99,'Dfb','オムスク'],[60.6,56.84,'Dfb','エカテリンブルク'],[49.11,55.79,'Dfb','カザン'],
+[44.51,48.71,'Dfa','ヴォルゴグラード'],[39.72,47.24,'Dfa','ロストフ'],[38.98,45.04,'Cfa','クラスノダール'],
+[39.72,43.59,'Cfa','ソチ'],[48.03,46.35,'BSk','アストラハン'],[142.74,46.96,'Dfb','ユジノサハリンスク'],
+[158.65,53.02,'Dfc','ペトロパブロフスク'],[150.8,59.56,'Dfc','マガダン'],[177.51,64.73,'ET','アナディリ'],
+[139.69,35.69,'Cfa','東京'],[141.35,43.06,'Dfb','札幌'],[127.68,26.21,'Cfa','那覇'],[126.98,37.57,'Dwa','ソウル'],
+[129.08,35.18,'Cfa','釜山'],[125.75,39.03,'Dwa','平壌'],[116.4,39.9,'BSk','北京'],[121.47,31.23,'Cfa','上海'],
+[113.26,23.13,'Cfa','広州'],[114.17,22.32,'Cwa','香港'],[104.07,30.67,'Cwa','成都'],[106.55,29.56,'Cfa','重慶'],
+[102.71,25.04,'Cwb','昆明'],[91.13,29.66,'Dwb','ラサ'],[87.58,43.83,'BSk','ウルムチ'],[75.99,39.47,'BWk','カシュガル'],
+[89.19,42.95,'BWk','トルファン'],[106.91,47.92,'BSk','ウランバートル'],[104.42,43.57,'BWk','ダランザドガド'],
+[69.28,41.31,'Dsa','タシケント'],[66.96,39.65,'Dsa','サマルカンド'],[64.42,39.77,'BWk','ブハラ'],
+[58.38,37.95,'BWk','アシガバート'],[68.78,38.56,'Dsa','ドゥシャンベ'],[74.6,42.87,'Dfb','ビシュケク'],
+[71.43,51.17,'Dfb','アスタナ'],[76.95,43.24,'Dfb','アルマトイ'],[51.19,35.69,'BSk','テヘラン'],
+[59.6,36.3,'BSk','マシュハド'],[51.67,32.65,'BSk','イスファハーン'],[56.27,27.18,'BWh','バンダレ Abbas'],
+[60.86,29.5,'BWh','ザヘダン'],[46.72,24.71,'BWh','リヤド'],[39.17,21.54,'BWh','ジッダ'],[55.27,25.2,'BWh','ドバイ'],
+[47.98,29.38,'BWh','クウェート'],[44.37,33.31,'BWh','バグダッド'],[34.78,32.08,'Csa','テルアビブ'],
+[35.9,31.95,'BSh','アンマン'],[36.29,33.51,'BSk','ダマスカス'],[29.06,41.01,'Csa','イスタンブール'],
+[32.85,39.93,'BSk','アンカラ'],[41.28,39.9,'Dfb','エルズルム'],[67.01,24.86,'BWh','カラチ'],
+[71.47,30.2,'BWh','ムルタン'],[74.34,31.55,'BSh','ラホール'],[77.21,28.61,'Cwa','デリー'],
+[72.83,19.07,'Am','ムンバイ'],[77.59,12.97,'Aw','ベンガルール'],[80.27,13.08,'Aw','チェンナイ'],
+[88.36,22.57,'Aw','コルカタ'],[90.41,23.81,'Am','ダッカ'],[76.27,9.93,'Am','コーチ'],
+[78.48,17.38,'BSh','ハイダラバード'],[73.85,18.52,'BSh','プネー'],[75.85,26.92,'BSh','ジャイプル'],
+[73.02,26.24,'BWh','ジョードプル'],[80.94,26.85,'Cwa','ラクナウ'],[85.32,27.7,'Cwb','カトマンズ'],
+[79.86,6.93,'Af','コロンボ'],[96.15,16.87,'Am','ヤンゴン'],[96.1,21.97,'BSh','マンダレー'],
+[100.5,13.75,'Aw','バンコク'],[105.85,21.03,'Cwa','ハノイ'],[106.7,10.82,'Aw','ホーチミン'],
+[103.85,1.35,'Af','シンガポール'],[101.69,3.14,'Af','クアラルンプール'],[106.85,-6.21,'Af','ジャカルタ'],
+[112.75,-7.25,'Aw','スラバヤ'],[120.98,14.6,'Am','マニラ'],[121.5,25.03,'Cfa','台北'],
+[-6.84,34.02,'Csa','ラバト'],[-7.59,33.57,'Csa','カサブランカ'],[3.06,36.75,'Csa','アルジェ'],
+[10.18,36.8,'Csa','チュニス'],[13.19,32.89,'BSh','トリポリ'],[31.2,30,'BWh','カイロ'],
+[29.9,31.2,'BWh','アレクサンドリア'],[32.9,24.09,'BWh','アスワン'],[32.53,15.6,'BWh','ハルツーム'],
+[-15.98,18.08,'BWh','ヌアクショット'],[-3,16.77,'BWh','トンブクトゥ'],[7.99,16.97,'BWh','アガデス'],
+[-17.45,14.69,'BSh','ダカール'],[-1.53,12.37,'BSh','ワガドゥグー'],[2.11,13.51,'BSh','ニアメ'],
+[15.05,12.11,'BSh','ンジャメナ'],[25.35,13.63,'BSh','エルファシル'],[36.4,15.45,'BSh','カッサラ'],
+[-8,12.65,'Aw','バマコ'],[-0.2,5.56,'Aw','アクラ'],[3.38,6.5,'Aw','ラゴス'],[9.7,4.05,'Am','ドゥアラ'],
+[-13.23,8.48,'Am','フリータウン'],[-10.8,6.3,'Am','モンロビア'],[-4.03,5.36,'Am','アビジャン'],
+[9.45,0.39,'Af','リーブルヴィル'],[18.26,0.05,'Af','ムバンダカ'],[25.19,0.52,'Af','キサンガニ'],
+[32.58,0.35,'Af','カンパラ'],[15.31,-4.32,'Aw','キンシャサ'],[38.75,9.03,'Cwb','アディスアベバ'],
+[36.82,-1.29,'Cwb','ナイロビ'],[39.67,-4.05,'Aw','モンバサ'],[39.27,-6.82,'Aw','ダルエスサラーム'],
+[35.75,-6.17,'BSh','ドドマ'],[43.15,11.59,'BWh','ジブチ'],[45.34,2.04,'BSh','モガディシュ'],
+[13.23,-8.84,'BSh','ルアンダ'],[12.15,-15.2,'BWk','ナミベ'],[15.73,-12.77,'Cwb','ウアンボ'],
+[28.28,-15.42,'Cwa','ルサカ'],[31.05,-17.83,'Cwb','ハラレ'],[25.92,-24.65,'BSh','ハボローネ'],
+[17.08,-22.57,'BSh','ウィントフック'],[14.5,-22.95,'BWk','ウォルビスベイ'],[28.05,-26.2,'Cwb','ヨハネスブルグ'],
+[31.02,-29.86,'Cfa','ダーバン'],[18.42,-33.92,'Csb','ケープタウン'],[25.6,-33.96,'Cfb','ポートエリザベス'],
+[21.25,-28.45,'BWh','アップイントン'],[32.58,-25.97,'Aw','マプト'],[47.52,-18.91,'Cwb','アンタナナリボ'],
+[49.4,-18.15,'Af','トアマシナ'],[46.32,-15.72,'Aw','マハジャンガ'],[43.67,-23.35,'BSh','トゥリアラ'],
+[-9.14,38.72,'Csa','リスボン'],[-3.7,40.42,'BSk','マドリード'],[2.17,41.39,'Csa','バルセロナ'],
+[-5.98,37.39,'Csa','セビリア'],[2.35,48.86,'Cfb','パリ'],[4.84,45.76,'Cfa','リヨン'],
+[5.37,43.3,'Csa','マルセイユ'],[7.6,45.07,'Cfa','トリノ'],[9.19,45.46,'Cfa','ミラノ'],
+[12.5,41.9,'Csa','ローマ'],[14.27,40.85,'Csa','ナポリ'],[23.73,37.98,'Csa','アテネ'],
+[13.4,52.52,'Cfb','ベルリン'],[9.99,53.55,'Cfb','ハンブルク'],[11.58,48.14,'Cfb','ミュンヘン'],
+[16.37,48.21,'Cfb','ウィーン'],[14.42,50.09,'Cfb','プラハ'],[19.04,47.5,'Dfb','ブダペスト'],
+[4.9,52.37,'Cfb','アムステルダム'],[-0.13,51.51,'Cfb','ロンドン'],[-6.26,53.35,'Cfb','ダブリン'],
+[-8.47,51.9,'Cfb','コーク'],[12.57,55.68,'Cfb','コペンハーゲン'],[18.07,59.33,'Dfb','ストックホルム'],
+[10.75,59.91,'Dfb','オスロ'],[5.32,60.39,'Cfb','ベルゲン'],[24.94,60.17,'Dfb','ヘルシンキ'],
+[24.66,59.44,'Dfb','タリン'],[24.11,56.95,'Dfb','リガ'],[25.28,54.69,'Dfb','ヴィリニュス'],
+[27.57,53.9,'Dfb','ミンスク'],[30.52,50.45,'Dfb','キーウ'],[37.62,55.75,'Dfb','モスクワ'],
+[30.31,59.94,'Dfb','サンクトペテルブルク'],[26.1,44.43,'Dfa','ブカレスト'],[20.46,44.82,'Dfb','ベオグラード'],
+[-21.9,64.1,'Cfc','レイキャビク'],[-122.3,47.6,'Csb','シアトル'],[-122.4,37.8,'Csb','サンフランシスコ'],
+[-118.2,34.05,'Csa','ロサンゼルス'],[-117.2,32.7,'BSh','サンディエゴ'],[-112.1,33.4,'BWh','フェニックス'],
+[-104.99,39.7,'BSk','デンバー'],[-111.9,40.76,'BSk','ソルトレイクシティ'],[-93.3,44.98,'Dfa','ミネアポリス'],
+[-87.6,41.9,'Dfa','シカゴ'],[-79.4,43.7,'Dfa','トロント'],[-73.6,45.5,'Dfb','モントリオール'],
+[-74,40.7,'Dfa','ニューヨーク'],[-77,38.9,'Cfa','ワシントンDC'],[-84.4,33.75,'Cfa','アトランタ'],
+[-95.4,29.76,'Cfa','ヒューストン'],[-80.2,25.8,'Am','マイアミ'],[-99.13,19.43,'Cwb','メキシコシティ'],
+[-100.3,25.67,'BSh','モンテレイ'],[-89.6,20.97,'Aw','メリダ'],[-90.5,14.6,'Cwb','グアテマラシティ'],
+[-84.08,9.93,'Cwb','サンホセ'],[-79.5,8.98,'Am','パナマシティ'],[-82.4,23.1,'Aw','ハバナ'],
+[-77.3,18.1,'Aw','キングストン'],[-66.1,18.4,'Am','サンファン'],[-61.3,10.4,'Am','ポートオブスペイン'],
+[-78.5,-0.18,'Cfb','キト'],[-79.9,-2.2,'Aw','グアヤキル'],[-77,-12,'BWh','リマ'],
+[-68.15,-16.5,'ET','ラパス'],[-65.26,-19.03,'Cwb','スクレ'],[-63.18,-17.78,'Aw','サンタクルス'],
+[-58.4,-34.6,'Cfa','ブエノスアイレス'],[-56.2,-34.9,'Cfa','モンテビデオ'],[-51.2,-30.03,'Cfa','ポルトアレグレ'],
+[-49.27,-25.43,'Cfb','クリチバ'],[-46.63,-23.55,'Cfa','サンパウロ'],[-43.2,-22.9,'Aw','リオデジャネイロ'],
+[-47.9,-15.8,'Aw','ブラジリア'],[-60,-3.1,'Af','マナウス'],[-73.2,-3.75,'Af','イキトス'],
+[-48.5,-1.45,'Af','ベレン'],[-34.9,-8.05,'Am','レシフェ'],[-38.54,-3.72,'Aw','フォルタレザ'],
+[-70.65,-33.45,'Csb','サンティアゴ'],[-73.24,-39.82,'Cfb','バルディビア'],[-70.9,-53.16,'ET','プンタアレーナス'],
+[-68.83,-32.89,'BWk','メンドーサ'],[-65.3,-43.25,'BWk','トレレウ'],[-64.18,-31.42,'Cwa','コルドバ'],
+[-65.22,-26.82,'Cwa','トゥクマン'],[-74.07,4.71,'Cfb','ボゴタ'],[-66.9,10.5,'Aw','カラカス'],
+[144.96,-37.81,'Cfb','メルボルン'],[151.21,-33.87,'Cfa','シドニー'],[153.02,-27.47,'Cfa','ブリスベン'],
+[138.6,-34.93,'Csa','アデレード'],[115.86,-31.95,'Csa','パース'],[147.33,-42.88,'Cfb','ホバート'],
+[130.84,-12.46,'Aw','ダーウィン'],[145.77,-16.92,'Am','ケアンズ'],[133.88,-23.7,'BWh','アリススプリングス'],
+[121.47,-30.75,'BSh','カルグーリー'],[174.78,-41.29,'Cfb','ウェリントン'],[172.64,-43.53,'Cfb','クライストチャーチ'],
+[178.44,-18.14,'Af','スバ'],[147.18,-9.44,'Aw','ポートモレスビー'],[145.77,-5.22,'Af','マダン'],
+[-45,72,'EF','グリーンランド内陸'],[-100,72,'ET','北カナダ'],[60,72,'ET','ノヴァヤゼムリャ'],
+[100,73,'ET','タイミル'],[140,72,'ET','北シベリア'],[0,-70,'EF','南極'],[60,-70,'EF','東南極'],
+[120,-70,'EF','東南極'],[-60,-70,'EF','南極半島']
+];
+CLIM_ANCHORS=CLIM_ANCHORS.concat(EXTRA_ANCHORS);
+
+/* ===== 気候地域境界 ===== */
+var CLIM_REGIONS=[
+{cat:'Dfb',pts:[[-168,66],[-140,68],[-110,68],[-85,66],[-60,60],[-55,52],[-70,47],[-95,49],[-120,54],[-150,60],[-168,62]]},
+{cat:'Dfb',pts:[[24,68],[40,68],[60,68],[80,68],[100,66],[104,64],[104,54],[95,52],[75,52],[55,54],[35,56],[24,60]]},
+{cat:'Dwb',pts:[[104,42],[110,42],[118,42],[124,40],[128,41.5],[131,42.4],[134,44],[136,46],[138,49],[140,52],[136,54],[130,52],[124,50],[118,48],[112,48],[106,46],[104,44]]},
+{cat:'Dwc',pts:[[104,64],[120,68],[140,70],[155,68],[168,66],[172,62],[160,58],[145,54],[140,52],[136,54],[130,52],[124,50],[118,48],[112,48],[106,46],[104,50]]},
+{cat:'Dfb',pts:[[141,45.5],[144,46],[143.6,50],[142.6,54],[141,52],[141.4,48]]},
+{cat:'Dfc',pts:[[155,50.5],[160,52],[162,56],[160,60],[156,58],[155,54]]},
+{cat:'ET',pts:[[-180,70],[-140,72],[-100,73],[-60,72],[-20,70],[20,70],[60,72],[100,74],[140,73],[180,70],[180,85],[-180,85]]},
+{cat:'EF',pts:[[-58,60],[-42,59],[-25,64],[-19,74],[-28,83],[-50,83],[-60,75]]},
+{cat:'EF',pts:[[-180,-63],[180,-63],[180,-85],[-180,-85]]},
+{cat:'Cfb',pts:[[-10,43],[-9,48],[-4,49],[1,51],[8,54],[16,55],[24,54],[28,52],[26,48],[20,46],[13,44],[3,43],[-6,43]]},
+{cat:'Cfb',pts:[[-11,50],[-6,52],[-5,56],[-3,59],[0,56],[2,51],[-5,49]]},
+{cat:'Cfa',pts:[[7,44],[13,46],[16,45],[13,43],[8,43]]},
+{cat:'Dfb',pts:[[24,54],[35,56],[45,55],[50,52],[45,48],[35,47],[26,48]]},
+{cat:'Csa',pts:[[-10,36],[-9,40],[-2,42],[4,43],[9,44],[13,42],[17,40],[21,38],[25,36],[30,36],[35,36],[37,33],[33,31],[24,32],[13,33],[2,35],[-6,35]]},
+{cat:'Cfa',pts:[[-99,27],[-90,29],[-82,30],[-76,35],[-72,41],[-78,44],[-89,44],[-97,42]]},
+{cat:'Dfa',pts:[[-97,42],[-89,44],[-78,44],[-70,45],[-64,47],[-70,50],[-86,50],[-97,48]]},
+{cat:'BSk',pts:[[-106,31],[-98,31],[-98,49],[-106,49]]},
+{cat:'BWh',pts:[[-117,33],[-108,33],[-104,28],[-109,24],[-115,28]]},
+{cat:'Csb',pts:[[-125,33],[-120,33],[-117,36],[-120,41],[-125,41]]},
+{cat:'Cfb',pts:[[-126,42],[-122,42],[-121,49],[-126,50],[-128,46]]},
+{cat:'Am',pts:[[-82,25],[-80,26],[-80.5,28],[-82.5,27.5]]},
+{cat:'Aw',pts:[[-106,20],[-96,18],[-90,16],[-86,13],[-84,11],[-89,13],[-96,16],[-103,18]]},
+{cat:'Cwb',pts:[[-106,19],[-98,19],[-96,24],[-103,25],[-106,22]]},
+{cat:'BWh',pts:[[-17,20],[-16,24],[-14,27],[-11,29.5],[-8,31],[-4,32.5],[0,33],[4,33.5],[8,33],[12,32.5],[16,31.5],[20,31.5],[24,32],[28,31],[31,31],[33,30],[34.5,28],[35.5,25.5],[36.5,22.5],[37,20],[37.5,17],[35,15.5],[31,14.5],[27,14.5],[23,14.5],[19,15],[15,15],[11,15.5],[7,16],[3,16.5],[-1,17],[-5,17],[-9,17.5],[-13,17.5],[-16,16.5]]},
+{cat:'BSh',pts:[[-17,13],[-16,16],[-13,17.5],[-9,17.5],[-5,17],[0,16.5],[5,16],[10,15.5],[15,15],[20,15],[25,14.5],[30,14.5],[34,14],[37,13.5],[39,12.5],[38,11],[35,10.5],[32,10],[29,10],[26,10],[23,10.5],[20,10.5],[17,11],[14,11],[11,11.5],[8,12],[5,12.5],[2,12.5],[-1,12.5],[-4,12.5],[-8,12.5],[-12,12.5],[-15,12.5]]},
+{cat:'Csa',pts:[[-9.8,31.5],[-9.5,33],[-8,34.5],[-6,35.8],[-5.3,35.9],[-2,35.3],[0,36.2],[3,36.8],[6,37],[8.6,37.3],[10.3,37.2],[11,36.5],[10.5,35],[9,33.8],[7,33.4],[4,33.8],[1,33.8],[-2,33.2],[-5,32.2],[-7.5,30.8]]},
+{cat:'Aw',pts:[[-17,13],[-13,12.5],[-9,12.5],[-5,12],[0,12],[5,12],[10,11.5],[15,11],[20,10.5],[25,10],[30,10.5],[35,10.5],[39,11],[41,9],[42,6],[43,3],[42,0],[40,-3],[37,-6],[34,-9],[31,-11],[28,-13],[24,-14],[20,-14],[16,-13],[12,-10],[9,-6],[8,-2],[8,2],[6,4],[3,5],[0,5],[-4,5],[-8,5.5],[-12,7],[-15,9],[-17,11]]},
+{cat:'Am',pts:[[-17,12.5],[-15,11],[-13,9.5],[-11,8],[-9,6.5],[-7,5],[-5,4.9],[-3,5.1],[-3,6.8],[-6,7.5],[-9,9],[-12,10.5],[-15,12],[-17,13.5]]},
+{cat:'Af',pts:[[9.5,3.5],[13,4],[17,4.5],[21,4.5],[25,4],[28,3],[29.5,1],[29.5,-1.5],[28,-4],[25,-5],[21,-4.5],[17,-3.5],[13,-2.5],[10,-1],[9.5,1.5]]},
+{cat:'Cwb',pts:[[34.5,14.5],[37,15],[39,14.5],[40.5,13],[41,11],[40.5,9],[39.5,7],[38,5.5],[36.5,5],[35,6],[34,8],[33.8,10],[34.2,12]]},
+{cat:'BSh',pts:[[38,12],[41,12.5],[43,11.5],[45,11],[47,10],[49,9],[51,8],[51,5],[49,3],[47,1],[45,0],[43,-1],[41,0],[40,2],[39,4],[40,6],[41,8],[40,10],[38,11]]},
+{cat:'BWh',pts:[[42,11.9],[44,11.6],[46,11.1],[48,10.6],[50,10.1],[51.3,9],[51.3,7],[49,7.6],[47,8.6],[45,9.6],[43,10.6],[42,11.2]]},
+{cat:'Aw',pts:[[30,4],[34,4],[38,3],[41,2],[42,-1],[41,-4],[39,-7],[37,-9],[35,-10],[33,-9],[31,-7],[30,-4],[29,-1],[29,2]]},
+{cat:'Cwb',pts:[[34.3,1.6],[36,1.6],[37.6,0.6],[38.2,-1],[37.6,-2.6],[36.4,-3.6],[35,-3],[34,-1.6],[34,0]]},
+{cat:'Aw',pts:[[12,-9],[16,-12],[20,-13],[24,-13],[28,-12],[32,-10],[35,-9],[38,-11],[40,-14],[40,-17],[38,-20],[35,-22],[33,-25],[31,-26],[29,-25],[27,-23],[25,-21],[22,-19],[18,-17],[14,-14],[12,-11]]},
+{cat:'Cwa',pts:[[22,-13],[26,-13],[30,-13],[33,-14],[33,-17],[31,-19],[28,-20],[25,-19],[22,-17],[21,-15]]},
+{cat:'BSh',pts:[[16,-18],[20,-18],[24,-19],[26,-22],[26,-26],[24,-28],[21,-28],[18,-26],[16,-23],[15,-20]]},
+{cat:'BWk',pts:[[11.4,-17],[13,-18],[14.6,-21],[15.6,-24],[16.6,-27],[15,-28.6],[13,-26],[12,-22],[11.4,-19]]},
+{cat:'Cwb',pts:[[24,-24],[27,-23],[30,-24],[31,-26],[30,-28.5],[28,-30],[26,-30],[24,-28],[23,-26]]},
+{cat:'Csb',pts:[[17.8,-32],[19,-34.5],[21,-34.8],[23,-34],[24,-33],[22,-32.5],[19.5,-32.5]]},
+{cat:'Cfb',pts:[[23,-34],[26,-34],[28,-33.5],[29,-32],[27,-32],[24,-32.8]]},
+{cat:'Cfa',pts:[[28,-31],[30,-30],[32,-28],[32.6,-26],[31,-26],[29,-28],[28,-29.5]]},
+{cat:'Aw',pts:[[49.3,-12.0],[50.5,-15.4],[49.9,-17.5],[48.6,-20.8],[47.3,-24.3],[45.2,-25.6],[43.9,-24.0],[43.3,-22.0],[43.2,-20.0],[44.0,-17.5],[44.4,-16.0],[46.3,-15.7],[47.5,-14.5],[48.8,-13.2]]},
+{cat:'Af',pts:[[48.6,-12.6],[50.5,-15.4],[49.9,-17.5],[48.6,-20.8],[47.4,-24.3],[46.8,-24.6],[47.5,-20.6],[48.2,-17.5],[48.5,-15.0],[48.2,-13.2]]},
+{cat:'Cwb',pts:[[46.3,-14.2],[48.3,-14.6],[48.4,-17.5],[47.7,-20.5],[46.9,-22.8],[45.7,-22.5],[45.5,-19.5],[45.8,-16.5]]},
+{cat:'BSh',pts:[[43.3,-21.4],[45.6,-21.8],[46.7,-23.5],[46.2,-25.2],[45.2,-25.6],[43.9,-24.0],[43.3,-22.5]]},
+{cat:'BWh',pts:[[34.5,29],[37,31],[40,31],[43,30],[46,29.5],[48,29],[50,27],[52,25],[55,23],[57,21],[58,19],[56,17],[53,16],[50,15],[47,14],[44,13],[43,14],[42,16],[40,18],[38,21],[36,24],[35,27]]},
+{cat:'Csa',pts:[[34.4,31.4],[35,33],[35.5,34.5],[36,35.5],[36.6,36.5],[35.6,36.8],[34.8,35.5],[34.4,34],[34.2,32.4]]},
+{cat:'BSk',pts:[[35.6,33],[37,33.5],[39,33],[41,32],[42,31],[40,30],[37,30.5],[35.8,31.5]]},
+{cat:'Csa',pts:[[26,40.5],[28,41],[30,40.5],[31,39],[30,37.5],[28,36.5],[26.5,37.5],[26,39]]},
+{cat:'BSk',pts:[[30,40.5],[33,41],[36,40.5],[39,40],[41,39],[41,37.5],[38,37.5],[35,38],[32,38.5],[30,39]]},
+{cat:'Dfb',pts:[[39,41],[42,41.5],[44,40.5],[44,38.5],[42,38],[40,38.5],[39,39.5]]},
+{cat:'BSk',pts:[[44,39],[48,39.5],[52,38],[56,37],[60,36],[63,35],[66,34],[68,33],[68,30],[65,29],[62,28],[58,28],[54,29],[50,30],[47,32],[44,34],[43,36]]},
+{cat:'BWh',pts:[[48,32],[52,31],[56,29],[60,28],[62,27],[60,25.5],[56,26],[52,27],[49,29]]},
+{cat:'Cfa',pts:[[48.5,38.5],[50,39.5],[52,39],[53.5,37.5],[53,36.6],[51,36.6],[49,37.2]]},
+{cat:'BSk',pts:[[48,50],[56,51],[64,51],[72,50],[80,49],[82,47],[76,45],[68,45],[60,45],[52,46],[47,48]]},
+{cat:'Dfb',pts:[[48,54],[58,55],[68,55],[78,54],[84,52],[80,50],[70,51],[60,51],[50,51],[46,52]]},
+{cat:'BWk',pts:[[52,46],[58,46],[64,45],[69,43],[70,41],[66,38.5],[60,39],[54,41],[50,43]]},
+{cat:'Dsa',pts:[[58,42],[64,42.5],[70,41.5],[72,40],[68,38],[62,38],[58,40]]},
+{cat:'Dsb',pts:[[70,40],[76,41],[82,41],[86,40],[80,37.5],[74,37.5],[70,38.5]]},
+{cat:'BWh',pts:[[67.5,29.5],[71,30.5],[74,30],[76,28],[75,25],[72,24],[69,25],[67,27]]},
+{cat:'BSh',pts:[[66,32],[70,33],[74,33],[76,31],[74,29],[70,28],[67,29]]},
+{cat:'Cwa',pts:[[74,31],[78,31],[82,29],[86,27],[88,26],[88,24],[85,23],[82,23],[79,24],[76,26],[74,28]]},
+{cat:'Aw',pts:[[73.5,22],[78,22],[82,21],[85,20],[87,21],[87,18],[84,16],[81,14],[78,13],[76,15],[74,18]]},
+{cat:'BSh',pts:[[75,19.5],[78,19.5],[80,17.5],[79.5,15],[77,14.5],[75,16.5]]},
+{cat:'Am',pts:[[72.6,21.5],[73.6,19],[74.2,16],[75.2,13],[76.2,10],[77.2,8],[78.2,8.4],[77.6,11],[76.6,14],[75.6,17],[74.6,20],[73.6,22.2]]},
+{cat:'Am',pts:[[88,26.5],[90,26.8],[92,26.5],[94,25],[93,23],[91,21.8],[89,21.8],[87.5,23]]},
+{cat:'Af',pts:[[79.8,9],[81,8.5],[81.5,7],[80.5,5.9],[79.7,6.5],[79.6,8]]},
+{cat:'Aw',pts:[[94,26],[98,26],[102,24],[105,23],[107,21],[108,18],[107,15],[106,12],[104,10],[102,12],[100,14],[98,17],[96,20],[94,23]]},
+{cat:'Am',pts:[[92,21.5],[94,20],[95,17],[96,15],[97,12],[98,9],[99,7],[98,8],[96,12],[94,16],[92,19]]},
+{cat:'Cwa',pts:[[98,27],[102,28],[105,27],[106,24],[103,22],[100,23],[98,25]]},
+{cat:'Am',pts:[[105.5,21],[108,18],[109,15],[109.5,12],[107,10],[106,11],[107,14],[107,17],[105,20]]},
+{cat:'Af',pts:[[95,6],[100,4],[104,2],[108,1],[112,0],[116,-1],[120,-2],[124,-2],[128,-2],[132,-2],[136,-3],[140,-4],[145,-6],[148,-8],[144,-9],[138,-8],[132,-7],[126,-6],[120,-5],[114,-4],[108,-3],[104,-1],[100,1],[96,3]]},
+{cat:'Aw',pts:[[112,-7],[116,-8],[120,-8.5],[124,-9],[126,-9],[124,-10],[118,-9.5],[113,-8.5]]},
+{cat:'Af',pts:[[120,18],[123,17],[125,14],[126,10],[126,7],[124,6],[122,8],[121,12],[119,15]]},
+{cat:'Cfa',pts:[[104,22],[108,22],[112,22],[116,23],[120,25],[122,28],[122,32],[119,34],[115,33],[111,31],[107,29],[104,27]]},
+{cat:'Cwa',pts:[[98,22],[102,23],[106,24],[108,26],[106,28],[102,28],[99,26]]},
+{cat:'Dwa',pts:[[104,34],[108,35],[112,36],[116,37],[120,38],[122,40],[124,42],[126,44],[128,46],[126,48],[122,48],[118,46],[114,44],[110,42],[106,40],[104,37]]},
+{cat:'BSk',pts:[[100,36],[104,37],[108,38],[110,40],[108,41],[104,40],[100,39]]},
+{cat:'BWk',pts:[[75,40],[80,41],[86,41],[90,40],[92,38],[88,37],[82,37],[77,38]]},
+{cat:'BSk',pts:[[78,45.5],[84,46.5],[88,45.5],[90,44],[86,43],[80,43],[77,44]]},
+{cat:'BWk',pts:[[92,44],[98,45],[104,45],[110,44],[114,43],[112,41],[106,41],[100,42],[94,42]]},
+{cat:'BSk',pts:[[90,48],[96,49],[102,49],[108,48],[112,47],[110,45],[104,46],[98,46],[92,46]]},
+{cat:'Dwb',pts:[[78,36],[84,37],[90,36],[96,35],[100,33],[102,30],[98,28],[92,28],[86,29],[80,31],[77,33]]},
+{cat:'Cfa',pts:[[129,31],[132,33],[135,34],[138,35],[140,36],[141,39],[140,41],[138,38],[135,35],[131,34],[129,32]]},
+{cat:'Dfb',pts:[[139.5,41.5],[143,43],[146,44.5],[144,45.6],[141,45],[139.5,43]]},
+{cat:'Dwa',pts:[[124.5,38],[128,39],[129.5,41],[127,42.5],[125,41]]},
+{cat:'Cfa',pts:[[126,33.5],[128.5,35],[129.5,36],[129,38],[127,38],[126,36]]},
+{cat:'Af',pts:[[-76,4],[-68,5],[-60,3],[-52,1],[-48,-2],[-50,-9],[-58,-11],[-66,-9],[-74,-4],[-77,0]]},
+{cat:'Am',pts:[[-46,-2],[-38,-5],[-35,-9],[-38,-13],[-43,-9],[-47,-4]]},
+{cat:'Aw',pts:[[-61,-3],[-50,-4],[-44,-8],[-44,-17],[-51,-21],[-59,-18],[-63,-12],[-63,-6]]},
+{cat:'Cfa',pts:[[-66,-20],[-56,-21],[-48,-25],[-52,-34],[-58,-39],[-66,-38],[-69,-32],[-68,-25]]},
+{cat:'Cfb',pts:[[-74,-38],[-70,-38],[-70,-47],[-75,-47]]},
+{cat:'Csb',pts:[[-73,-30],[-69,-30],[-69,-37],[-74,-37]]},
+{cat:'BWh',pts:[[-71,-4],[-68,-10],[-68,-20],[-70,-29],[-73,-25],[-73,-15]]},
+{cat:'BSk',pts:[[-71,-40],[-65,-40],[-64,-49],[-69,-53],[-72,-48]]},
+{cat:'BWk',pts:[[-70,-42],[-66,-43],[-66,-48],[-70,-47]]},
+{cat:'Cwa',pts:[[-66,-20],[-63,-20],[-63,-26],[-66,-27],[-68,-24]]},
+{cat:'ET',pts:[[-70,-14],[-66,-15],[-66,-22],[-70,-22],[-71,-18]]},
+{cat:'ET',pts:[[-72,-50],[-66,-52],[-65,-55],[-71,-55]]},
+{cat:'Aw',pts:[[113,-13],[124,-13],[133,-11],[141,-11],[147,-16],[142,-19],[132,-17],[122,-18],[113,-18]]},
+{cat:'BSh',pts:[[112,-19],[123,-17],[133,-16],[143,-19],[148,-25],[145,-31],[137,-34],[127,-33],[117,-30],[112,-26]]},
+{cat:'BWh',pts:[[116,-22],[126,-20],[136,-20],[144,-24],[144,-29],[135,-31],[126,-30],[118,-28],[115,-25]]},
+{cat:'Cfa',pts:[[144,-24],[150,-25],[154,-30],[151,-35],[145,-33],[142,-28]]},
+{cat:'Cfb',pts:[[140,-33],[148,-34],[151,-38],[145,-40],[140,-37]]},
+{cat:'Cfb',pts:[[144,-40],[149,-41],[148,-44],[144,-43]]},
+{cat:'Csa',pts:[[113,-27],[118,-29],[119,-35],[114,-35]]},
+{cat:'Csa',pts:[[135,-32],[139,-33],[140,-36],[136,-35.5]]},
+{cat:'Cfb',pts:[[166,-46],[172,-41],[177,-37],[179,-38],[174,-43],[168,-48]]},
+{cat:'Af',pts:[[131,-1],[141,-3],[148,-6],[150,-9],[143,-9],[135,-7],[131,-4]]}
+];
+var H_POLYS=[
+[[73,36],[86,37],[99,34],[103,29],[92,26],[80,29],[74,32]],
+[[-77,7],[-70,2],[-67,-8],[-65,-18],[-67,-28],[-70,-39],[-74,-32],[-77,-18],[-80,-6],[-78,2]],
+[[-118,32],[-110,34],[-107,44],[-113,55],[-120,50],[-122,38]],
+[[5,44],[10,46],[16,47],[13,43],[8,43]],
+[[34,14],[42,14],[44,8],[38,3],[33,8]],
+[[39,43],[50,42],[49,40],[42,40]],
+[[43,37],[52,34],[54,30],[46,30],[42,33]],
+[[67,41],[81,43],[87,40],[78,36],[68,38]],
+[[-9,33],[2,35],[11,34],[6,31],[-5,30]],
+[[142,-21],[149,-25],[152,-32],[147,-36],[143,-28]],
+[[5,60],[14,64],[21,68],[14,69],[6,63]],
+[[131,-3],[141,-5],[148,-7],[140,-9],[132,-6]],
+[[-109,29],[-104,26],[-100,20],[-105,20],[-109,24]],
+[[28,3],[36,0],[39,-6],[33,-10],[28,-4]],
+[[26,-28],[31,-29],[30,-33],[26,-31]],
+[[84,48],[99,52],[106,50],[95,46],[85,46]],
+[[-156,60],[-145,62],[-139,60],[-150,58]],
+[[95,29],[100,32],[103,28],[98,26]],
+[[136,35.5],[138.5,36.8],[139.5,36.2],[137.5,35.2]]
+];
+
+/* ===== 土壌ポリゴン（写真準拠） ===== */
+var SOIL=[
+/* ツンドラ土：北極周縁 */
+{cat:'tun',pts:[[-180,66],[-140,68],[-100,70],[-60,68],[-20,66],[20,66],[60,68],[100,70],[140,68],[180,66],[180,85],[-180,85]]},
+{cat:'tun',pts:[[-58,60],[-42,59],[-25,64],[-19,74],[-28,83],[-50,83],[-60,75]]},
+/* ポドゾル：タイガ帯 */
+{cat:'pod',pts:[[-168,66],[-140,66],[-110,66],[-85,64],[-60,58],[-55,50],[-70,47],[-95,49],[-120,52],[-150,58],[-168,60]]},
+{cat:'pod',pts:[[5,70],[20,70],[40,68],[60,68],[80,68],[100,66],[120,66],[140,66],[160,64],[175,62],[170,56],[150,54],[130,52],[110,52],[90,52],[70,52],[50,54],[30,56],[15,58],[5,62]]},
+/* 褐色森林土：温帯湿潤 */
+{cat:'brn',pts:[[-10,43],[-9,48],[-4,49],[1,51],[8,54],[16,55],[24,54],[28,52],[26,48],[20,46],[13,44],[3,43],[-6,43]]},
+{cat:'brn',pts:[[-11,50],[-6,52],[-5,56],[-3,59],[0,56],[2,51],[-5,49]]},
+{cat:'brn',pts:[[-99,27],[-90,29],[-82,30],[-76,35],[-72,41],[-78,44],[-89,44],[-97,42]]},
+{cat:'brn',pts:[[104,22],[108,22],[112,22],[116,23],[120,25],[122,28],[122,32],[119,34],[115,33],[111,31],[107,29],[104,27]]},
+{cat:'brn',pts:[[129,31],[132,33],[135,34],[138,35],[140,36],[141,39],[140,41],[138,38],[135,35],[131,34],[129,32]]},
+{cat:'brn',pts:[[126,33.5],[128.5,35],[129.5,36],[129,38],[127,38],[126,36]]},
+{cat:'brn',pts:[[166,-46],[172,-41],[177,-37],[179,-38],[174,-43],[168,-48]]},
+{cat:'brn',pts:[[144,-37],[148,-38],[151,-38],[150,-40],[146,-40],[144,-39]]},
+{cat:'brn',pts:[[145,-41],[148,-41],[148,-43],[145,-43]]},
+{cat:'brn',pts:[[-74,-38],[-70,-38],[-70,-47],[-75,-47]]},
+/* ラトソル・赤黄色土：熱帯湿潤 */
+{cat:'lat',pts:[[-78,8],[-70,11],[-60,8],[-50,4],[-44,-1],[-40,-5],[-44,-12],[-52,-16],[-60,-16],[-68,-12],[-75,-6],[-79,0]]},
+{cat:'lat',pts:[[-17,12],[-10,6],[0,5],[8,4],[10,2],[12,-5],[20,-5],[30,-2],[40,-2],[42,2],[40,8],[30,10],[20,12],[10,12],[0,10],[-10,12]]},
+{cat:'lat',pts:[[92,26],[98,24],[105,22],[108,16],[106,10],[100,6],[103,1],[110,-2],[120,-2],[130,-2],[140,-4],[147,-6],[140,-8],[120,-8],[110,-7],[105,-6],[100,0],[95,5]]},
+{cat:'lat',pts:[[73.5,22],[78,22],[82,21],[85,20],[87,21],[87,18],[84,16],[81,14],[78,13],[76,15],[74,18]]},
+{cat:'lat',pts:[[48.6,-12.6],[50.5,-15.4],[49.9,-17.5],[48.6,-20.8],[47.4,-24.3],[46.8,-24.6],[47.5,-20.6],[48.2,-17.5],[48.5,-15.0],[48.2,-13.2]]},
+{cat:'lat',pts:[[-105,20],[-95,18],[-88,16],[-83,12],[-78,9],[-83,10],[-90,14],[-97,16]]},
+{cat:'lat',pts:[[113,-13],[124,-13],[133,-11],[141,-11],[147,-16],[142,-19],[132,-17],[122,-18],[113,-18]]},
+/* 栗色土：半乾燥ステップ */
+{cat:'che',pts:[[48,50],[56,51],[64,51],[72,50],[80,49],[82,47],[76,45],[68,45],[60,45],[52,46],[47,48]]},
+{cat:'che',pts:[[90,48],[96,49],[102,49],[108,48],[112,47],[110,45],[104,46],[98,46],[92,46]]},
+{cat:'che',pts:[[-106,31],[-98,31],[-98,49],[-106,49]]},
+{cat:'che',pts:[[30,40.5],[33,41],[36,40.5],[39,40],[41,39],[41,37.5],[38,37.5],[35,38],[32,38.5],[30,39]]},
+{cat:'che',pts:[[44,39],[48,39.5],[52,38],[56,37],[60,36],[63,35],[66,34],[68,33],[68,30],[65,29],[62,28],[58,28],[54,29],[50,30],[47,32],[44,34],[43,36]]},
+{cat:'che',pts:[[-17,13],[-16,16],[-13,17.5],[-9,17.5],[-5,17],[0,16.5],[5,16],[10,15.5],[15,15],[20,15],[25,14.5],[30,14.5],[34,14],[37,13.5],[39,12.5],[38,11],[35,10.5],[32,10],[29,10],[26,10],[23,10.5],[20,10.5],[17,11],[14,11],[11,11.5],[8,12],[5,12.5],[2,12.5],[-1,12.5],[-4,12.5],[-8,12.5],[-12,12.5],[-15,12.5]]},
+{cat:'che',pts:[[112,-19],[123,-17],[133,-16],[143,-19],[148,-25],[145,-31],[137,-34],[127,-33],[117,-30],[112,-26]]},
+{cat:'che',pts:[[16,-18],[20,-18],[24,-19],[26,-22],[26,-26],[24,-28],[21,-28],[18,-26],[16,-23],[15,-20]]},
+/* 黒土：チェルノーゼム・プレーリー・パンパ・デカン */
+{cat:'blk',pts:[[25,47],[40,50],[62,52],[82,50],[70,45],[50,45],[30,45]]},
+{cat:'blk',pts:[[-106,33],[-98,33],[-98,49],[-106,49]]},
+{cat:'blk',pts:[[-66,-30],[-57,-30],[-57,-39],[-66,-39]]},
+{cat:'blk',pts:[[113,41],[126,41],[126,49],[113,49]]},
+{cat:'blk',pts:[[75,19.5],[78,19.5],[80,17.5],[79.5,15],[77,14.5],[75,16.5]]},
+{cat:'blk',pts:[[-17,13],[-13,12.5],[-9,12.5],[-5,12],[0,12],[5,12],[10,11.5],[15,11],[20,10.5],[25,10],[30,10.5],[35,10.5],[39,11],[41,9],[42,6],[43,3],[42,0],[40,-3],[37,-6],[34,-9],[31,-11],[28,-13],[24,-14],[20,-14],[16,-13],[12,-10],[9,-6],[8,-2],[8,2],[6,4],[3,5],[0,5],[-4,5],[-8,5.5],[-12,7],[-15,9],[-17,11]]},
+{cat:'blk',pts:[[144,-24],[150,-25],[154,-30],[151,-35],[145,-33],[142,-28]]},
+/* 砂漠土 */
+{cat:'des',pts:[[-17,20],[-16,24],[-14,27],[-11,29.5],[-8,31],[-4,32.5],[0,33],[4,33.5],[8,33],[12,32.5],[16,31.5],[20,31.5],[24,32],[28,31],[31,31],[33,30],[34.5,28],[35.5,25.5],[36.5,22.5],[37,20],[37.5,17],[35,15.5],[31,14.5],[27,14.5],[23,14.5],[19,15],[15,15],[11,15.5],[7,16],[3,16.5],[-1,17],[-5,17],[-9,17.5],[-13,17.5],[-16,16.5]]},
+{cat:'des',pts:[[34.5,29],[37,31],[40,31],[43,30],[46,29.5],[48,29],[50,27],[52,25],[55,23],[57,21],[58,19],[56,17],[53,16],[50,15],[47,14],[44,13],[43,14],[42,16],[40,18],[38,21],[36,24],[35,27]]},
+{cat:'des',pts:[[52,46],[58,46],[64,45],[69,43],[70,41],[66,38.5],[60,39],[54,41],[50,43]]},
+{cat:'des',pts:[[75,40],[80,41],[86,41],[90,40],[92,38],[88,37],[82,37],[77,38]]},
+{cat:'des',pts:[[92,44],[98,45],[104,45],[110,44],[114,43],[112,41],[106,41],[100,42],[94,42]]},
+{cat:'des',pts:[[116,-22],[126,-20],[136,-20],[144,-24],[144,-29],[135,-31],[126,-30],[118,-28],[115,-25]]},
+{cat:'des',pts:[[11.4,-17],[13,-18],[14.6,-21],[15.6,-24],[16.6,-27],[15,-28.6],[13,-26],[12,-22],[11.4,-19]]},
+{cat:'des',pts:[[18,-29],[21,-29],[23,-31],[22,-33],[19,-33],[17.5,-31]]},
+{cat:'des',pts:[[-71,-4],[-68,-10],[-68,-20],[-70,-29],[-73,-25],[-73,-15]]},
+{cat:'des',pts:[[-70,-42],[-66,-43],[-66,-48],[-70,-47]]},
+{cat:'des',pts:[[-117,33],[-108,33],[-104,28],[-109,24],[-115,28]]},
+{cat:'des',pts:[[67.5,29.5],[71,30.5],[74,30],[76,28],[75,25],[72,24],[69,25],[67,27]]},
+{cat:'des',pts:[[48,32],[52,31],[56,29],[60,28],[62,27],[60,25.5],[56,26],[52,27],[49,29]]},
+/* 山岳土：山脈・高原 */
+{cat:'mtn',pts:[[73,36],[86,37],[99,34],[103,29],[92,26],[80,29],[74,32]]},
+{cat:'mtn',pts:[[-77,7],[-70,2],[-67,-8],[-65,-18],[-67,-28],[-70,-39],[-74,-32],[-77,-18],[-80,-6],[-78,2]]},
+{cat:'mtn',pts:[[-118,32],[-110,34],[-107,44],[-113,55],[-120,50],[-122,38]]},
+{cat:'mtn',pts:[[5,44],[10,46],[16,47],[13,43],[8,43]]},
+{cat:'mtn',pts:[[34,14],[42,14],[44,8],[38,3],[33,8]]},
+{cat:'mtn',pts:[[39,43],[50,42],[49,40],[42,40]]},
+{cat:'mtn',pts:[[43,37],[52,34],[54,30],[46,30],[42,33]]},
+{cat:'mtn',pts:[[67,41],[81,43],[87,40],[78,36],[68,38]]},
+{cat:'mtn',pts:[[-9,33],[2,35],[11,34],[6,31],[-5,30]]},
+{cat:'mtn',pts:[[142,-21],[149,-25],[152,-32],[147,-36],[143,-28]]},
+{cat:'mtn',pts:[[5,60],[14,64],[21,68],[14,69],[6,63]]},
+{cat:'mtn',pts:[[131,-3],[141,-5],[148,-7],[140,-9],[132,-6]]},
+{cat:'mtn',pts:[[-109,29],[-104,26],[-100,20],[-105,20],[-109,24]]},
+{cat:'mtn',pts:[[28,3],[36,0],[39,-6],[33,-10],[28,-4]]},
+{cat:'mtn',pts:[[26,-28],[31,-29],[30,-33],[26,-31]]},
+{cat:'mtn',pts:[[84,48],[99,52],[106,50],[95,46],[85,46]]},
+{cat:'mtn',pts:[[-156,60],[-145,62],[-139,60],[-150,58]]},
+{cat:'mtn',pts:[[95,29],[100,32],[103,28],[98,26]]},
+{cat:'mtn',pts:[[136,35.5],[138.5,36.8],[139.5,36.2],[137.5,35.2]]}
+];
+
+/* ===== 国名・地形ラベル ===== */
+var LABELS=[
+['アメリカ合衆国',-98,39,1],['カナダ',-105,58,1],['ブラジル',-52,-10,1],['ロシア',95,61,1],['中国',104,35,1],['インド',78,21,1],['オーストラリア',134,-25,1],['アルジェリア',2,28,1],['サウジアラビア',45,24,1],['カザフスタン',67,48,1],['アルゼンチン',-64,-35,1],['ペルー',-75,-10,1],['エジプト',30,27,1],['南アフリカ',25,-29,1],['インドネシア',113,-2,1],['モンゴル',103,47,1],['メキシコ',-102,24,1],['イラン',54,32,1],['コンゴ民主共和国',23,-3,1],['リビア',17,27,1],['日本',138,37,1],['イギリス',-2,54,1],['ドイツ',10,51,1],['フランス',2,47,1],
+['スペイン',-4,40,2],['イタリア',12,42,2],['ノルウェー',9,61,2],['スウェーデン',15,62,2],['フィンランド',26,64,2],['ポーランド',19,52,2],['ウクライナ',32,49,2],['トルコ',35,39,2],['パキスタン',69,30,2],['イラク',44,33,2],['エチオピア',39,9,2],['ケニア',38,1,2],['ナイジェリア',8,9,2],['マリ',-2,17,2],['スーダン',30,15,2],['アンゴラ',18,-12,2],['ナミビア',17,-22,2],['タンザニア',35,-6,2],['マダガスカル',47,-19,2],['チリ',-71,-30,2],['ボリビア',-64,-17,2],['コロンビア',-73,4,2],['ベネズエラ',-66,7,2],['ニュージーランド',172,-42,2],['パプアニューギニア',143,-6,2],['フィリピン',122,12,2],['ベトナム',106,16,2],['タイ',101,15,2],['ミャンマー',96,21,2],['韓国',128,36,2],['アイスランド',-19,65,2],['モロッコ',-6,32,2],['グリーンランド',-42,74,2],
+['ポルトガル',-8,39.5,3],['アイルランド',-8,53,3],['オランダ',5.3,52.2,3],['ベルギー',4.5,50.6,3],['ルクセンブルク',6.1,49.8,3],['スイス',8.2,46.8,3],['オーストリア',14.5,47.6,3],['チェコ',15.5,49.8,3],['スロバキア',19.5,48.7,3],['ハンガリー',19.5,47.2,3],['ルーマニア',25,45.9,3],['ブルガリア',25.5,42.7,3],['ギリシャ',22,39,3],['アルバニア',20,41,3],['北マケドニア',21.7,41.6,3],['セルビア',21,44,3],['モンテネグロ',19.3,42.8,3],['ボスニア・ヘルツェゴビナ',17.8,44,3],['クロアチア',16.5,45.2,3],['スロベニア',14.8,46.1,3],['デンマーク',10,56,3],['エストニア',25.5,58.7,3],['ラトビア',24.6,56.9,3],['リトアニア',23.9,55.3,3],['ベラルーシ',28,53.7,3],['モルドバ',28.5,47.2,3],['マルタ',14.4,35.9,3],['キプロス',33.4,35.1,3],['アンドラ',1.6,42.5,3],['モナコ',7.4,43.7,3],['リヒテンシュタイン',9.55,47.16,3],['サンマリノ',12.46,43.94,3],['バチカン',12.45,41.9,3],
+['ネパール',84,28,3],['バングラデシュ',90.3,23.7,3],['ブータン',90.4,27.5,3],['スリランカ',80.7,7.9,3],['アフガニスタン',66,34,3],['ウズベキスタン',64,41.5,3],['トルクメニスタン',59,39,3],['キルギス',74.5,41.5,3],['タジキスタン',71,38.5,3],['アゼルバイジャン',47.5,40.3,3],['アルメニア',45,40.2,3],['ジョージア',43.5,42,3],['シリア',38.5,35,3],['ヨルダン',36.5,31.2,3],['イスラエル',35,31.4,3],['レバノン',35.9,33.9,3],['クウェート',47.5,29.3,3],['カタール',51.2,25.3,3],['バーレーン',50.55,26,3],['アラブ首長国連邦',54,24,3],['オマーン',56,21,3],['イエメン',48,15.5,3],['北朝鮮',127,40,3],['台湾',121,23.7,3],['マレーシア',102,4,3],['シンガポール',103.8,1.35,3],['ブルネイ',114.7,4.5,3],['カンボジア',105,12.5,3],['ラオス',103,18,3],['東ティモール',125.9,-8.8,3],['モルディブ',73.4,3.2,3],
+['チュニジア',9.5,34,3],['チャド',18.5,15,3],['ニジェール',9,17,3],['モーリタニア',-10,20,3],['セネガル',-14.5,14.5,3],['ガンビア',-15.4,13.4,3],['ギニアビサウ',-15,12,3],['ギニア',-10.5,10.5,3],['シエラレオネ',-11.8,8.5,3],['リベリア',-9.4,6.4,3],['コートジボワール',-5.5,7.5,3],['ガーナ',-1.2,7.9,3],['トーゴ',0.9,8.6,3],['ベナン',2.3,9.6,3],['ブルキナファソ',-1.7,12.3,3],['カメルーン',12.5,5.7,3],['中央アフリカ共和国',20.5,6.6,3],['赤道ギニア',10.5,1.6,3],['ガボン',11.8,-0.6,3],['コンゴ共和国',15.3,-0.8,3],['ウガンダ',32.3,1.4,3],['ルワンダ',29.9,-2,3],['ブルンジ',29.9,-3.4,3],['南スーダン',30.3,7.5,3],['ソマリア',46,5.5,3],['ジブチ',42.6,11.8,3],['エリトリア',39,15.5,3],['ザンビア',27.8,-13.5,3],['ジンバブエ',29.8,-19,3],['モザンビーク',35.5,-17.5,3],['マラウイ',34.3,-13.2,3],['ボツワナ',24.7,-22.2,3],['レソト',28.2,-29.6,3],['エスワティニ',31.5,-26.5,3],['コモロ',43.3,-11.7,3],['モーリシャス',57.6,-20.3,3],['セーシェル',55.5,-4.6,3],['カーボベルデ',-23.6,15.1,3],['サントメ・プリンシペ',6.6,0.2,3],
+['グアテマラ',-90.3,15.5,3],['ベリーズ',-88.7,17.2,3],['ホンジュラス',-86.6,14.8,3],['エルサルバドル',-88.9,13.7,3],['ニカラグア',-85,12.8,3],['コスタリカ',-84,10,3],['パナマ',-80,9,3],['キューバ',-79,21.5,3],['ハイチ',-72.3,19,3],['ドミニカ共和国',-70.5,19,3],['ジャマイカ',-77.3,18.1,3],['バハマ',-78,24.5,3],['トリニダード・トバゴ',-61.3,10.4,3],['バルバドス',-59.5,13.2,3],['ドミニカ国',-61.35,15.4,3],['セントルシア',-60.98,13.9,3],['セントビンセント・グレナディーン',-61.2,13.25,3],['グレナダ',-61.68,12.1,3],['アンティグア・バーブーダ',-61.8,17.1,3],['セントクリストファー・ネイビス',-62.78,17.35,3],['プエルトリコ',-66.5,18.2,3],['エクアドル',-78.5,-1.5,3],['パラグアイ',-58,-23.5,3],['ウルグアイ',-56,-32.8,3],['ガイアナ',-59,5,3],['スリナム',-56,4,3],['仏領ギアナ',-53,4,3],
+['フィジー',178,-17.8,3],['ソロモン諸島',160,-9.6,3],['バヌアツ',167,-16,3],['サモア',-172.4,-13.6,3],['トンガ',-175.2,-21.2,3],['キリバス',173,1.4,3],['ミクロネシア',158.2,6.9,3],['パラオ',134.5,7.5,3],['マーシャル諸島',171,7.1,3],['ナウル',166.9,-0.5,3],['ツバル',179.2,-8.5,3]
+];
+var FEATURES=[];
+RIVERS.forEach(function(r){FEATURES.push([r.n,r.pts[Math.floor(r.pts.length/2)][0],r.pts[Math.floor(r.pts.length/2)][1],2,'river']);});
+LAKES.forEach(function(l){var c=l.pts[0];FEATURES.push([l.n,c[0],c[1],2,'lake']);});
+FEATURES=FEATURES.concat([
+['ヒマラヤ山脈',85,28,1,'mtn'],['アンデス山脈',-70,-20,1,'mtn'],['ロッキー山脈',-110,45,1,'mtn'],['アルプス山脈',10,46,1,'mtn'],
+['コーカサス山脈',44,42,2,'mtn'],['ウラル山脈',60,60,2,'mtn'],['アトラス山脈',0,32,2,'mtn'],['グレートディバイディング山脈',147,-25,2,'mtn'],['アパラチア山脈',-80,38,2,'mtn'],['崑崙山脈',85,36,2,'mtn'],['天山山脈',78,42,2,'mtn'],['ヒンドゥークシュ山脈',70,36,2,'mtn'],['カラコルム山脈',76,36,2,'mtn'],['ザグロス山脈',48,32,2,'mtn'],['スカンジナビア山脈',12,63,2,'mtn'],['ドラケンスバーグ山脈',29,-29,2,'mtn'],['西ガーツ山脈',76,13,2,'mtn'],
+['アルタイ山脈',90,48,3,'mtn'],['サヤン山脈',98,52,3,'mtn'],['スタノヴォイ山脈',125,55,3,'mtn'],['カルパティア山脈',24,48,3,'mtn'],['アペニン山脈',13,42,3,'mtn'],['ピレネー山脈',0,42.7,3,'mtn'],['シエラネバダ山脈',-119,37,3,'mtn'],['カスケード山脈',-121,45,3,'mtn'],['日本アルプス',137.8,36.3,3,'mtn']
+]);
+DESERT_DATA.forEach(function(d){FEATURES.push([d[0],d[3],d[2],1,'desert']);});
+
+var ANT=[
+[-180,-73],[-175,-74],[-170,-75],[-165,-76],[-160,-77],[-155,-77],[-150,-76],[-145,-75],[-140,-74],[-135,-74],[-130,-73],[-125,-73],[-120,-73],[-115,-72],[-110,-72],[-105,-71],[-100,-71],[-95,-70],[-90,-68],[-85,-67],[-80,-65],[-75,-63],[-70,-62],[-65,-61],[-62,-62],[-60,-64],[-58,-66],[-60,-68],[-63,-70],[-66,-72],[-68,-74],[-66,-76],[-62,-77],[-58,-78],[-54,-78],[-50,-77],[-46,-76],[-42,-75],[-38,-74],[-34,-73],[-30,-72],[-26,-71],[-22,-70],[-18,-69],[-14,-68],[-10,-67],[-6,-66],[-2,-66],[2,-66],[6,-65],[10,-64],[14,-65],[18,-66],[22,-67],[26,-67],[30,-66],[34,-65],[38,-64],[42,-63],[46,-63],[50,-64],[54,-65],[58,-66],[62,-66],[66,-65],[70,-64],[74,-63],[78,-63],[82,-64],[86,-65],[90,-66],[94,-65],[98,-64],[102,-63],[106,-63],[110,-64],[114,-65],[118,-66],[122,-66],[126,-65],[130,-64],[134,-65],[138,-66],[142,-67],[146,-68],[150,-69],[154,-70],[158,-71],[162,-73],[166,-75],[170,-77],[174,-78],[178,-78],[180,-77],
+[180,-85.05],[90,-85.05],[0,-85.05],[-90,-85.05],[-180,-85.05]
+];
 var LAND=[
 [[-168,66],[-164,60],[-158,58],[-152,60],[-146,60],[-136,58],[-130,54],[-125,49],[-124,42],[-120,34],[-114,29],[-110,24],[-106,20],[-97,16],[-92,15],[-88,13],[-84,10],[-80,8],[-77,8],[-81,9],[-83,11],[-87,16],[-90,18],[-87,21],[-91,19],[-97,22],[-97,26],[-94,29],[-90,29],[-85,30],[-82,27],[-80,25],[-80,32],[-76,35],[-74,40],[-70,42],[-66,44],[-60,46],[-56,50],[-53,47],[-56,52],[-60,55],[-64,58],[-64,60],[-70,58],[-78,55],[-82,52],[-88,56],[-94,59],[-92,64],[-88,66],[-82,68],[-80,72],[-95,72],[-110,72],[-125,70],[-140,70],[-155,71],[-162,68]],
 [[-58,64],[-52,60],[-44,60],[-40,64],[-32,68],[-22,70],[-18,74],[-22,78],[-32,82],[-46,82],[-58,78],[-68,76],[-62,72],[-56,68]],
@@ -397,7 +877,7 @@ var LAND=[
 [[-22,64],[-16,63],[-14,65],[-18,66],[-23,65]],
 [[130,31],[132,33],[135,34],[137,35],[140,35],[141,37],[140,40],[141,42],[143,42],[145,44],[143,45],[141,44],[140,42],[139,39],[137,37],[134,35],[131,33]],
 [[80,9],[82,8],[81,6],[80,7]],
-[[44,-12],[49,-14],[50,-17],[47,-25],[44,-22],[43,-17]],
+[[49.3,-12.0],[50.5,-15.4],[49.9,-17.5],[48.6,-20.8],[47.3,-24.3],[45.2,-25.6],[43.9,-24.0],[43.3,-22.0],[43.2,-20.0],[44.0,-17.5],[44.4,-16.0],[46.3,-15.7],[47.5,-14.5],[48.8,-13.2]],
 [[95,5],[99,3],[103,-1],[106,-5],[104,-6],[100,0],[96,4]],
 [[105,-6],[110,-7],[114,-8],[115,-9],[108,-8],[105,-7]],
 [[109,2],[113,5],[117,7],[119,4],[118,0],[114,-3],[110,-2]],
@@ -411,7 +891,8 @@ var LAND=[
 [[-85,22],[-80,23],[-75,21],[-74,20],[-78,21],[-83,22]],
 [[-74,20],[-70,20],[-68,19],[-72,18],[-74,19]],
 [[-78,68],[-72,71],[-64,69],[-62,66],[-68,63],[-75,66]],
-[[-180,-73],[-150,-76],[-120,-74],[-95,-73],[-80,-70],[-70,-68],[-62,-64],[-57,-63],[-63,-68],[-55,-72],[-40,-77],[-25,-75],[-10,-71],[5,-70],[20,-70],[35,-69],[50,-67],[65,-67],[80,-66],[95,-66],[110,-66],[125,-66],[140,-67],[155,-69],[170,-71],[180,-73],[180,-81],[180,-90],[90,-90],[0,-90],[-90,-90],[-180,-90],[-180,-81],[-180,-73]],
+[[-70,12],[-66,11],[-61,10],[-60,13],[-61,16],[-64,18],[-68,18],[-72,15]],
+[[-63,18],[-62,17],[-61,17],[-62,18.5]],
 [[120.1,22],[121.9,25],[122,23.5],[120.5,21.9]],
 [[108.6,18.2],[110.5,20],[111,19.5],[109,18.2]],
 [[13,38],[15,38],[15.5,37],[14,36.7],[12.5,37.5]],
@@ -427,32 +908,12 @@ var LAND=[
 [[-71,-53],[-68,-54.5],[-65,-54.8],[-66,-52.8],[-69,-52.8]],
 [[-61,-51.5],[-58,-51.3],[-58.5,-52],[-61,-52]]
 ];
-var CLIM=[
-{cat:'A',lon1:-180,lat1:15,lon2:180,lat2:-15},
-{cat:'B',lon1:-180,lat1:32,lon2:180,lat2:15},{cat:'B',lon1:-180,lat1:-15,lon2:180,lat2:-32},
-{cat:'C',lon1:-180,lat1:50,lon2:180,lat2:32},{cat:'C',lon1:-180,lat1:-32,lon2:180,lat2:-46},
-{cat:'D',lon1:-180,lat1:66,lon2:180,lat2:50},
-{cat:'E',lon1:-180,lat1:90,lon2:180,lat2:66},{cat:'E',lon1:-180,lat1:-46,lon2:180,lat2:-90},
-{cat:'A',lon1:-75,lat1:6,lon2:-44,lat2:-18},{cat:'A',lon1:10,lat1:6,lon2:32,lat2:-6},{cat:'A',lon1:95,lat1:20,lon2:145,lat2:-10},{cat:'A',lon1:68,lat1:22,lon2:88,lat2:8},{cat:'A',lon1:-92,lat1:18,lon2:-78,lat2:8},
-{cat:'B',lon1:-15,lat1:33,lon2:35,lat2:14},{cat:'B',lon1:112,lat1:-17,lon2:148,lat2:-33},{cat:'B',lon1:48,lat1:50,lon2:105,lat2:33},{cat:'B',lon1:-118,lat1:44,lon2:-100,lat2:28},{cat:'B',lon1:-72,lat1:-36,lon2:-63,lat2:-52},{cat:'B',lon1:-72,lat1:-3,lon2:-67,lat2:-30},
-{cat:'C',lon1:104,lat1:34,lon2:122,lat2:21},{cat:'C',lon1:-100,lat1:34,lon2:-74,lat2:24},{cat:'C',lon1:-10,lat1:58,lon2:30,lat2:43},{cat:'C',lon1:130,lat1:45,lon2:142,lat2:30},{cat:'C',lon1:166,lat1:-34,lon2:178,lat2:-47},{cat:'C',lon1:140,lat1:-28,lon2:153,lat2:-45},{cat:'C',lon1:-74,lat1:-30,lon2:-68,lat2:-46},
-{cat:'D',lon1:-140,lat1:66,lon2:-55,lat2:46},{cat:'D',lon1:40,lat1:52,lon2:140,lat2:45},
-{cat:'E',lon1:-60,lat1:83,lon2:-18,lat2:60},
-{cat:'H',lon1:74,lat1:40,lon2:102,lat2:27},{cat:'H',lon1:-73,lat1:6,lon2:-64,lat2:-45},{cat:'H',lon1:-116,lat1:55,lon2:-105,lat2:32},{cat:'H',lon1:35,lat1:14,lon2:43,lat2:5},{cat:'H',lon1:6,lat1:47,lon2:15,lat2:43}
-];
-var CLIM_META={A:{c:'#ff5a4e',n:'熱帯 (A)'},B:{c:'#ffb347',n:'乾燥帯 (B)'},C:{c:'#4ade80',n:'温帯 (C)'},D:{c:'#38a3e0',n:'冷帯 (D)'},E:{c:'#cfe8ff',n:'寒帯 (E)'},H:{c:'#a78bfa',n:'高地 (H)'}};
-var SOIL=[
-{cat:'lat',lon1:-180,lat1:18,lon2:180,lat2:-18},{cat:'lat',lon1:68,lat1:22,lon2:88,lat2:6},{cat:'lat',lon1:95,lat1:18,lon2:145,lat2:-8},
-{cat:'des',lon1:-180,lat1:35,lon2:180,lat2:18},{cat:'des',lon1:-180,lat1:-18,lon2:180,lat2:-35},{cat:'des',lon1:-15,lat1:35,lon2:35,lat2:15},{cat:'des',lon1:48,lat1:50,lon2:105,lat2:35},
-{cat:'brn',lon1:-180,lat1:46,lon2:180,lat2:30},{cat:'brn',lon1:-180,lat1:-30,lon2:180,lat2:-46},{cat:'brn',lon1:-10,lat1:55,lon2:30,lat2:43},{cat:'brn',lon1:104,lat1:35,lon2:122,lat2:22},
-{cat:'che',lon1:-115,lat1:54,lon2:-90,lat2:44},{cat:'che',lon1:25,lat1:56,lon2:60,lat2:44},{cat:'che',lon1:60,lat1:56,lon2:110,lat2:45},
-{cat:'pod',lon1:-180,lat1:66,lon2:180,lat2:55},
-{cat:'tun',lon1:-180,lat1:90,lon2:180,lat2:66},{cat:'tun',lon1:-180,lat1:-46,lon2:180,lat2:-90},{cat:'tun',lon1:-60,lat1:83,lon2:-18,lat2:60}
-];
-var SOIL_META={lat:{c:'#e05d3d',n:'ラテライト（赤色土）'},des:{c:'#d9b36a',n:'砂漠土・ステップ土'},brn:{c:'#8a6f4d',n:'褐色森林土'},che:{c:'#5a4a3a',n:'チェルノーゼム（黒土）'},pod:{c:'#9fb4c7',n:'ポドゾル'},tun:{c:'#d7e6f2',n:'ツンドラ土・氷沼土'}};
+LAND.push(ANT);
+
 var CURRENTS=[
 {n:'黒潮（日本暖流）',t:'warm',note:'世界最大級の暖流。日本沿岸を北上し気候を温暖湿潤に。',pts:[[122,22],[126,28],[132,32],[138,34],[142,36],[150,38],[160,40]]},
 {n:'親潮（千島寒流）',t:'cold',note:'南下する寒流。黒潮とぶつかり三陸沖に好漁場を形成。',pts:[[155,58],[150,52],[146,46],[143,42]]},
+{n:'リマン寒流',t:'cold',note:'沿海州沿岸を南下。ウラジオストクの冬を厳しくする。',pts:[[140,52],[137,48],[134,45],[132,43]]},
 {n:'メキシコ湾流',t:'warm',note:'メキシコ湾から北上する強力な暖流。北大西洋海流へ。',pts:[[-82,24],[-79,28],[-75,34],[-68,38],[-55,42]]},
 {n:'北大西洋海流',t:'warm',note:'湾流の続き。西欧・北欧を高緯度の割に温暖にする。',pts:[[-55,42],[-40,48],[-25,54],[-10,60],[0,64],[10,68]]},
 {n:'カリフォルニア寒流',t:'cold',note:'北米西岸を南下。沿岸に乾燥気候と霧をもたらす。',pts:[[-130,46],[-126,38],[-120,30],[-112,24]]},
@@ -460,64 +921,120 @@ var CURRENTS=[
 {n:'ベンゲラ寒流',t:'cold',note:'アフリカ南西岸を北上。ナミブ砂漠と上昇流漁場を形成。',pts:[[16,-34],[13,-26],[11,-16],[9,-6]]},
 {n:'ペルー（フンボルト）寒流',t:'cold',note:'上昇流でアンチョビ漁場。沿岸を乾燥させアタカマ砂漠を形成。',pts:[[-78,-45],[-75,-35],[-74,-25],[-77,-15],[-81,-6],[-85,-2]]},
 {n:'ブラジル暖流',t:'warm',note:'南米東岸を南下する暖流。',pts:[[-38,-8],[-42,-16],[-48,-24],[-52,-32]]},
+{n:'アガラス暖流',t:'warm',note:'マダガスカル東岸を南下。東岸の多雨（Af）を支える。',pts:[[42,-12],[40,-18],[36,-24],[32,-30],[28,-34]]},
 {n:'東オーストラリア海流',t:'warm',note:'オーストラリア東岸を南下する暖流。',pts:[[153,-24],[155,-30],[154,-36],[150,-40]]},
 {n:'西風漂流',t:'cold',note:'南極を取り巻く世界最大の環流。偏西風に吹かれ東流。',pts:[[-170,-55],[-120,-57],[-70,-58],[-20,-55],[30,-52],[80,-53],[130,-55],[175,-56]]}
 ];
-var LABELS=[
-['アメリカ合衆国',-98,39,1],['カナダ',-105,58,1],['ブラジル',-52,-10,1],['ロシア',95,61,1],['中国',104,35,1],['インド',78,21,1],['オーストラリア',134,-25,1],['アルジェリア',2,28,1],['サウジアラビア',45,24,1],['カザフスタン',67,48,1],['アルゼンチン',-64,-35,1],['ペルー',-75,-10,1],['エジプト',30,27,1],['南アフリカ',25,-29,1],['インドネシア',113,-2,1],['モンゴル',103,47,1],['メキシコ',-102,24,1],['イラン',54,32,1],['コンゴ民主共和国',23,-3,1],['リビア',17,27,1],['日本',138,37,1],['イギリス',-2,54,1],['ドイツ',10,51,1],['フランス',2,47,1],
-['スペイン',-4,40,2],['イタリア',12,42,2],['ノルウェー',9,61,2],['スウェーデン',15,62,2],['フィンランド',26,64,2],['ポーランド',19,52,2],['ウクライナ',32,49,2],['トルコ',35,39,2],['パキスタン',69,30,2],['イラク',44,33,2],['エチオピア',39,9,2],['ケニア',38,1,2],['ナイジェリア',8,9,2],['マリ',-2,17,2],['スーダン',30,15,2],['アンゴラ',18,-12,2],['ナミビア',17,-22,2],['タンザニア',35,-6,2],['マダガスカル',47,-19,2],['チリ',-71,-30,2],['ボリビア',-64,-17,2],['コロンビア',-73,4,2],['ベネズエラ',-66,7,2],['ニュージーランド',172,-42,2],['パプアニューギニア',143,-6,2],['フィリピン',122,12,2],['ベトナム',106,16,2],['タイ',101,15,2],['ミャンマー',96,21,2],['韓国',128,36,2],['アイスランド',-19,65,2],['モロッコ',-6,32,2],['グリーンランド',-42,74,2]
-];
-var GEO_SPOTS=[
-{id:'tokyo',name:'東京',region:'アジア',lat:35.7,lon:139.7,koppen:'Cfa',kname:'温暖湿潤気候',soil:'黒ボク土（火山性）',agri:'近郊農業・工業・都市機能',temp:[5.2,5.7,8.7,13.9,18.2,21.4,25.3,26.7,23.3,18.0,12.6,7.7],prec:[52,56,118,125,138,168,154,168,210,198,93,51],summary:'ユーラシア大陸東岸の中緯度に位置し季節風の影響を受ける。夏は高温多雨、冬は低温乾燥。梅雨と台風で降水の山が2つ。',logic:[{c:'アジア大陸東岸・中緯度',e:'季節風の影響（夏：海洋性気団／冬：大陸性気団）'},{c:'夏：高温多湿／冬：低温乾燥',e:'温暖湿潤気候 Cfa が成立'},{c:'梅雨前線＋台風',e:'6月と9月に降水の山'},{c:'雨温図：夏雨型・最寒月≧-3℃',e:'Cs・Cwとの判別が頻出'}],note:'Cfa・Cwa・Cwの判別、二重の降水ピークが狙われる。',quiz:[{q:'東京の気候区分として正しいものは？',ch:['Cfa（温暖湿潤）','Csa（地中海性）','Dfa（冷帯湿潤）','Aw（サバナ）'],a:0,ex:'最寒月が-3℃以上18℃未満、夏雨型のため Cfa。'},{q:'東京の秋（9月頃）に降水が多い主な要因は？',ch:['シベリア気団','台風と秋雨前線','北東貿易風','エルニーニョ'],a:1,ex:'台風と秋雨前線により9月に降水の山ができる。'}]},
-{id:'singapore',name:'シンガポール',region:'アジア',lat:1.35,lon:103.8,koppen:'Af',kname:'熱帯雨林気候',soil:'ラテライト（赤色土）',agri:'貿易・金融・エレクトロニクス',temp:[26.5,27.1,27.5,28.0,28.3,28.3,27.9,27.9,27.6,27.6,27.0,26.6],prec:[235,113,171,155,171,131,145,143,177,167,259,318],summary:'赤道直下に位置し一年中高温多湿。対流雨（スコール）が卓越し乾季がほとんどない。',logic:[{c:'赤道付近・赤道低圧帯',e:'上昇気流が卓越し対流雨'},{c:'一年中高温多雨・乾季なし',e:'熱帯雨林気候 Af'},{c:'激しい風化・溶脱',e:'ラテライト（痩せた土壌）'},{c:'マラッカ海峡の要衝',e:'中継貿易・金融で発展'}],note:'AfとAwの判別、ラテライトと農業。',quiz:[{q:'シンガポールで毎日見られる降雨の形態は？',ch:['前線雨','地形雨','対流雨（スコール）','台风雨'],a:2,ex:'赤道付近の上昇気流による対流雨。'},{q:'ラテライトの特徴は？',ch:['腐植に富み肥沃','鉄・アルミが残り痩せている','石灰質','凍結'],a:1,ex:'溶脱で鉄・アルミが残り農業に不向き。'}]},
-{id:'mumbai',name:'ムンバイ',region:'アジア',lat:19.1,lon:72.9,koppen:'Am',kname:'熱帯モンスーン気候',soil:'黒綿土（レグール）',agri:'綿花・雑穀・綿工業',temp:[24.5,25.2,27.3,29.2,30.4,29.3,27.6,27.4,27.6,28.7,27.7,25.9],prec:[1,1,0,1,16,520,840,585,341,64,13,3],summary:'インド西岸に位置し南西モンスーンが大量の水汽を運ぶ。6〜9月に極端な雨季、冬は乾季。',logic:[{c:'夏：南西モンスーン',e:'海洋性気団が水汽を供給'},{c:'西ガーツ山脈の地形雨',e:'6〜9月に極端な多雨'},{c:'冬：北東モンスーン',e:'乾季（Aw/Amの判別点）'},{c:'デカン高原の黒綿土',e:'綿花栽培'}],note:'極端な雨季、黒綿土と綿花。',quiz:[{q:'ムンバイの雨季をもたらす風は？',ch:['北東モンスーン','南西モンスーン','偏西風','貿易風'],a:1,ex:'夏にインド洋から吹く南西モンスーン。'},{q:'黒綿土で盛んな作物は？',ch:['稲','綿花','コーヒー','茶'],a:1,ex:'保水性のある黒綿土は綿花に最適。'}]},
-{id:'cairo',name:'カイロ',region:'アフリカ',lat:30.0,lon:31.2,koppen:'BWh',kname:'砂漠気候',soil:'砂漠土',agri:'ナイル川灌漑・長繊維綿花',temp:[14.0,15.1,17.6,21.5,25.2,27.7,28.6,28.4,26.6,23.3,18.9,15.0],prec:[5,4,4,1,1,0,0,0,0,1,3,6],summary:'北緯30度付近の亜熱帯高圧帯に位置し一年中乾燥。ナイル川灌漑で長繊維綿花が発達。',logic:[{c:'亜熱帯高圧帯・下降気流',e:'一年中乾燥（BWh）'},{c:'ナイル川の氾濫',e:'肥沃なシルトが堆積'},{c:'アスワン・ハイ・ダム',e:'通年灌漑→綿花・小麦'},{c:'乾燥＋労働力',e:'長繊維綿花の輸出'}],note:'BWとBSの判別、ナイル川と灌漑。',quiz:[{q:'カイロが乾燥する主因は？',ch:['寒流','亜熱帯高圧帯の下降気流','山脈の雨影','高緯度'],a:1,ex:'亜熱帯高圧帯の下降気流で雲ができない。'},{q:'長繊維綿花を支える水源は？',ch:['地下水','ナイル川','雨水貯留','海水淡水化'],a:1,ex:'ナイル川の灌漑が農業を支える。'}]},
-{id:'rome',name:'ローマ',region:'ヨーロッパ',lat:41.9,lon:12.5,koppen:'Csa',kname:'地中海性気候',soil:'テラロッサ（赤色土）',agri:'オリーブ・ぶどう・柑橘',temp:[8.1,8.7,11.5,14.6,19.1,23.3,26.2,26.4,22.6,18.0,12.9,9.2],prec:[67,73,58,62,44,22,15,21,63,98,115,81],summary:'地中海沿岸。夏は亜熱帯高圧帯で乾燥、冬は偏西風で降雨の「夏乾型」。',logic:[{c:'夏：亜熱帯高圧帯',e:'乾燥（夏乾）'},{c:'冬：偏西風',e:'海洋から湿気→冬雨'},{c:'夏乾＋冬雨',e:'地中海性気候 Cs'},{c:'夏の乾燥に耐える樹木作物',e:'オリーブ・ぶどう・柑橘'}],note:'Csの夏乾型雨温図、Cfaとの対比が最頻出。',quiz:[{q:'ローマの夏が乾燥する理由は？',ch:['偏西風','亜熱帯高圧帯に覆われる','寒流','標高'],a:1,ex:'夏は亜熱帯高圧帯で下降気流。'},{q:'地中海式農業の作物は？',ch:['稲・茶','オリーブ・ぶどう・柑橘','小麦・甜菜','コーヒー・カカオ'],a:1,ex:'夏の乾燥に耐える樹木作物。'}]},
-{id:'london',name:'ロンドン',region:'ヨーロッパ',lat:51.5,lon:-0.1,koppen:'Cfb',kname:'西岸海洋性気候',soil:'褐色森林土',agri:'混合型農業・金融',temp:[5.2,5.3,7.6,9.9,13.3,16.5,18.7,18.5,15.7,12.0,8.0,5.5],prec:[55,41,42,44,49,45,45,50,49,69,59,55],summary:'大陸西岸の中緯度。一年中偏西風と北大西洋海流で温和、年較差が小さい。',logic:[{c:'大陸西岸・中緯度',e:'一年中偏西風'},{c:'北大西洋海流（暖流）',e:'高緯度の割に温和'},{c:'年較差小・降水均等',e:'西岸海洋性気候 Cfb'},{c:'冷涼湿潤',e:'混合農業'}],note:'Cfbの年較差の小ささ、暖流の効果。',quiz:[{q:'ロンドンの冬が温暖な主因は？',ch:['黒潮','北大西洋海流','エルニーニョ','季節風'],a:1,ex:'北大西洋海流と偏西風。'},{q:'西岸海洋性気候で発達する農業は？',ch:['地中海式','混合農業','プランテーション','焼畑'],a:1,ex:'冷涼湿潤で牧草が育ち混合農業。'}]},
-{id:'moscow',name:'モスクワ',region:'ヨーロッパ',lat:55.8,lon:37.6,koppen:'Dfb',kname:'冷帯湿潤気候',soil:'ポドゾル',agri:'小麦・ライ麦・じゃがいも',temp:[-6.5,-6.7,-1.0,6.7,13.2,17.0,19.2,17.0,11.3,5.6,-1.2,-5.2],prec:[52,41,35,37,53,80,85,82,68,71,55,52],summary:'大陸内部の高緯度。年較差が非常に大きく最寒月-3℃未満で冷帯（D）。',logic:[{c:'大陸内部・高緯度',e:'年較差が極めて大きい'},{c:'最寒月＜-3℃',e:'冷帯 D'},{c:'針葉樹林（タイガ）',e:'ポドゾル'},{c:'冷涼',e:'ライ麦・じゃがいも'}],note:'CとDの境界、ポドゾルとタイガ。',quiz:[{q:'モスクワが冷帯（D）の基準は？',ch:['最暖月10℃未満','最寒月-3℃未満','年降水250mm未満','乾季あり'],a:1,ex:'最寒月が-3℃未満で冷帯D。'},{q:'タイガ下の土壌は？',ch:['チェルノーゼム','ポドゾル','ラテライト','テラロッサ'],a:1,ex:'針葉樹林下の痩せたポドゾル。'}]},
-{id:'ulaanbaatar',name:'ウランバートル',region:'アジア',lat:47.9,lon:106.9,koppen:'BSk',kname:'ステップ気候（寒冷）',soil:'チェルノーゼム周辺',agri:'遊牧（羊・山羊・馬）',temp:[-21.6,-16.6,-7.4,2.0,10.1,15.7,18.2,16.0,9.6,0.5,-11.9,-19.0],prec:[2,2,3,6,12,28,76,51,23,7,5,3],summary:'モンゴル高原の内陸で乾燥。短い草原（ステップ）が広がり遊牧が伝統的産業。',logic:[{c:'内陸＋山脈の雨影',e:'乾燥（BS）'},{c:'寒冷＋乾燥',e:'寒冷ステップ BSk'},{c:'短い草原',e:'遊牧が成立'},{c:'黒土地帯の周辺',e:'一部で小麦'}],note:'BSとBWの判別、遊牧の背景。',quiz:[{q:'モンゴル高原で遊牧が行われる主因は？',ch:['降水豊富','短い草原が広がる','低標高','暖流'],a:1,ex:'乾燥気候のステップで家畜を移動。'},{q:'ウランバートルの気温の特徴は？',ch:['年較差小','年較差が非常に大きい','一年中高温','冬温暖'],a:1,ex:'内陸のため年較差が極めて大きい。'}]},
-{id:'lima',name:'リマ',region:'南アメリカ',lat:-12.0,lon:-77.0,koppen:'BWn',kname:'砂漠気候（多霧）',soil:'砂漠土（グアノ）',agri:'灌漑農業・アンチョビ漁業',temp:[22.1,22.9,22.6,21.0,19.2,17.6,16.6,16.2,16.6,17.6,19.2,20.9],prec:[1,1,1,0,1,2,3,3,2,1,1,1],summary:'南米西岸。ペルー寒流で大気が安定し降雨が極めて少ない。上昇流が好漁場を形成。',logic:[{c:'ペルー寒流',e:'大気安定で降雨少'},{c:'寒流＋上昇流',e:'プランクトン→アンチョビ漁場'},{c:'乾燥沿岸',e:'アタカマ砂漠'},{c:'エルニーニョ年',e:'寒流弱化→豪雨・漁獲減'}],note:'寒流と乾燥・漁場、エルニーニョ。',quiz:[{q:'リマが乾燥する主因は？',ch:['暖流','ペルー寒流で大気安定','標高','貿易風なし'],a:1,ex:'ペルー寒流で対流が抑制。'},{q:'ペルー沖の上昇流の恩恵は？',ch:['観光','プランクトン→好漁場','石油','真水'],a:1,ex:'上昇流が栄養塩を運び好漁場に。'}]},
-{id:'sydney',name:'シドニー',region:'オセアニア',lat:-33.9,lon:151.2,koppen:'Cfa',kname:'温暖湿潤気候（南半球）',soil:'褐色森林土',agri:'小麦・羊毛・石炭',temp:[23.6,23.4,22.1,19.5,16.6,14.2,13.4,14.5,17.0,19.0,20.7,22.4],prec:[102,118,129,128,117,132,98,81,69,77,84,78],summary:'オーストラリア南東岸の温暖湿潤。南半球のため気温の山が1月（北半球と逆）。',logic:[{c:'南半球・中緯度東岸',e:'気温の山が1月'},{c:'温暖湿潤 Cfa',e:'東京と同区分だが半球逆'},{c:'山脈東側',e:'多雨・人口集中'},{c:'内陸の乾燥',e:'牧羊・小麦'}],note:'南半球の雨温図、東京との対比。',quiz:[{q:'シドニーで気温が最も高い月は？',ch:['7月','1月','4月','10月'],a:1,ex:'南半球のため1月が夏。'},{q:'オーストラリアの主要輸出品は？',ch:['米・絹','小麦・羊毛・石炭','コーヒー・ゴム','自動車'],a:1,ex:'小麦・羊毛・石炭。'}]},
-{id:'manaus',name:'マナウス',region:'南アメリカ',lat:-3.1,lon:-60.0,koppen:'Af',kname:'熱帯雨林気候',soil:'ラテライト',agri:'焼畑・ゴム・森林資源',temp:[26.7,26.6,26.6,26.6,26.9,27.2,27.6,28.4,28.8,28.6,28.0,27.2],prec:[260,288,314,311,256,114,88,58,83,126,183,217],summary:'アマゾン川流域。世界最大の熱帯雨林で一年中高温多雨。',logic:[{c:'赤道直下・アマゾン盆地',e:'一年中高温多雨（Af）'},{c:'年較差＜日較差',e:'熱帯の特徴'},{c:'激しい風化',e:'ラテライト＋豊かな生物量'},{c:'森林伐採',e:'温暖化・生物多様性減'}],note:'年較差の小ささ、森林破壊。',quiz:[{q:'マナウスの気温の特徴は？',ch:['年較差大','年較差が日較差より小さい','冬寒い','乾季あり'],a:1,ex:'赤道付近は年較差が極めて小さい。'},{q:'熱帯雨林減少の問題は？',ch:['オゾン層のみ','生物多様性減・温暖化促進','海流停止','地震増'],a:1,ex:'生物多様性減とCO2吸収源喪失。'}]},
-{id:'capetown',name:'ケープタウン',region:'アフリカ',lat:-33.9,lon:18.4,koppen:'Csb',kname:'地中海性気候（南半球）',soil:'褐色森林土',agri:'ぶどう・柑橘・ワイン',temp:[22.3,22.6,21.0,18.3,15.6,13.4,12.7,13.1,14.5,17.0,19.3,21.2],prec:[15,17,20,41,69,93,82,77,40,30,14,17],summary:'アフリカ南端の南半球地中海性。夏（1月）乾燥、冬（7月）に偏西風で雨。',logic:[{c:'南緯30〜40度大陸西岸',e:'地中海性 Cs'},{c:'夏（1月）：高圧帯',e:'乾燥'},{c:'冬（7月）：偏西風',e:'雨の山が7月'},{c:'夏乾＋温暖',e:'ぶどう・ワイン'}],note:'ローマとの南北半球対比。',quiz:[{q:'ケープタウンの降水が多い時期は？',ch:['1月','7月','4月','10月'],a:1,ex:'南半球の地中海性は冬（7月）多雨。'},{q:'ケープタウンとローマの共通点は？',ch:['同じ半球','どちらも夏乾燥','一年中多雨','冷帯'],a:1,ex:'半球は逆だが夏に乾燥するCs。'}]},
-{id:'reykjavik',name:'レイキャビク',region:'ヨーロッパ',lat:64.1,lon:-21.9,koppen:'Cfc',kname:'西岸海洋性気候（冷涼）',soil:'火山性土・氷沼土',agri:'漁業・地熱発電',temp:[-0.5,0.4,0.5,2.9,6.3,9.0,10.6,10.3,7.4,4.4,1.1,-0.2],prec:[76,72,82,58,44,50,52,62,67,86,73,79],summary:'北緯64度ながら北大西洋海流で冬季も比較的温暖。地熱発電が豊富。',logic:[{c:'高緯度',e:'本来は寒帯'},{c:'北大西洋海流',e:'冬季も温和'},{c:'火山島',e:'地熱発電豊富'},{c:'地熱＋冷涼',e:'温室園芸・漁業'}],note:'暖流の高緯度温暖化、地熱利用。',quiz:[{q:'レイキャビクが温暖な主因は？',ch:['黒潮','北大西洋海流','季節風','エルニーニョ'],a:1,ex:'北大西洋海流の暖流効果。'},{q:'アイスランドで豊富な再エネは？',ch:['太陽光','地熱','石炭','石油'],a:1,ex:'火山島のため地熱発電。'}]},
-{id:'nairobi',name:'ナイロビ',region:'アフリカ',lat:-1.3,lon:36.8,koppen:'Aw',kname:'サバナ気候（高地）',soil:'赤色土（サバナ）',agri:'高原野菜・コーヒー・紅茶',temp:[19.5,20.3,20.6,20.0,18.9,17.4,16.5,17.0,18.5,19.6,19.0,18.9],prec:[58,50,92,242,190,110,20,23,31,60,150,101],summary:'赤道直下ながら標高約1,800mの高原で冷涼。高地のためサバナ気候。',logic:[{c:'赤道直下＋高標高',e:'冷涼（年較差小）'},{c:'赤道低圧帯の季節移動',e:'雨季と乾季（Aw）'},{c:'冷涼な高原',e:'コーヒー・紅茶'},{c:'サバナ＋野生動物',e:'サファリ観光'}],note:'高地効果、Awの雨季・乾季。',quiz:[{q:'ナイロビが冷涼な理由は？',ch:['寒流','標高が高い','高緯度','乾季'],a:1,ex:'標高約1,800mの高地効果。'},{q:'ナイロビ周辺の換金作物は？',ch:['稲・ゴム','コーヒー・紅茶','綿花・甜菜','オリーブ'],a:1,ex:'冷涼な高原でコーヒー・紅茶。'}]}
-];
 
+/* ===== GEO_SPOTS ===== */
+var TYPE_INFO={
+BWh:{kname:'砂漠気候（高温）',soil:'砂漠土',agri:'灌漑農業・オアシス・石油',logic:[{c:'亜熱帯高圧帯／寒流／雨影',e:'年間降水が極めて少ない'},{c:'最寒月も高温',e:'BWh（高温砂漠）に分類'}],quiz:{q:'この都市の乾燥をもたらす主因として最も適切なものは？',ch:['亜熱帯高圧帯や寒流','偏西風','赤道低圧帯','季節風'],a:0,ex:'砂漠気候は高圧帯・寒流・山脈の雨影などで形成される。'}},
+BWk:{kname:'砂漠気候（低温）',soil:'砂漠土',agri:'遊牧・オアシス農業',logic:[{c:'内陸部で水汽が届かない',e:'降水が少ない'},{c:'冬が寒冷',e:'BWk（低温砂漠）に分類'}],quiz:{q:'内陸の低温砂漠でみられる農業は？',ch:['オアシス・遊牧','稲作','プランテーション','酪農'],a:0,ex:'水のあるオアシスや遊牧が中心。'}},
+BSh:{kname:'ステップ気候（高温）',soil:'ステップ土',agri:'遊牧・乾燥牧畜',logic:[{c:'砂漠の外縁',e:'短い草原が広がる'},{c:'高温',e:'BSh に分類'}],quiz:{q:'ステップ気候で伝統的な産業は？',ch:['遊牧','稲作','樹木作物','漁業'],a:0,ex:'短い草原を利用した遊牧が典型。'}},
+BSk:{kname:'ステップ気候（低温）',soil:'チェルノーゼム周辺',agri:'遊牧・小麦',logic:[{c:'内陸・雨影',e:'降水が少ない'},{c:'冬が寒冷',e:'BSk に分類'}],quiz:{q:'寒冷ステップの代表的畜産は？',ch:['羊・馬の遊牧','水牛','トナカイ','らくだのみ'],a:0,ex:'モンゴルなどで羊・馬の遊牧が典型。'}},
+Af:{kname:'熱帯雨林気候',soil:'ラトソル・赤黄色土',agri:'プランテーション・焼畑',logic:[{c:'赤道低圧帯',e:'対流雨が卓越'},{c:'一年中高温多雨',e:'Af に分類'}],quiz:{q:'熱帯雨林気候の降雨形態は？',ch:['対流雨（スコール）','前線雨','地形雨のみ','雪'],a:0,ex:'赤道付近では対流雨が多い。'}},
+Am:{kname:'熱帯モンスーン気候',soil:'ラトソル・黒綿土',agri:'稲・綿花・プランテーション',logic:[{c:'季節風（モンスーン）',e:'雨季に集中豪雨'},{c:'乾季が短い',e:'Am に分類'}],quiz:{q:'モンスーン気候の雨季をもたらす風は？',ch:['海洋から吹く季節風','大陸から吹く風','偏西風','貿易風'],a:0,ex:'夏に海洋から湿った季節風が吹く。'}},
+Aw:{kname:'サバナ気候',soil:'サバナ赤色土',agri:'稲・雑穀・牧畜',logic:[{c:'赤道低圧帯と貿易風の季節移動',e:'雨季と乾季が明瞭'},{c:'最寒月18℃以上',e:'Aw に分類'}],quiz:{q:'サバナ気候の特徴は？',ch:['雨季と乾季の区別','一年中多雨','夏に乾燥','一年中寒冷'],a:0,ex:'雨季と乾季が明瞭なのがサバナ。'}},
+Csa:{kname:'地中海性気候（高温夏）',soil:'テラロッサ',agri:'オリーブ・ぶどう・柑橘',logic:[{c:'夏：亜熱帯高圧帯',e:'乾燥'},{c:'冬：偏西風',e:'降雨 → Cs'}],quiz:{q:'地中海性気候の農業は？',ch:['オリーブ・ぶどう','稲・茶','小麦・甜菜','コーヒー'],a:0,ex:'夏乾に耐える樹木作物が典型。'}},
+Csb:{kname:'地中海性気候（温暖夏）',soil:'褐色森林土',agri:'ぶどう・柑橘・ワイン',logic:[{c:'夏：高圧帯',e:'乾燥'},{c:'冬：偏西風',e:'雨 → Csb'}],quiz:{q:'南半球地中海性の雨のピークは？',ch:['冬（7月頃）','夏（1月頃）','一年中均等','春のみ'],a:0,ex:'南半球の冬は7月頃。'}},
+Cwa:{kname:'温帯冬季少雨（高温夏）',soil:'赤色土・沖積土',agri:'稲・茶・綿花',logic:[{c:'大陸東岸の季節風',e:'夏雨・冬乾'},{c:'最寒月-3〜18℃',e:'Cwa に分類'}],quiz:{q:'Cwa の降水パターンは？',ch:['夏に多く冬に少ない','冬に多い','一年中均等','ほとんど無い'],a:0,ex:'季節風により夏雨・冬乾。'}},
+Cwb:{kname:'温帯冬季少雨（温暖夏）',soil:'赤色土（高地）',agri:'コーヒー・紅茶・高原野菜',logic:[{c:'高地で冷涼',e:'温帯 C に'},{c:'夏雨・冬乾',e:'Cwb に分類'}],quiz:{q:'高地の Cwb で盛んな作物は？',ch:['コーヒー・紅茶','稲のみ','オリーブ','ヤシ'],a:0,ex:'冷涼な高原でコーヒー・紅茶。'}},
+Cfa:{kname:'温暖湿潤気候',soil:'褐色森林土・黒ボク土',agri:'稲・小麦・工業',logic:[{c:'大陸東岸中緯度',e:'季節風の影響'},{c:'一年中降水',e:'Cfa に分類'}],quiz:{q:'温暖湿潤気候の特徴は？',ch:['夏高温多雨・冬比較的温和','夏乾燥','一年中寒冷','乾季明瞭'],a:0,ex:'日本の大部分などが該当。'}},
+Cfb:{kname:'西岸海洋性気候',soil:'褐色森林土',agri:'混合農業・牧畜',logic:[{c:'偏西風＋暖流',e:'一年中温和湿潤'},{c:'年較差小',e:'Cfb に分類'}],quiz:{q:'西岸海洋性で発達する農業は？',ch:['混合農業・牧畜','地中海式','プランテーション','焼畑'],a:0,ex:'冷涼湿潤で牧草が育つ。'}},
+Cfc:{kname:'西岸海洋性（冷涼）',soil:'火山性土',agri:'漁業・牧畜',logic:[{c:'高緯度の西岸',e:'暖流で温和'},{c:'夏が冷涼',e:'Cfc に分類'}],quiz:{q:'高緯度西岸を温和にするのは？',ch:['暖流と偏西風','寒流','高圧帯','季節風'],a:0,ex:'暖流と偏西風の効果。'}},
+Dfa:{kname:'冷帯湿潤（高温夏）',soil:'褐色森林土・黒土',agri:'小麦・とうもろこし',logic:[{c:'大陸東岸〜内陸',e:'年較差大'},{c:'最寒月<-3℃',e:'Dfa に分類'}],quiz:{q:'冷帯の基準は？',ch:['最寒月-3℃未満','最暖月10℃未満','降水250mm未満','乾季あり'],a:0,ex:'最寒月-3℃未満で冷帯D。'}},
+Dfb:{kname:'冷帯湿潤（温暖夏）',soil:'ポドゾル',agri:'小麦・ライ麦・酪農',logic:[{c:'高緯度内陸',e:'冬が長い'},{c:'夏は温暖',e:'Dfb に分類'}],quiz:{q:'冷帯湿潤の代表的土壌は？',ch:['ポドゾル','ラトソル','テラロッサ','砂漠土'],a:0,ex:'針葉樹林下にポドゾル。'}},
+Dfc:{kname:'冷帯湿潤（冷涼夏）',soil:'ポドゾル',agri:'林業・毛皮',logic:[{c:'亜寒帯',e:'夏が短く冷涼'},{c:'タイガ',e:'Dfc に分類'}],quiz:{q:'亜寒帯の植生は？',ch:['針葉樹林（タイガ）','熱帯雨林','サバナ','硬葉樹林'],a:0,ex:'亜寒帯はタイガが広がる。'}},
+Dwa:{kname:'冷帯冬季少雨（高温夏）',soil:'褐色森林土・黒土',agri:'小麦・とうもろこし・大豆',logic:[{c:'大陸東岸',e:'シベリア気団で冬寒冷乾燥'},{c:'夏に季節風で多雨',e:'Dwa に分類'}],quiz:{q:'Dwa の冬の気団は？',ch:['シベリア気団','海洋性気団','赤道気団','熱帯気団'],a:0,ex:'冬はシベリア気団で寒冷乾燥。'}},
+Dwb:{kname:'冷帯冬季少雨（温暖夏）',soil:'ポドゾル・褐色森林土',agri:'小麦・じゃがいも・林業',logic:[{c:'シベリア〜東アジア内陸',e:'厳冬'},{c:'夏に降水集中',e:'Dwb に分類'}],quiz:{q:'Dwb の降水の特徴は？',ch:['夏に集中','冬に集中','一年中均等','ほぼゼロ'],a:0,ex:'夏季に降水が集中する。'}},
+Dwc:{kname:'冷帯冬季少雨（冷涼夏）',soil:'ポドゾル',agri:'林業・遊牧',logic:[{c:'東シベリア',e:'極寒の冬'},{c:'短い夏に雨',e:'Dwc に分類'}],quiz:{q:'東シベリアの冬の特徴は？',ch:['極めて寒冷','温暖','多雨','霧が多い'],a:0,ex:'シベリア高気圧で極寒。'}},
+Dwd:{kname:'冷帯冬季少雨（極寒）',soil:'永久凍土',agri:'ほぼ不可・馴鹿',logic:[{c:'東シベリア内陸',e:'世界有数の寒さ'},{c:'年較差極大',e:'Dwd に分類'}],quiz:{q:'北半球の寒極はどこ？',ch:['東シベリア（ベルホヤンスク等）','北欧','カナダ東岸','アラスカ南岸'],a:0,ex:'ベルホヤンスク・オイミャコンが寒極。'}},
+Dsa:{kname:'冷帯夏季少雨（高温夏）',soil:'ステップ土・褐色土',agri:'綿花・小麦・オアシス',logic:[{c:'内陸で夏乾燥',e:'冬春に降水'},{c:'冬は寒冷',e:'Dsa に分類'}],quiz:{q:'中央アジアのオアシス都市の気候は？',ch:['夏乾燥・冬春に雨','一年中多雨','夏多雨','冬温暖'],a:0,ex:'内陸で夏は乾燥し冬春に降水。'}},
+Dsb:{kname:'冷帯夏季少雨（温暖夏）',soil:'ステップ土',agri:'牧畜・小麦',logic:[{c:'高地・内陸',e:'夏乾燥'},{c:'冬寒冷',e:'Dsb に分類'}],quiz:{q:'高地内陸の降水パターンは？',ch:['冬春に多い','夏に多い','一年中均等','皆無'],a:0,ex:'内陸高地は冬春に降水が多い。'}},
+ET:{kname:'ツンドラ気候',soil:'ツンドラ土・永久凍土',agri:'馴鹿・狩猟',logic:[{c:'高緯度／高地',e:'最暖月0〜10℃'},{c:'樹木が育たない',e:'ET に分類'}],quiz:{q:'ツンドラ気候の最暖月の気温は？',ch:['0〜10℃','10〜20℃','20℃以上','0℃未満'],a:0,ex:'最暖月0〜10℃がツンドラ。'}},
+EF:{kname:'氷雪気候',soil:'氷床',agri:'なし',logic:[{c:'極地／氷床',e:'最暖月0℃未満'},{c:'一年中氷雪',e:'EF に分類'}],quiz:{q:'氷雪気候の最暖月は？',ch:['0℃未満','0〜10℃','10℃以上','20℃以上'],a:0,ex:'最暖月0℃未満で氷雪。'}}
+};
+var GEO_SPOTS=CITY_DATA.map(function(c,i){
+  var ti=TYPE_INFO[c[5]]||TYPE_INFO.Cfa;
+  return {id:'city'+i,kind:'city',name:c[0],country:c[1],region:c[2],lat:c[3],lon:c[4],koppen:c[5],freq:c[6],
+    temp:c[7],prec:c[8],summary:c[9],kname:ti.kname,soil:ti.soil,agri:ti.agri,logic:ti.logic,quiz:[ti.quiz]};
+});
+DESERT_DATA.forEach(function(d,i){
+  var ti=TYPE_INFO[d[4]]||TYPE_INFO.BWh;
+  GEO_SPOTS.push({id:'desert'+i,kind:'desert',name:d[0],country:'砂漠',region:d[1],lat:d[2],lon:d[3],koppen:d[4],freq:0,
+    causes:d[5],causeText:d[6],temp:d[7],prec:d[8],summary:d[6],kname:ti.kname,soil:'砂漠土',agri:'オアシス農業・遊牧',logic:[{c:d[5].join('＋'),e:'降水が蒸発散を下回る'},{c:'乾燥帯 B',e:d[4]+' に分類'}],quiz:[{q:d[0]+'の乾燥成因として正しい組合せは？',ch:[d[5].join('・'),'赤道低圧帯・対流雨','偏西風・暖流','季節風・地形雨'],a:0,ex:d[6]}]});
+});
+
+/* ===== 幾何ヘルパー ===== */
 function chaikin(pts,iter){for(var k=0;k<iter;k++){var o=[];for(var i=0;i<pts.length;i++){var a=pts[i],b=pts[(i+1)%pts.length];o.push([a[0]*.75+b[0]*.25,a[1]*.75+b[1]*.25]);o.push([a[0]*.25+b[0]*.75,a[1]*.25+b[1]*.75]);}pts=o;}return pts;}
 function touchesEdge(ll){for(var i=0;i<ll.length;i++){if(Math.abs(ll[i][0])>=179.5)return true;}return false;}
-function polyPath(ll){var src=touchesEdge(ll)?ll:chaikin(ll,2);var p=src.map(function(q){return proj(q[0],q[1]);});return 'M'+p.map(function(q){return q[0].toFixed(1)+' '+q[1].toFixed(1);}).join('L')+'Z';}
+function bboxOf(p){var x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;for(var i=0;i<p.length;i++){if(p[i][0]<x0)x0=p[i][0];if(p[i][0]>x1)x1=p[i][0];if(p[i][1]<y0)y0=p[i][1];if(p[i][1]>y1)y1=p[i][1];}return{x0:x0,x1:x1,y0:y0,y1:y1};}
 function smoothPath(p){if(p.length<3)return 'M'+p.map(function(q){return q.join(' ');}).join(' L');var d='M '+p[0][0]+' '+p[0][1];for(var i=0;i<p.length-1;i++){var a=p[Math.max(0,i-1)],b=p[i],c=p[i+1],e=p[Math.min(p.length-1,i+2)];d+=' C '+((b[0]+(c[0]-a[0])/6)).toFixed(1)+' '+((b[1]+(c[1]-a[1])/6)).toFixed(1)+', '+((c[0]-(e[0]-b[0])/6)).toFixed(1)+' '+((c[1]-(e[1]-b[1])/6)).toFixed(1)+', '+c[0]+' '+c[1];}return d;}
 function curPath(pts){return smoothPath(pts.map(function(q){var p=proj(q[0],q[1]);return [+p[0].toFixed(1),+p[1].toFixed(1)];}));}
-function rectLL(c){var a=proj(c.lon1,c.lat1),b=proj(c.lon2,c.lat2);return{x:Math.min(a[0],b[0]),y:Math.min(a[1],b[1]),w:Math.abs(b[0]-a[0]),h:Math.abs(b[1]-a[1])};}
+function pathFromLL(pts){
+  var P=pts.map(function(q){return proj(q[0],q[1]);});
+  var n=P.length,p=new Path2D();
+  if(n<3){for(var i=0;i<n;i++){if(i===0)p.moveTo(P[i][0],P[i][1]);else p.lineTo(P[i][0],P[i][1]);}p.closePath();return p;}
+  p.moveTo(P[0][0],P[0][1]);
+  for(var i=0;i<n;i++){
+    var p0=P[(i-1+n)%n],p1=P[i],p2=P[(i+1)%n],p3=P[(i+2)%n];
+    p.bezierCurveTo(p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6,p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6,p2[0],p2[1]);
+  }
+  p.closePath();return p;
+}
+function lineFromLL(pts){var p=new Path2D();for(var i=0;i<pts.length;i++){var q=proj(pts[i][0],pts[i][1]);if(i===0)p.moveTo(q[0],q[1]);else p.lineTo(q[0],q[1]);}return p;}
+function devicePathLL(pts,k,ox,oy){
+  var P=pts.map(function(q){var w=proj(q[0],q[1]);return [w[0]*k+ox,w[1]*k+oy];});
+  var n=P.length,p=new Path2D();
+  if(n<3){for(var i=0;i<n;i++){if(i===0)p.moveTo(P[i][0],P[i][1]);else p.lineTo(P[i][0],P[i][1]);}p.closePath();return p;}
+  p.moveTo(P[0][0],P[0][1]);
+  for(var i=0;i<n;i++){
+    var p0=P[(i-1+n)%n],p1=P[i],p2=P[(i+1)%n],p3=P[(i+2)%n];
+    p.bezierCurveTo(p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6,p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6,p2[0],p2[1]);
+  }
+  p.closePath();return p;
+}
+function ringFromPoly(ll,smooth){
+  var src=smooth?chaikin(ll,2):ll;
+  var p=src.map(function(q){return proj(q[0],q[1]);});
+  var bb=bboxOf(p);
+  var d='M'+p.map(function(q){return q[0].toFixed(1)+' '+q[1].toFixed(1);}).join('L')+'Z';
+  return {d:d,x0:bb.x0,x1:bb.x1,y0:bb.y0,y1:bb.y1};
+}
+var ANT_TOP=mercY(-55);
+var ANT_RING=ringFromPoly(ANT,false);
 
-var mapsvg=document.getElementById('mapsvg');
-var gridGs=qsa('.js-grid'),climGs=qsa('.js-clim'),soilGs=qsa('.js-soil'),curGs=qsa('.js-cur');
-var landEls=qsa('.js-land'),borderEls=qsa('.js-border');
-var mapCopies=qsa('.mapcopy');
-var landClipEl=document.getElementById('landClipPath');
+var viewCanvas=document.getElementById('viewCanvas');
+var vctx=viewCanvas.getContext('2d');
+var baseCanvas=document.createElement('canvas');
+var bctx=baseCanvas.getContext('2d');
+var climCv=document.createElement('canvas'),climCx=climCv.getContext('2d');
+var soilCv=document.createElement('canvas'),soilCx=soilCv.getContext('2d');
+var hatchPattern=null;
 var labelLayer=document.getElementById('labelLayer');
 var pinLayer=document.getElementById('pinLayer');
 var lodPill=document.getElementById('lodPill');
 var coordPill=document.getElementById('coordPill');
+var climPill=document.getElementById('climPill');
 var zoomSliderEl=document.getElementById('zoomSlider'),zoomValEl=document.getElementById('zoomVal');
-
-function buildMap(){
-  var fallbackD=LAND.map(polyPath).join('');
-  gridGs.forEach(function(g){var lo,la,x,y;
-    for(lo=-180;lo<=180;lo+=30){x=proj(lo,0)[0];svgEl('line',{'class':'grat'+(lo===0?' strong':''),x1:x,y1:0,x2:x,y2:1000},g);}
-    for(la=-90;la<=90;la+=30){y=proj(0,la)[1];svgEl('line',{'class':'grat'+(la===0?' strong':''),x1:0,y1:y,x2:2000,y2:y},g);}
-  });
-  climGs.forEach(function(g){CLIM.forEach(function(cc){var r=rectLL(cc);svgEl('rect',{'class':'clim','data-cat':cc.cat,x:-2000,y:r.y,width:6000,height:r.h,fill:CLIM_META[cc.cat].c},g);});});
-  soilGs.forEach(function(g){SOIL.forEach(function(cc){var r=rectLL(cc);svgEl('rect',{'class':'soil','data-cat':cc.cat,x:-2000,y:r.y,width:6000,height:r.h,fill:'url(#pat-'+cc.cat+')'},g);});});
-  curGs.forEach(function(g){CURRENTS.forEach(function(cc,idx){var d=curPath(cc.pts);svgEl('path',{'class':'current '+cc.t,'data-i':idx,d:d},g);svgEl('path',{'class':'current-hit','data-i':idx,d:d},g);});});
-  landEls.forEach(function(p){p.setAttribute('d',fallbackD);});
-  landClipEl.setAttribute('d',fallbackD);
+var dprView=1,dprBase=1;
+function makeHatch(){
+  var s=Math.max(7,Math.round(9*dprBase));
+  var c=document.createElement('canvas');c.width=s;c.height=s;var g=c.getContext('2d');
+  g.strokeStyle=CLIM_META.H.c;g.lineWidth=Math.max(1.1,s*0.2);g.lineCap='square';
+  g.beginPath();g.moveTo(-1,s+1);g.lineTo(s+1,-1);g.stroke();
+  g.beginPath();g.moveTo(-1,1);g.lineTo(1,-1);g.stroke();
+  g.beginPath();g.moveTo(s-1,s+1);g.lineTo(s+1,s-1);g.stroke();
+  hatchPattern=bctx.createPattern(c,'repeat');
 }
 
-var LOD={current:'fallback',desired:'110m',cache:{},fetching:{},failed:{},
+var LOD={current:'fallback',cache:{},fetching:{},failed:{},
   levels:{'110m':{file:'countries-110m.json',dec:1,stride:1,label:'標準'},'50m':{file:'countries-50m.json',dec:2,stride:1,label:'高'},'10m':{file:'countries-10m.json',dec:2,stride:2,label:'最高'}}};
 var scheduleIdle=window.requestIdleCallback?function(f){requestIdleCallback(f,{timeout:1500});}:function(f){setTimeout(f,200);};
+function buildFallback(){
+  var frings=LAND.map(function(ll){return ringFromPoly(ll,!touchesEdge(ll));});
+  LOD.cache['fallback']={rings:frings,borders:[]};
+}
 function topoToGeometry(topo,dec,stride){
   if(!topo||!topo.objects||!topo.objects.land)throw new Error('land missing');
   var t=topo.transform;
@@ -527,8 +1044,7 @@ function topoToGeometry(topo,dec,stride){
     for(var i=0;i<pts.length;i++){
       var lon=pts[i][0]+off;
       if(prev!==null){ if(lon-prev>180){off-=360;lon=pts[i][0]+off;} else if(lon-prev<-180){off+=360;lon=pts[i][0]+off;} }
-      prev=lon;
-      out.push(proj(lon,pts[i][1]));
+      prev=lon;out.push(proj(lon,pts[i][1]));
     }
     return out;
   }
@@ -545,43 +1061,44 @@ function topoToGeometry(topo,dec,stride){
     }
     return pts;
   }
-  function ringD(idxs){
-    var raw=ringPts(idxs);
-    if(raw.length<4)return '';
+  function ringObj(idxs){
+    var raw=ringPts(idxs);if(raw.length<4)return null;
     var closed=(raw[0][0]===raw[raw.length-1][0]&&raw[0][1]===raw[raw.length-1][1]);
     var p=decim(unwrapProj(raw));
     if(closed&&p.length>1){var f=p[0],l2=p[p.length-1];if(Math.abs(l2[0]-f[0])>1||Math.abs(l2[1]-f[1])>1){p[p.length-1]=[f[0],f[1]];}}
-    var minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9,i;
-    for(i=0;i<p.length;i++){if(p[i][0]<minx)minx=p[i][0];if(p[i][0]>maxx)maxx=p[i][0];if(p[i][1]<miny)miny=p[i][1];if(p[i][1]>maxy)maxy=p[i][1];}
-    if((maxx-minx)>0.95*W&&(maxy-miny)<0.2*H)return '';
-    for(i=1;i<p.length;i++){if(Math.abs(p[i][0]-p[i-1][0])>0.9*W)return '';}
-    var s='M'+fmt(p[0]);for(i=1;i<p.length;i++)s+='L'+fmt(p[i]);return s+'Z';
+    var bb=bboxOf(p);
+    if((bb.x1-bb.x0)>0.95*WS&&(bb.y1-bb.y0)<0.15*WS)return null;
+    for(var i=1;i<p.length;i++){if(Math.abs(p[i][0]-p[i-1][0])>0.9*WS)return null;}
+    var s='M'+fmt(p[0]);for(i=1;i<p.length;i++)s+='L'+fmt(p[i]);
+    return {d:s+'Z',x0:bb.x0,x1:bb.x1,y0:bb.y0,y1:bb.y1};
   }
-  function geomD(g){var d='';if(g.type==='Polygon'){g.arcs.forEach(function(r){d+=ringD(r);});}else if(g.type==='MultiPolygon'){g.arcs.forEach(function(poly){poly.forEach(function(r){d+=ringD(r);});});}else if(g.type==='GeometryCollection'){g.geometries.forEach(function(gg){d+=geomD(gg);});}return d;}
-  var landD=geomD(topo.objects.land);
-  var borderD='';
+  function geomRings(g,out){
+    if(g.type==='Polygon'){g.arcs.forEach(function(r){var o=ringObj(r);if(o)out.push(o);});}
+    else if(g.type==='MultiPolygon'){g.arcs.forEach(function(poly){poly.forEach(function(r){var o=ringObj(r);if(o)out.push(o);});});}
+    else if(g.type==='GeometryCollection'){g.geometries.forEach(function(gg){geomRings(gg,out);});}
+  }
+  var rings=[];geomRings(topo.objects.land,rings);
+  rings=rings.filter(function(r){return !((r.x1-r.x0)>0.9*WS && r.y0>ANT_TOP);});
+  rings.push(ANT_RING);
+  var borders=[];
   var cObj=topo.objects.countries;
   if(cObj&&cObj.geometries){
     var use={};
     cObj.geometries.forEach(function(g){var seen={};var polys=g.type==='Polygon'?[g.arcs]:g.type==='MultiPolygon'?g.arcs:[];
       polys.forEach(function(poly){poly.forEach(function(r){r.forEach(function(idx){var k=idx<0?~idx:idx;if(!seen[k]){seen[k]=1;use[k]=(use[k]||0)+1;}});});});});
-    var bs=[];
     for(var k in use){
       if(use[k]>=2){
-        var p=decim(unwrapProj(arcs[k]));
-        var cur='M'+fmt(p[0]),cnt=1;
+        var p=decim(unwrapProj(arcs[k]));var seg=[p[0]];
         for(var i=1;i<p.length;i++){
-          if(Math.abs(p[i][0]-p[i-1][0])>0.9*W){ if(cnt>=2)bs.push(cur); cur='M'+fmt(p[i]); cnt=1; }
-          else { cur+='L'+fmt(p[i]); cnt++; }
+          if(Math.abs(p[i][0]-p[i-1][0])>0.9*WS){ if(seg.length>=2){var bb=bboxOf(seg);borders.push({d:seg.map(function(q,j){return (j?'L':'M')+fmt(q);}).join(''),x0:bb.x0,x1:bb.x1,y0:bb.y0,y1:bb.y1});} seg=[p[i]]; }
+          else seg.push(p[i]);
         }
-        if(cnt>=2)bs.push(cur);
+        if(seg.length>=2){var bb2=bboxOf(seg);borders.push({d:seg.map(function(q,j){return (j?'L':'M')+fmt(q);}).join(''),x0:bb2.x0,x1:bb2.x1,y0:bb2.y0,y1:bb2.y1});}
       }
     }
-    borderD=bs.join('');
   }
-  return {landD:landD,borderD:borderD};
+  return {rings:rings,borders:borders};
 }
-function applyGeometry(geo,id){landEls.forEach(function(el){el.setAttribute('d',geo.landD);});landClipEl.setAttribute('d',geo.landD);borderEls.forEach(function(el){el.setAttribute('d',geo.borderD||'');});LOD.current=id;updateLodUI();}
 function updateLodUI(){var l=LOD.levels[LOD.current];var loading=Object.keys(LOD.fetching).length>0;lodPill.className='pill'+(loading?' loading':'');lodPill.innerHTML='詳細 <b>'+(l?l.label:'簡易')+'</b>'+(loading?' ⏳':'');}
 function fetchTopo(file){
   var bases=['https://cdn.jsdelivr.net/npm/world-atlas@2/','https://unpkg.com/world-atlas@2/'];
@@ -605,32 +1122,263 @@ function ensureLod(id){
       try{LOD.cache[id]=topoToGeometry(topo,LOD.levels[id].dec,LOD.levels[id].stride);delete LOD.failed[id];}
       catch(e){LOD.failed[id]=1;}
       delete LOD.fetching[id];updateLodUI();
-      if(atlas)atlas.scheduleCommit(0);
+      if(atlas)atlas.scheduleRender(0);
       var nx=id==='110m'?'50m':id==='50m'?'10m':null;if(nx)scheduleIdle(function(){ensureLod(nx);});
     };
     scheduleIdle(run);
   }).catch(function(){LOD.failed[id]=1;delete LOD.fetching[id];updateLodUI();});
 }
-function lodForMult(m){return m>=4.5?'10m':m>=1.4?'50m':'110m';}
-function maybeApplyLod(){if(!atlas)return;var want=lodForMult(atlas.s/atlas.fitS);var geo=LOD.cache[want];if(geo&&LOD.current!==want)applyGeometry(geo,want);}
-function prefetchLod(mult){LOD.desired=lodForMult(mult);ensureLod(LOD.desired);if(mult>=1.1)ensureLod('50m');if(mult>=3.2)ensureLod('10m');}
-function commitLodVisuals(mult){var bOp=clamp((mult-1.4)/2,0,1)*0.55;borderEls.forEach(function(el){el.style.opacity=bOp;});maybeApplyLod();}
-lodPill.addEventListener('click',function(){delete LOD.failed[LOD.desired];ensureLod(LOD.desired);});
+function lodForLi(li){return li>=4?'10m':li>=2?'50m':'110m';}
+function prefetchLod(li){var w=lodForLi(li);ensureLod(w);if(li>=1)ensureLod('50m');if(li>=3)ensureLod('10m');}
+lodPill.addEventListener('click',function(){var w=lodForLi(atlas?atlas.liNow():0);delete LOD.failed[w];ensureLod(w);});
 
-/* ============================================================
-   Atlas：オーバー スキャン＋transform手势／アイドル時コミット
-============================================================ */
+/* ===== 気候グリッド ===== */
+var GW=720,GH=360,climGrid=null,anchorCellMap={};
+function pointInPoly(x,y,pts){
+  var inside=false;
+  for(var i=0,j=pts.length-1;i<pts.length;j=i++){
+    var xi=pts[i][0],yi=pts[i][1],xj=pts[j][0],yj=pts[j][1];
+    if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))inside=!inside;
+  }
+  return inside;
+}
+function fbClass(lon,lat){
+  if(lat<=-62)return 'EF';
+  if(lat>=79)return 'EF';
+  if(lat>=69||lat<=-52)return 'ET';
+  if(lon>=-20&&lon<=52&&lat<37&&lat>-36){
+    if(lat>=31)return 'Csa';
+    if(lat>=17)return 'BWh';
+    if(lat>=11)return 'BSh';
+    if(lat>=4)return 'Aw';
+    if(lat>=-6)return 'Af';
+    if(lat>=-18)return 'Aw';
+    if(lat>=-27)return 'BSh';
+    return 'Csb';
+  }
+  if(lon>=-12&&lon<=60){
+    if(lat>=50)return 'Dfb';
+    if(lat>=44)return 'Dfb';
+    if(lat>=36)return 'Cfb';
+    if(lat>=30)return 'Csa';
+    return 'BWh';
+  }
+  if(lon>60&&lon<=104){
+    if(lat>=50)return 'Dfb';
+    if(lat>=42)return 'BSk';
+    if(lat>=34)return 'BSk';
+    if(lat>=28)return 'BWh';
+    if(lat>=20)return 'Aw';
+    if(lat>=8)return 'Aw';
+    return 'Af';
+  }
+  if(lon>104&&lon<=150){
+    if(lat>=52)return 'Dwb';
+    if(lat>=35)return 'Dwa';
+    if(lat>=22)return 'Cfa';
+    if(lat>=10)return 'Aw';
+    if(lat>=-10)return 'Af';
+    if(lat>=-20)return 'Aw';
+    if(lat>=-30)return 'BWh';
+    return 'Cfa';
+  }
+  if(lon<-30){
+    if(lat>=50)return 'Dfb';
+    if(lat>=42)return 'Dfa';
+    if(lat>=33)return lon<-100?'BSk':'Cfa';
+    if(lat>=22)return lon<-100?'BWh':'Aw';
+    if(lat>=8)return 'Aw';
+    if(lat>=-6)return 'Af';
+    if(lat>=-22)return 'Aw';
+    if(lat>=-38)return 'Cfa';
+    return 'Cfb';
+  }
+  return lat>0?'Aw':'Cfb';
+}
+function buildClimateGrid(){
+  climGrid=new Uint8Array(GW*GH);
+  anchorCellMap={};
+  for(var gy=0;gy<GH;gy++){
+    var lat=90-(gy+0.5)*180/GH;
+    for(var gx=0;gx<GW;gx++){
+      var lon=-180+(gx+0.5)*360/GW;
+      climGrid[gy*GW+gx]=CLIM_INDEX[fbClass(lon,lat)];
+    }
+  }
+  CLIM_REGIONS.forEach(function(r){
+    var c=CLIM_INDEX[r.cat];if(c===undefined)return;
+    var pts=r.pts,minLon=1e9,maxLon=-1e9,minLat=1e9,maxLat=-1e9;
+    for(var i=0;i<pts.length;i++){var p=pts[i];
+      if(p[0]<minLon)minLon=p[0];if(p[0]>maxLon)maxLon=p[0];
+      if(p[1]<minLat)minLat=p[1];if(p[1]>maxLat)maxLat=p[1];}
+    var gx0=Math.max(0,Math.floor((minLon+180)/360*GW)),gx1=Math.min(GW-1,Math.ceil((maxLon+180)/360*GW));
+    var gy0=Math.max(0,Math.floor((90-maxLat)/180*GH)),gy1=Math.min(GH-1,Math.ceil((90-minLat)/180*GH));
+    for(var gy=gy0;gy<=gy1;gy++){
+      var lat=90-(gy+0.5)*180/GH;
+      for(var gx=gx0;gx<=gx1;gx++){
+        var lon=-180+(gx+0.5)*360/GW;
+        if(pointInPoly(lon,lat,pts))climGrid[gy*GW+gx]=c;
+      }
+    }
+  });
+  var R=3.0,dist=new Float32Array(GW*GH);
+  for(var i=0;i<dist.length;i++)dist[i]=Infinity;
+  CLIM_ANCHORS.forEach(function(a){
+    var c=CLIM_INDEX[a[2]];if(c===undefined)return;
+    var ax=a[0],ay=a[1];
+    var gx0=Math.floor((ax-R+180)/360*GW),gx1=Math.floor((ax+R+180)/360*GW);
+    var gy0=Math.max(0,Math.floor((90-(ay+R))/180*GH)),gy1=Math.min(GH-1,Math.floor((90-(ay-R))/180*GH));
+    for(var gy=gy0;gy<=gy1;gy++){
+      var lat=90-(gy+0.5)*180/GH,cosLat=Math.cos(lat*Math.PI/180);
+      for(var gx=gx0;gx<=gx1;gx++){
+        var gxw=((gx%GW)+GW)%GW,lon=-180+(gxw+0.5)*360/GW;
+        var dLon=Math.abs(lon-ax);if(dLon>180)dLon=360-dLon;
+        var dx=dLon*cosLat,dy=lat-ay,d=dx*dx+dy*dy,idx=gy*GW+gxw;
+        if(d<R*R&&d<=dist[idx]){dist[idx]=d;climGrid[idx]=c;}
+      }
+    }
+    var acx=((Math.floor((ax+180)/360*GW)%GW)+GW)%GW,acy=clamp(Math.floor((90-ay)/180*GH),0,GH-1);
+    anchorCellMap[acy*GW+acx]=c;
+  });
+  var out=new Uint8Array(climGrid);
+  for(var gy=1;gy<GH-1;gy++){
+    for(var gx=0;gx<GW;gx++){
+      var idx=gy*GW+gx;if(anchorCellMap[idx]!==undefined)continue;
+      var cnt={},best=climGrid[idx],bc=0;
+      for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){
+        var nx=((gx+dx)%GW+GW)%GW,v=climGrid[(gy+dy)*GW+nx];
+        cnt[v]=(cnt[v]||0)+1;if(cnt[v]>bc){bc=cnt[v];best=v;}
+      }
+      if(bc>=6)out[idx]=best;
+    }
+  }
+  climGrid=out;
+  for(var k in anchorCellMap)climGrid[k]=anchorCellMap[k];
+}
+function climateAt(lon,lat){
+  if(!climGrid)return null;
+  var gx=((Math.floor((lon+180)/360*GW)%GW)+GW)%GW,gy=clamp(Math.floor((90-lat)/180*GH),0,GH-1);
+  return CLIM_CLASSES[climGrid[gy*GW+gx]];
+}
+function nearestStation(lon,lat){
+  var best=null,bd=1e9,cl=Math.cos(lat*Math.PI/180);
+  for(var i=0;i<CLIM_ANCHORS.length;i++){
+    var a=CLIM_ANCHORS[i];
+    var dl=Math.abs(lon-a[0]);if(dl>180)dl=360-dl;
+    var dx=dl*cl,dy=lat-a[1],d=dx*dx+dy*dy;
+    if(d<bd){bd=d;best=a;}
+  }
+  return best?{name:best[3],cat:best[2],dist:Math.sqrt(bd)}:null;
+}
+var climateRaster=null,climateRasterFocus=null;
+function buildClimateRaster(focusCat){
+  var RS=1536,cv=document.createElement('canvas');cv.width=RS;cv.height=RS;
+  var cx=cv.getContext('2d'),img=cx.createImageData(RS,RS),d=img.data;
+  var rows=new Int32Array(RS);
+  for(var y=0;y<RS;y++){
+    var n=Math.PI*(1-2*y/RS),lat=Math.atan(Math.sinh(n))*180/Math.PI;
+    rows[y]=clamp(Math.floor((90-lat)/180*GH),0,GH-1)*GW;
+  }
+  var rgb={};
+  CLIM_CLASSES.forEach(function(c){
+    var col=CLIM_META[c].c;
+    if(focusCat&&focusCat!==c)col=mixHex(col,'#16283a',0.84);
+    rgb[CLIM_INDEX[c]]=hex2rgb(col);
+  });
+  for(var y=0;y<RS;y++){
+    var base=rows[y];
+    for(var x=0;x<RS;x++){
+      var gx=Math.floor(x/RS*GW);if(gx>=GW)gx=GW-1;
+      var col=rgb[climGrid[base+gx]],idx=(y*RS+x)*4;
+      d[idx]=col[0];d[idx+1]=col[1];d[idx+2]=col[2];d[idx+3]=255;
+    }
+  }
+  cx.putImageData(img,0,0);
+  return cv;
+}
+function getClimateRaster(){
+  var f=(focus&&focus.layer==='clim')?focus.cat:null;
+  if(!climateRaster||climateRasterFocus!==f){climateRaster=buildClimateRaster(f);climateRasterFocus=f;}
+  return climateRaster;
+}
+
+/* ===== レイヤー描画 ===== */
+function colFor(layerName,meta,cat){
+  var c=meta[cat].c;
+  if(focus&&focus.layer===layerName&&focus.cat!==cat)return mixHex(c,'#16283a',0.84);
+  return c;
+}
+function paintClimate(k,ox,oy,pathLand,bw,bh,opacity){
+  if(climCv.width!==bw||climCv.height!==bh){climCv.width=bw;climCv.height=bh;}
+  climCx.setTransform(1,0,0,1,0,0);climCx.clearRect(0,0,bw,bh);
+  climCx.save();
+  climCx.setTransform(k,0,0,k,ox,oy);
+  climCx.clip(pathLand,'nonzero');
+  climCx.imageSmoothingEnabled=true;
+  climCx.drawImage(getClimateRaster(),0,0,WS,WS);
+  climCx.setTransform(1,0,0,1,0,0);
+  var dimH=focus&&focus.layer==='clim'&&focus.cat!=='H';
+  H_POLYS.forEach(function(poly){
+    var dp=devicePathLL(poly,k,ox,oy);
+    climCx.globalAlpha=dimH?0.10:0.14;
+    climCx.fillStyle=CLIM_META.H.c;climCx.fill(dp);
+    climCx.globalAlpha=dimH?0.22:0.95;
+    climCx.fillStyle=hatchPattern;climCx.fill(dp);
+    climCx.globalAlpha=1;
+  });
+  climCx.restore();
+  bctx.setTransform(1,0,0,1,0,0);
+  bctx.globalAlpha=clamp(opacity,0,1);
+  bctx.drawImage(climCv,0,0);
+  bctx.globalAlpha=1;
+}
+function paintSoil(k,ox,oy,pathLand,bw,bh,opacity){
+  if(soilCv.width!==bw||soilCv.height!==bh){soilCv.width=bw;soilCv.height=bh;}
+  soilCx.setTransform(1,0,0,1,0,0);soilCx.clearRect(0,0,bw,bh);
+  soilCx.save();
+  soilCx.setTransform(k,0,0,k,ox,oy);
+  soilCx.clip(pathLand,'nonzero');
+  soilCx.globalAlpha=1;
+  for(var o=0;o<SOIL_ORDER.length;o++){
+    var cat=SOIL_ORDER[o];
+    soilCx.fillStyle=colFor('soil',SOIL_META,cat);
+    for(var i=0;i<SOIL.length;i++){if(SOIL[i].cat===cat)soilCx.fill(pathFromLL(SOIL[i].pts),'nonzero');}
+  }
+  soilCx.restore();
+  bctx.setTransform(1,0,0,1,0,0);
+  bctx.globalAlpha=clamp(opacity,0,1);
+  bctx.drawImage(soilCv,0,0);
+  bctx.globalAlpha=1;
+}
+function paintWater(k,ox,oy){
+  bctx.setTransform(k,0,0,k,ox,oy);
+  bctx.lineJoin='round';bctx.lineCap='round';
+  for(var i=0;i<LAKES.length;i++){
+    var p=pathFromLL(LAKES[i].pts);
+    bctx.fillStyle='#3f8fd4';bctx.fill(p,'nonzero');
+    bctx.strokeStyle='#7fc3f7';bctx.lineWidth=0.8/k;bctx.stroke(p);
+  }
+  for(var j=0;j<RIVERS.length;j++){
+    var rp=lineFromLL(RIVERS[j].pts);
+    bctx.strokeStyle='#3f8fd4';bctx.lineWidth=1.4/k;bctx.stroke(rp);
+    bctx.strokeStyle='rgba(127,195,247,.5)';bctx.lineWidth=0.5/k;bctx.stroke(rp);
+  }
+}
+
+/* ===== Atlas ===== */
 var atlas=null;
-function Atlas(svg,vp){
-  this.svg=svg;this.vp=vp;
-  this.s=1;this.cx=W/2;this.cy=H/2;
-  this.rS=1;this.rCx=W/2;this.rCy=H/2;
-  this.fitS=1;this.vw=0;this.vh=0;this.ew=0;this.eh=0;this.L=0;this.T=0;
+function Atlas(vp){
+  atlas=this;
+  this.vp=vp;
+  this.s=1;this.cx=WS/2;this.cy=WS/2;
+  this.sMin=1;this.vw=0;this.vh=0;
   this.rect=null;
+  this.base={sB:0,bcx:0,bcy:0,k:1,li:-1,valid:false,w:0,h:0};
   this.pins=[];this.labels=[];
   this.touchMode='none';this.pinch=null;this.panLast=null;this.moved=false;this.mouse=null;this.lastTap=0;
-  this._raf=0;this._paintQueued=false;this._commitTimer=0;this._rr=0;
-  this._lastCommit=0;this._animsPaused=false;this._px=0;this._py=0;this._coordDirty=false;this._lastMult=-1;this._tier='';
+  this._raf=0;this._paintQueued=false;this._renderTimer=0;this._rr=0;
+  this._lastRender=0;this._px=0;this._py=0;this._coordDirty=false;this._lastMult=-1;this._tier='';
+  this._perr=false;this._rerr=false;
   this._bind();this.resize(true);
 }
 Atlas.prototype._bind=function(){
@@ -646,137 +1394,241 @@ Atlas.prototype._bind=function(){
   vp.addEventListener('wheel',function(e){self.onWheel(e);},{passive:false});
   vp.addEventListener('dblclick',function(e){var p=self.posXY(e.clientX,e.clientY);self.zoomAt(p.x,p.y,1.8,true);});
   vp.addEventListener('contextmenu',function(e){e.preventDefault();});
-  vp.addEventListener('mousemove',function(e){self._px=e.clientX;self._py=e.clientY;self._coordDirty=true;},{passive:true});
+  vp.addEventListener('mousemove',function(e){self._px=e.clientX;self._py=e.clientY;self._coordDirty=true;self.paint();},{passive:true});
   window.addEventListener('resize',function(){self.resize(false);});
-  if(window.ResizeObserver){try{new ResizeObserver(function(){self.resize(false);}).observe(vp);}catch(e){}}
+  if(window.ResizeObserver){try{new ResizeObserver(function(){try{self.resize(false);}catch(err){}}).observe(vp);}catch(e){}}
 };
 Atlas.prototype.cacheRect=function(){this.rect=this.vp.getBoundingClientRect();};
 Atlas.prototype.posXY=function(cx,cy){if(!this.rect)this.cacheRect();return{x:cx-this.rect.left,y:cy-this.rect.top};};
 Atlas.prototype.pos=function(t){return this.posXY(t.clientX,t.clientY);};
+Atlas.prototype.liNow=function(){return clamp(Math.round(Math.log2(this.s/this.sMin)),0,6);};
 Atlas.prototype.resize=function(init){
   this.cacheRect();
   var vw=this.rect.width,vh=this.rect.height;
   if(!vw||!vh){ if(this._rr<40){this._rr++;var self=this;setTimeout(function(){self.resize(init);},60);} return; }
   this._rr=0;
-  var mult=this.fitS?this.s/this.fitS:1;
+  var mult=this.sMin?this.s/this.sMin:1;
   this.vw=vw;this.vh=vh;
-  this.fitS=vh/H;
-  /* オーバースキャン要素サイズ */
-  this.ew=vw*OSX;this.eh=vh*OSY;
-  this.L=-(OSX-1)/2*vw;this.T=-(OSY-1)/2*vh;
-  this.svg.style.width=this.ew+'px';this.svg.style.height=this.eh+'px';
-  this.svg.style.left=this.L+'px';this.svg.style.top=this.T+'px';
-  if(init){this.s=this.fitS;this.cx=W/2;this.cy=H/2;}else{this.s=this.fitS*mult;}
-  this.normalize();
-  this.commit();
+  dprView=Math.min(window.devicePixelRatio||1,2);
+  dprBase=Math.min(window.devicePixelRatio||1,2);
+  viewCanvas.width=Math.round(vw*dprView);viewCanvas.height=Math.round(vh*dprView);
+  this.sMin=Math.min(vw/WS,vh/WS);
+  var bw=Math.round(vw*1.6*dprBase),bh=Math.round(vh*1.6*dprBase);
+  if(baseCanvas.width!==bw||baseCanvas.height!==bh){baseCanvas.width=bw;baseCanvas.height=bh;this.base.valid=false;makeHatch();}
+  if(init){this.s=this.sMin;this.cx=WS/2;this.cy=WS/2;}else{this.s=this.sMin*mult;}
+  this.normalize();this.render();this.paint();
 };
 Atlas.prototype.normalize=function(){
-  this.s=clamp(this.s,this.fitS,this.fitS*12);
+  this.s=clamp(this.s,this.sMin,this.sMin*64);
   var vhW=this.vh/this.s;
-  if(vhW>=H-0.001){this.cy=H/2;}else{this.cy=clamp(this.cy,vhW/2,H-vhW/2);}
-  this.cx=((this.cx%W)+W)%W;
+  if(vhW>=WS-0.001){this.cy=WS/2;}else{this.cy=clamp(this.cy,vhW/2,WS-vhW/2);}
+  this.cx=((this.cx%WS)+WS)%WS;
 };
 Atlas.prototype.paint=function(){
   if(this._paintQueued)return;
   this._paintQueued=true;
   var self=this;
-  requestAnimationFrame(function(){self._paintQueued=false;self._doPaint();});
+  requestAnimationFrame(function(){self._paintQueued=false;self.paintSafe();});
+};
+Atlas.prototype.paintSafe=function(){
+  try{this._doPaint();}
+  catch(e){if(!this._perr){this._perr=true;showErr('ペイントエラー: '+e.message);if(window.console)console.error(e);}}
 };
 Atlas.prototype._doPaint=function(){
-  var a=this.s/this.rS;
-  var x0=this.rCx-this.ew/(2*this.rS);
-  var y0=this.rCy-this.eh/(2*this.rS);
-  var tx=this.s*(x0-this.cx)+this.vw/2-this.L;
-  var ty=this.s*(y0-this.cy)+this.vh/2-this.T;
-  this.svg.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+a.toFixed(4)+')';
-  this.updateOverlays();
-  var mult=this.s/this.fitS;
-  if(Math.abs(mult-this._lastMult)>0.02){this._lastMult=mult;zoomSliderEl.value=Math.log2(mult);zoomValEl.textContent='×'+mult.toFixed(1);prefetchLod(mult);}
-  if(this._coordDirty){this._coordDirty=false;this.writeCoord();}
-  if(!this._animsPaused){this._animsPaused=true;this.setAnims('paused');}
-  /* 表示範囲がオーバースキャン余白を超えた時だけ間引きコミット（空白防止） */
-  var txMin=this.vw-this.L-a*this.ew, txMax=-this.L;
-  var tyMin=this.vh-this.T-a*this.eh, tyMax=-this.T;
-  var gap=(tx<txMin||tx>txMax||ty<tyMin||ty>tyMax);
-  if(gap&&performance.now()-this._lastCommit>260){this.commit();return;}
-  this.scheduleCommit(110);
-};
-Atlas.prototype.setAnims=function(state){var cs=qsa('.current');for(var i=0;i<cs.length;i++)cs[i].style.animationPlayState=state;};
-Atlas.prototype.scheduleCommit=function(delay){
-  var self=this;
-  if(this._commitTimer)clearTimeout(this._commitTimer);
-  this._commitTimer=setTimeout(function(){self._commitTimer=0;self.commit();},delay==null?110:delay);
-};
-Atlas.prototype.commit=function(){
-  if(this._commitTimer){clearTimeout(this._commitTimer);this._commitTimer=0;}
-  this.normalize();
-  this.rS=this.s;this.rCx=this.cx;this.rCy=this.cy;
-  this.svg.style.transform='';
-  var EWw=this.ew/this.rS, EHw=this.eh/this.rS;
-  this.svg.setAttribute('viewBox',(this.cx-EWw/2).toFixed(2)+' '+(this.cy-EHw/2).toFixed(2)+' '+EWw.toFixed(2)+' '+EHw.toFixed(2));
-  /* 画面外コピーをカリングしてラスタコスト削減 */
-  var R0=this.cx-EWw/2,R1=this.cx+EWw/2,M=2*(R1-R0);
-  for(var i=0;i<mapCopies.length;i++){var o=(i-1)*2000;mapCopies[i].style.display=((o<=R1+M)&&(o+2000>=R0-M))?'':'none';}
-  this._lastCommit=performance.now();
-  if(this._animsPaused){this._animsPaused=false;if(layerState.curAnim)this.setAnims('running');}
-  var mult=this.s/this.fitS;
-  commitLodVisuals(mult);
-  this._lastMult=mult;zoomSliderEl.value=Math.log2(mult);zoomValEl.textContent='×'+mult.toFixed(1);
-  this.updateOverlays();
-};
-Atlas.prototype.updateOverlays=function(){
-  var vw=this.vw,vh=this.vh,i,p,lb,off,sx,sy,el,vis;
-  for(i=0;i<this.pins.length;i++){p=this.pins[i];
-    off=Math.round((this.cx-p.wx)/W)*W;
-    sx=(p.wx+off-this.cx)*this.s+vw/2; sy=(p.wy-this.cy)*this.s+vh/2; el=p.el;
-    vis=!(sx<-40||sx>vw+40||sy<-40||sy>vh+40);
-    if(vis!==p.vis){p.vis=vis;el.style.display=vis?'':'none';}
-    if(vis)el.style.transform='translate3d('+sx.toFixed(1)+'px,'+sy.toFixed(1)+'px,0) translate(-50%,-100%)';
+  var b=this.base;
+  if(b.valid){
+    var k=b.k,a=(this.s*dprView)/k;
+    var tx=(b.bcx-this.cx)*this.s*dprView+(this.vw*dprView)/2-(b.w/2)*a;
+    var ty=(b.bcy-this.cy)*this.s*dprView+(this.vh*dprView)/2-(b.h/2)*a;
+    vctx.setTransform(1,0,0,1,0,0);
+    vctx.clearRect(0,0,viewCanvas.width,viewCanvas.height);
+    vctx.setTransform(a,0,0,a,tx,ty);
+    vctx.drawImage(baseCanvas,0,0);
+    vctx.setTransform(1,0,0,1,0,0);
   }
-  var tierNum=this._tier==='2'?2:this._tier==='1'?1:0;
-  if(tierNum>0&&layerState.label){
-    for(i=0;i<this.labels.length;i++){lb=this.labels[i];
-      if(lb.tier>tierNum){if(lb.vis){lb.vis=false;lb.el.style.display='none';}continue;}
-      off=Math.round((this.cx-lb.wx)/W)*W;
-      sx=(lb.wx+off-this.cx)*this.s+vw/2; sy=(lb.wy-this.cy)*this.s+vh/2; el=lb.el;
-      vis=!(sx<-80||sx>vw+80||sy<-40||sy>vh+40);
-      if(vis!==lb.vis){lb.vis=vis;el.style.display=vis?'':'none';}
-      if(vis)el.style.transform='translate3d('+sx.toFixed(1)+'px,'+sy.toFixed(1)+'px,0) translate(-50%,-50%)';
+  this.updateOverlays();
+  var mult=this.s/this.sMin;
+  if(Math.abs(mult-this._lastMult)>0.02){this._lastMult=mult;zoomSliderEl.value=Math.log2(mult);zoomValEl.textContent='×'+mult.toFixed(1);prefetchLod(this.liNow());}
+  if(this._coordDirty){this._coordDirty=false;this.writeCoord();this.writeClimateProbe();}
+  this.checkRender();
+};
+Atlas.prototype.checkRender=function(){
+  var b=this.base,li=this.liNow(),sB=this.sMin*Math.pow(2,li);
+  var snap=Math.max(this.vw,this.vh)/sB*0.25;
+  var bcx=Math.round(this.cx/snap)*snap;
+  var bhWorld=(baseCanvas.height/dprBase)/sB;
+  var bcy=bhWorld>=WS?WS/2:clamp(Math.round(this.cy/snap)*snap,bhWorld/2,WS-bhWorld/2);
+  var need=!b.valid||li!==b.li||Math.abs(bcx-b.bcx)>1||Math.abs(bcy-b.bcy)>1;
+  var gap=false;
+  if(b.valid){
+    var hw=(b.w/2)/b.k,hh=(b.h/2)/b.k;
+    var vw2=this.vw/(2*this.s),vh2=this.vh/(2*this.s);
+    gap=(Math.abs(this.cx-b.bcx)+vw2>hw*0.98)||(Math.abs(this.cy-b.bcy)+vh2>hh*0.98);
+  }
+  if(gap&&performance.now()-this._lastRender>250){this.render();return;}
+  if(need||gap)this.scheduleRender(120);
+};
+Atlas.prototype.scheduleRender=function(delay){
+  var self=this;
+  if(this._renderTimer)clearTimeout(this._renderTimer);
+  this._renderTimer=setTimeout(function(){self._renderTimer=0;self.render();},delay==null?120:delay);
+};
+Atlas.prototype.render=function(){
+  try{this.renderCore();}
+  catch(e){if(!this._rerr){this._rerr=true;showErr('レンダーエラー: '+e.message);if(window.console)console.error(e);}}
+};
+Atlas.prototype.renderCore=function(){
+  if(this._renderTimer){clearTimeout(this._renderTimer);this._renderTimer=0;}
+  this.normalize();
+  var li=this.liNow(),sB=this.sMin*Math.pow(2,li),k=sB*dprBase;
+  var bw=baseCanvas.width,bh=baseCanvas.height;
+  var snap=Math.max(this.vw,this.vh)/sB*0.25;
+  var bcx=Math.round(this.cx/snap)*snap;
+  var bhWorld=bh/k;
+  var bcy=bhWorld>=WS?WS/2:clamp(Math.round(this.cy/snap)*snap,bhWorld/2,WS-bhWorld/2);
+  var want=lodForLi(li);
+  if(LOD.cache[want])LOD.current=want;
+  updateLodUI();
+  var G=LOD.cache[LOD.current];
+  var hw=bw/2/k,hh=bh/2/k,pad=0.1*Math.max(hw,hh);
+  var r0=bcx-hw-pad,r1=bcx+hw+pad,t0=bcy-hh-pad,t1=bcy+hh+pad;
+  function vis(rr){if(rr.y1<t0||rr.y0>t1)return 0;var m=0;for(var q=-1;q<=1;q++){var x0=rr.x0+q*WS,x1=rr.x1+q*WS;if(!(x1<r0||x0>r1))m|=(1<<(q+1));}return m;}
+  var pathLand=new Path2D(),hasLand=false;
+  var DM=window.DOMMatrix?new DOMMatrix():null;
+  if(G){
+    for(var i=0;i<G.rings.length;i++){
+      var m=vis(G.rings[i]);if(!m)continue;
+      var rp=new Path2D(G.rings[i].d);hasLand=true;
+      for(var q=-1;q<=1;q++){
+        if(!(m&(1<<(q+1))))continue;
+        if(q===0)pathLand.addPath(rp);
+        else if(DM)pathLand.addPath(rp,DM.translate(q*WS,0));
+        else pathLand.addPath(rp);
+      }
     }
   }
-  var mult=this.s/this.fitS;
-  var tier=mult>=3?'2':mult>=1.7?'1':'0';
-  if(tier!==this._tier){this._tier=tier;labelLayer.dataset.tier=tier;}
+  bctx.setTransform(1,0,0,1,0,0);
+  bctx.fillStyle='#000';bctx.fillRect(0,0,bw,bh);
+  var ox=bw/2-bcx*k,oy=bh/2-bcy*k;
+  bctx.setTransform(k,0,0,k,ox,oy);
+  if(layerState.grid){
+    bctx.strokeStyle='rgba(140,190,230,.16)';bctx.lineWidth=1/k;bctx.beginPath();
+    for(var lo=-180;lo<=180;lo+=30){var gx=mercX(lo);for(var qq=-1;qq<=1;qq++){bctx.moveTo(gx+qq*WS,0);bctx.lineTo(gx+qq*WS,WS);}}
+    for(var la=-60;la<=60;la+=30){var gy=mercY(la);bctx.moveTo(-WS,gy);bctx.lineTo(2*WS,gy);}
+    bctx.stroke();
+    bctx.strokeStyle='rgba(140,190,230,.34)';bctx.beginPath();var eq=mercY(0);bctx.moveTo(-WS,eq);bctx.lineTo(2*WS,eq);
+    var pm=mercX(0);for(var qq2=-1;qq2<=1;qq2++){bctx.moveTo(pm+qq2*WS,0);bctx.lineTo(pm+qq2*WS,WS);}bctx.stroke();
+  }
+  var lg=bctx.createLinearGradient(0,0,0,WS);lg.addColorStop(0,'#466850');lg.addColorStop(1,'#33503d');
+  if(hasLand){
+    bctx.fillStyle=lg;bctx.fill(pathLand,'nonzero');
+    bctx.strokeStyle='rgba(190,230,190,.55)';bctx.lineWidth=1/k;bctx.stroke(pathLand);
+  }
+  if(hasLand&&layerState.clim)paintClimate(k,ox,oy,pathLand,bw,bh,layerState.opClim/100);
+  if(hasLand&&layerState.soil)paintSoil(k,ox,oy,pathLand,bw,bh,layerState.opSoil/100);
+  bctx.setTransform(k,0,0,k,ox,oy);
+  if(layerState.water)paintWater(k,ox,oy);
+  if(G&&hasLand){
+    var bOp=clamp((this.s/this.sMin-1.4)/2,0,1)*0.6;
+    if(bOp>0.02){
+      var pathB=new Path2D(),hasB=false;
+      for(var bi=0;bi<G.borders.length;bi++){var mm=vis(G.borders[bi]);if(!mm)continue;var bp=new Path2D(G.borders[bi].d);hasB=true;
+        for(var q3=-1;q3<=1;q3++){if(!(mm&(1<<(q3+1))))continue;if(q3===0)pathB.addPath(bp);else if(DM)pathB.addPath(bp,DM.translate(q3*WS,0));else pathB.addPath(bp);}}
+      if(hasB){bctx.strokeStyle='rgba(226,240,232,'+bOp.toFixed(2)+')';bctx.lineWidth=0.8/k;bctx.stroke(pathB);}
+    }
+  }
+  if(layerState.cur){
+    bctx.lineWidth=2.4/k;
+    if(layerState.curAnim)bctx.setLineDash([9/k,7/k]);else bctx.setLineDash([]);
+    for(var ui=0;ui<CURRENTS.length;ui++){
+      var cu=CURRENTS[ui];
+      var al3=1;if(focus&&(focus.layer==='warm'||focus.layer==='cold'))al3=((focus.layer==='warm')===(cu.t==='warm'))?1:0.12;
+      bctx.globalAlpha=al3;
+      bctx.strokeStyle=cu.t==='warm'?'#ff7a59':'#4fc3f7';
+      var cp2=new Path2D(curPath(cu.pts));
+      for(var q4=-1;q4<=1;q4++){bctx.save();bctx.translate(q4*WS,0);bctx.stroke(cp2);bctx.restore();}
+    }
+    bctx.globalAlpha=1;bctx.setLineDash([]);
+  }
+  bctx.setTransform(1,0,0,1,0,0);
+  this.base={sB:sB,bcx:bcx,bcy:bcy,k:k,li:li,valid:true,w:bw,h:bh};
+  this._lastRender=performance.now();this._lastMult=-1;
+  this.paint();
+};
+function rectsOverlap(a,b){return !(a.x+a.w<b.x||b.x+b.w<a.x||a.y+a.h<b.y||b.y+b.h<a.y);}
+Atlas.prototype.updateOverlays=function(){
+  var vw=this.vw,vh=this.vh,i,j,p,lb,off,sx,sy,el,vis;
+  if(!vw||!vh)return;
+  var placed=[];
+  for(i=0;i<this.pins.length;i++){p=this.pins[i];
+    off=Math.round((this.cx-p.wx)/WS)*WS;
+    sx=(p.wx+off-this.cx)*this.s+vw/2;sy=(p.wy-this.cy)*this.s+vh/2;el=p.el;
+    vis=!(sx<-40||sx>vw+40||sy<-40||sy>vh+40);
+    if(vis!==p.vis){p.vis=vis;el.style.display=vis?'':'none';}
+    if(vis){el.style.transform='translate3d('+((sx+0.5)|0)+'px,'+((sy+0.5)|0)+'px,0) translate(-50%,-50%)';placed.push({x:sx-13,y:sy-13,w:26,h:26});}
+  }
+  var mult=this.s/this.sMin,tier=mult>=4?3:mult>=2.5?2:1;
+  if(tier!==this._tier){this._tier=tier;labelLayer.dataset.tier=String(tier);}
+  for(i=0;i<this.labels.length;i++){
+    lb=this.labels[i];el=lb.el;
+    var show=(lb.kind==='country')?layerState.label:layerState.feature;
+    if(!show||lb.tier>tier){if(lb.vis){lb.vis=false;el.style.display='none';}continue;}
+    off=Math.round((this.cx-lb.wx)/WS)*WS;
+    sx=(lb.wx+off-this.cx)*this.s+vw/2;sy=(lb.wy-this.cy)*this.s+vh/2;
+    vis=!(sx<-90||sx>vw+90||sy<-30||sy>vh+30);
+    if(!vis){if(lb.vis){lb.vis=false;el.style.display='none';}continue;}
+    var fs=lb.tier===1?13:lb.tier===2?12:11;
+    var w=lb.name.length*fs+10,h=fs+6;
+    var rect={x:sx-w/2,y:sy-h/2,w:w,h:h},hit=false;
+    for(j=0;j<placed.length;j++){if(rectsOverlap(rect,placed[j])){hit=true;break;}}
+    if(hit){if(lb.vis){lb.vis=false;el.style.display='none';}continue;}
+    placed.push(rect);
+    if(!lb.vis){lb.vis=true;el.style.display='';}
+    el.style.opacity=lb.tier===3?'0.88':'0.94';
+    el.style.transform='translate3d('+((sx+0.5)|0)+'px,'+((sy+0.5)|0)+'px,0) translate(-50%,-50%)';
+  }
 };
 Atlas.prototype.writeCoord=function(){
   var p=this.posXY(this._px,this._py);
-  var wx=((p.x-this.vw/2)/this.s+this.cx);wx=((wx%W)+W)%W;
+  var wx=((p.x-this.vw/2)/this.s+this.cx);wx=((wx%WS)+WS)%WS;
   var wy=(p.y-this.vh/2)/this.s+this.cy;
   var ll=unproj(wx,wy);
   if(ll[0]>=-180&&ll[0]<=180&&ll[1]>=-90&&ll[1]<=90)coordPill.innerHTML='緯度 <b>'+Math.abs(ll[1]).toFixed(1)+'°'+(ll[1]>=0?'N':'S')+'</b> 経度 <b>'+Math.abs(ll[0]).toFixed(1)+'°'+(ll[0]>=0?'E':'W')+'</b>';
 };
+Atlas.prototype.writeClimateProbe=function(){
+  var p=this.posXY(this._px,this._py);
+  var wx=((p.x-this.vw/2)/this.s+this.cx);wx=((wx%WS)+WS)%WS;
+  var wy=(p.y-this.vh/2)/this.s+this.cy;
+  var ll=unproj(wx,wy);
+  var c=climateAt(ll[0],ll[1]);
+  if(!c)return;
+  var st=nearestStation(ll[0],ll[1]);
+  var tail='';
+  if(st&&st.dist<=3.0)tail=' <span class="stn">／'+st.name+' '+st.cat+'</span>';
+  else tail=' <span class="stn">／地域境界補間</span>';
+  climPill.innerHTML='気候 <b>'+c+'</b> '+CLIM_META[c].n.replace(/^[A-Za-z·]+\s*/,'')+tail;
+};
 Atlas.prototype.stopAnim=function(){if(this._raf){cancelAnimationFrame(this._raf);this._raf=null;}};
 Atlas.prototype.zoomAt=function(px,py,factor,animate){
-  var wx=(px-this.vw/2)/this.s+this.cx, wy=(py-this.vh/2)/this.s+this.cy;
-  var ns=clamp(this.s*factor,this.fitS,this.fitS*12);
+  var wx=(px-this.vw/2)/this.s+this.cx,wy=(py-this.vh/2)/this.s+this.cy;
+  var ns=clamp(this.s*factor,this.sMin,this.sMin*64);
   var to={s:ns,cx:wx-(px-this.vw/2)/ns,cy:wy-(py-this.vh/2)/ns};
   if(animate)this.tweenTo(to,240);else{this.s=to.s;this.cx=to.cx;this.cy=to.cy;this.normalize();this.paint();}
 };
-Atlas.prototype.flyTo=function(lon,lat,mult){var w=proj(lon,lat);var ns=clamp(this.fitS*mult,this.fitS,this.fitS*12);this.tweenTo({s:ns,cx:w[0],cy:w[1]},600);};
+Atlas.prototype.flyTo=function(lon,lat,mult){var w=proj(lon,lat);var ns=clamp(this.sMin*mult,this.sMin,this.sMin*64);this.tweenTo({s:ns,cx:w[0],cy:w[1]},600);};
 Atlas.prototype.tweenTo=function(to,dur){
   this.stopAnim();
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)dur=0;
   var from={s:this.s,cx:this.cx,cy:this.cy};
-  var dcx=to.cx-from.cx;dcx=((dcx%W)+W)%W;if(dcx>W/2)dcx-=W;
-  var t0=performance.now();var self=this;
+  var dcx=to.cx-from.cx;dcx=((dcx%WS)+WS)%WS;if(dcx>WS/2)dcx-=WS;
+  var t0=performance.now(),self=this;
   var ease=function(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;};
-  if(!this._animsPaused){this._animsPaused=true;this.setAnims('paused');}
   var step=function(now){
-    var t=dur?clamp((now-t0)/dur,0,1):1;var e=ease(t);
+    var t=dur?clamp((now-t0)/dur,0,1):1,e=ease(t);
     self.s=from.s+(to.s-from.s)*e;self.cx=from.cx+dcx*e;self.cy=from.cy+(to.cy-from.cy)*e;
     self.normalize();
-    if(t<1){self._doPaint();self._raf=requestAnimationFrame(step);}
-    else{self._raf=null;self.scheduleCommit(0);}
+    if(t<1){self.paintSafe();self._raf=requestAnimationFrame(step);}
+    else{self._raf=null;self.scheduleRender(0);}
   };
   this._raf=requestAnimationFrame(step);
 };
@@ -788,7 +1640,7 @@ Atlas.prototype.onTouchStart=function(e){this.stopAnim();this.cacheRect();this.m
 Atlas.prototype.onTouchMove=function(e){
   if(this.touchMode==='pinch'&&e.touches.length>=2){e.preventDefault();
     var a=this.pos(e.touches[0]),b=this.pos(e.touches[1]);var d=Math.hypot(b.x-a.x,b.y-a.y)||1;var mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-    var ns=clamp(this.pinch.s0*d/this.pinch.d0,this.fitS,this.fitS*12);
+    var ns=clamp(this.pinch.s0*d/this.pinch.d0,this.sMin,this.sMin*64);
     this.s=ns;this.cx=this.pinch.wx-(mx-this.vw/2)/ns;this.cy=this.pinch.wy-(my-this.vh/2)/ns;
     this.moved=true;this.normalize();this.paint();}
   else if(e.touches.length===1){var p=this.pos(e.touches[0]);
@@ -797,40 +1649,72 @@ Atlas.prototype.onTouchMove=function(e){
     if(Math.abs(dx)+Math.abs(dy)>2){e.preventDefault();this.moved=true;}
     this.cx-=dx/this.s;this.cy-=dy/this.s;this.panLast=p;this.normalize();this.paint();}};
 Atlas.prototype.onTouchEnd=function(e){
-  if(e.touches.length===0){if(this.moved)e.preventDefault();this.touchMode='none';this.pinch=null;this.paint();this.scheduleCommit(60);
+  if(e.touches.length===0){if(this.moved)e.preventDefault();this.touchMode='none';this.pinch=null;this.paint();this.scheduleRender(80);
     var ct=e.changedTouches[0];if(ct&&!this.moved){var now=performance.now();if(now-this.lastTap<320){var p=this.pos(ct);this.zoomAt(p.x,p.y,1.9,true);this.lastTap=0;}else this.lastTap=now;}}
   else if(e.touches.length===1){this.touchMode='pan';this.panLast=this.pos(e.touches[0]);}
   else{this.beginPinch(e.touches[0],e.touches[1]);}};
-Atlas.prototype.onTouchCancel=function(e){this.touchMode='none';this.pinch=null;this.moved=false;this.paint();this.scheduleCommit(60);};
+Atlas.prototype.onTouchCancel=function(e){this.touchMode='none';this.pinch=null;this.moved=false;this.paint();this.scheduleRender(80);};
 Atlas.prototype.onMouseDown=function(e){if(e.button!==0)return;var t=e.target;while(t&&t!==this.vp){if(t.className&&(''+t.className).indexOf('pin')>=0)return;t=t.parentNode;}
   this.stopAnim();this.cacheRect();this.mouse={x:e.clientX,y:e.clientY};this.moved=false;this.vp.classList.add('grabbing');};
 Atlas.prototype.onMouseMove=function(e){if(!this.mouse)return;var dx=e.clientX-this.mouse.x,dy=e.clientY-this.mouse.y;if(Math.abs(dx)+Math.abs(dy)>3)this.moved=true;
   this.cx-=dx/this.s;this.cy-=dy/this.s;this.mouse={x:e.clientX,y:e.clientY};this.normalize();this.paint();};
-Atlas.prototype.onMouseUp=function(){if(this.mouse){this.mouse=null;this.vp.classList.remove('grabbing');this.scheduleCommit(60);}};
+Atlas.prototype.onMouseUp=function(){if(this.mouse){this.mouse=null;this.vp.classList.remove('grabbing');this.scheduleRender(80);}};
 Atlas.prototype.onWheel=function(e){e.preventDefault();this.stopAnim();var p=this.posXY(e.clientX,e.clientY);var f=Math.exp(-e.deltaY*(e.ctrlKey?0.008:0.0016));this.zoomAt(p.x,p.y,clamp(f,.4,2.5));};
 
-function kopColor(c){var m={A:'#ff5a4e',B:'#ffb347',C:'#4ade80',D:'#38a3e0',E:'#cfe8ff',H:'#a78bfa'};return m[c[0]]||'#4ade80';}
+/* ===== ラベル／ピン ===== */
+function kopColor(code){return (CLIM_META[code]||CLIM_META.Cfa).c;}
 var selectedId=null,activeTab=0,quizState=null;
-function buildLabels(){labelLayer.innerHTML='';atlas.labels=[];
-  LABELS.forEach(function(L){var xy=proj(L[1],L[2]);
-    var d=document.createElement('div');d.className='maplabel t'+L[3];d.textContent=L[0];labelLayer.appendChild(d);
-    atlas.labels.push({wx:xy[0],wy:xy[1],tier:L[3],el:d,vis:false});});}
-function buildPins(){pinLayer.innerHTML='';atlas.pins=[];
-  GEO_SPOTS.forEach(function(sp){var xy=proj(sp.lon,sp.lat);var col=kopColor(sp.koppen);
+var FEAT_GLYPH={river:'〜',lake:'●',mtn:'▲',desert:'◆'};
+function buildLabels(){
+  labelLayer.innerHTML='';atlas.labels=[];
+  var all=[];
+  LABELS.forEach(function(L){all.push({name:L[0],lon:L[1],lat:L[2],tier:L[3],kind:'country'});});
+  FEATURES.forEach(function(F){all.push({name:F[0],lon:F[1],lat:F[2],tier:F[3],kind:F[4]});});
+  all.sort(function(a,b){return a.tier-b.tier||(a.kind==='country'?-1:1);});
+  all.forEach(function(L){
+    var xy=proj(L.lon,L.lat);
+    var d=document.createElement('div');
+    d.className='maplabel t'+L.tier+(L.kind!=='country'?' '+L.kind:'');
+    d.textContent=(L.kind!=='country'?FEAT_GLYPH[L.kind]+' ':'')+L.name;
+    d.style.display='none';
+    labelLayer.appendChild(d);
+    atlas.labels.push({name:d.textContent,wx:xy[0],wy:xy[1],tier:L.tier,kind:L.kind,el:d,vis:false});
+  });
+  document.getElementById('labelCount')&&(document.getElementById('labelCount').textContent=LABELS.length);
+  document.getElementById('featureCount')&&(document.getElementById('featureCount').textContent=FEATURES.length);
+}
+function buildPins(){
+  pinLayer.innerHTML='';atlas.pins=[];
+  GEO_SPOTS.forEach(function(sp){
+    var xy=proj(sp.lon,sp.lat);
     var el=document.createElement('div');el.className='pin';el.dataset.id=sp.id;
-    el.innerHTML='<svg viewBox="0 0 30 40"><path class="body" d="M15 39C15 39 3 24 3 14a12 12 0 0 1 24 0c0 10-12 25-12 25z" fill="'+col+'" stroke="#04121e" stroke-width="2"/><circle cx="15" cy="14" r="5" fill="#04121e" opacity=".55"/></svg><span class="tip">'+sp.name+'</span>';
+    el.style.display='none';
+    if(sp.kind==='desert'){
+      var sz=22;
+      el.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'"><path d="M'+(sz/2)+' 2 L'+(sz-2)+' '+(sz/2)+' L'+(sz/2)+' '+(sz-2)+' L2 '+(sz/2)+' Z" fill="#ffb347" stroke="#3a2200" stroke-width="1.5"/><text x="'+(sz/2)+'" y="'+(sz/2+3)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#3a2200">砂</text></svg><span class="tip">'+sp.name+'・成因を見る</span>';
+    }else{
+      var f=clamp(sp.freq||1,1,5),r=FREQ_R[f],fill=FREQ_FILL[f],stroke=kopColor(sp.koppen);
+      var sz2=Math.ceil(r*2+6);
+      el.innerHTML='<svg width="'+sz2+'" height="'+sz2+'" viewBox="0 0 '+sz2+' '+sz2+'"><circle cx="'+(sz2/2)+'" cy="'+(sz2/2)+'" r="'+r+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2"/></svg><span class="tip">'+sp.name+'・'+sp.koppen+'・'+f+'回</span>';
+    }
     el.addEventListener('click',function(ev){ev.stopPropagation();selectSpot(sp.id);});
     pinLayer.appendChild(el);
-    atlas.pins.push({id:sp.id,wx:xy[0],wy:xy[1],el:el,vis:false});});
+    atlas.pins.push({id:sp.id,wx:xy[0],wy:xy[1],el:el,vis:false});
+  });
   atlas.updateOverlays();
-  document.getElementById('spotCount').textContent=GEO_SPOTS.length;
-  document.getElementById('customCount').textContent=GEO_SPOTS.filter(function(s){return s.custom;}).length;}
+  document.getElementById('cityCount').textContent=GEO_SPOTS.filter(function(s){return s.kind==='city';}).length;
+  document.getElementById('desertCount').textContent=GEO_SPOTS.filter(function(s){return s.kind==='desert';}).length;
+  document.getElementById('riverCount').textContent=RIVERS.length;
+  document.getElementById('lakeCount').textContent=LAKES.length;
+}
 function buildSelect(filter){var sel=document.getElementById('spotSelect');var cur=sel.value;sel.innerHTML='<option value="">-- 地点を選択 --</option>';
   var f=(filter||'').trim().toLowerCase();
-  var regions=[];GEO_SPOTS.forEach(function(s){if(regions.indexOf(s.region)<0)regions.push(s.region);});
-  regions.forEach(function(r){var items=GEO_SPOTS.filter(function(s){return s.region===r&&(!f||s.name.toLowerCase().indexOf(f)>=0||r.toLowerCase().indexOf(f)>=0);});
-    if(!items.length)return;var og=document.createElement('optgroup');og.label=r;
-    items.forEach(function(s){var o=document.createElement('option');o.value=s.id;o.textContent=s.name+(s.custom?' ★':'');og.appendChild(o);});sel.appendChild(og);});
+  var groups=[['都市（雨温図）',function(s){return s.kind==='city';}],['砂漠（成因）',function(s){return s.kind==='desert';}],['カスタム',function(s){return s.custom;}]];
+  groups.forEach(function(g){
+    var items=GEO_SPOTS.filter(function(s){return g[1](s)&&(!f||s.name.toLowerCase().indexOf(f)>=0||(s.country||'').toLowerCase().indexOf(f)>=0||(s.region||'').toLowerCase().indexOf(f)>=0);});
+    if(!items.length)return;var og=document.createElement('optgroup');og.label=g[0];
+    items.forEach(function(s){var o=document.createElement('option');o.value=s.id;o.textContent=s.name+(s.kind==='city'?'（'+s.koppen+'・'+s.freq+'回）':s.kind==='desert'?'（成因）':' ★');og.appendChild(o);});sel.appendChild(og);
+  });
   var has=false;for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===cur)has=true;}
   if(has)sel.value=cur;}
 function selectSpot(id,fly){var sp=null;GEO_SPOTS.forEach(function(s){if(s.id===id)sp=s;});if(!sp)return;
@@ -840,31 +1724,60 @@ function selectSpot(id,fly){var sp=null;GEO_SPOTS.forEach(function(s){if(s.id===
   qsa('.tab').forEach(function(t,i){t.classList.toggle('active',i===0);});
   renderDetail();
   if(window.innerWidth<=1100)document.body.classList.add('sheet-open');
-  if(fly!==false)atlas.flyTo(sp.lon,sp.lat,Math.max(3.2,atlas.s/atlas.fitS));}
-function climateSVG(sp,mini){var t=sp.temp,p=sp.prec;if(!t)return '<div style="padding:20px;text-align:center;color:var(--dim);font-size:12px">雨温図データなし</div>';
-  var w=mini?300:340,h=mini?168:210,mL=mini?30:36,mR=mini?30:40,mT=14,mB=22,iw=w-mL-mR,ih=h-mT-mB;
-  var tLo=Math.floor(Math.min.apply(null,t)/5)*5,tHi=Math.ceil(Math.max.apply(null,t)/5)*5||5;
-  var pMax=Math.max.apply(null,p);var pHi=pMax<=50?50:pMax<=100?100:pMax<=200?200:pMax<=400?400:pMax<=600?600:Math.ceil(pMax/200)*200;
-  var X=function(i){return mL+iw*(i+.5)/12;},yT=function(v){return mT+ih*(1-(v-tLo)/((tHi-tLo)||1));},yP=function(v){return mT+ih*(1-v/pHi);};
-  var s='<svg viewBox="0 0 '+w+' '+h+'" width="100%" class="'+(mini?'no-anim':'')+'"><defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fc3f7"/><stop offset="1" stop-color="#1565a0"/></linearGradient></defs>';
-  for(var i=0;i<=4;i++){var v=tLo+(tHi-tLo)*i/4,y=yT(v);s+='<line class="grid-l" x1="'+mL+'" y1="'+y+'" x2="'+(w-mR)+'" y2="'+y+'"/><text class="ax" x="'+(mL-4)+'" y="'+(y+3)+'" text-anchor="end">'+v+'</text>';}
-  s+='<text class="ax" x="'+(w-mR+4)+'" y="'+(yP(pHi)+3)+'">'+pHi+'</text><text class="ax" x="'+w-mR+4+'" y="'+(yP(0)+3)+'">0</text>';
-  s+='<text class="axl" x="'+(mL-4)+'" y="'+(mT-4)+'" text-anchor="end">℃</text><text class="axl" x="'+(w-mR+4)+'" y="'+(mT-4)+'">mm</text>';
-  var bw=iw/12*.5;
-  p.forEach(function(v,i){var by=yP(v),bh=mT+ih-by;s+='<rect class="cbar" x="'+(X(i)-bw/2)+'" y="'+by+'" width="'+bw+'" height="'+Math.max(0,bh)+'" fill="url(#bg1)" style="animation-delay:'+(i*30)+'ms"/>';});
+  if(fly!==false)atlas.flyTo(sp.lon,sp.lat,Math.max(3.2,atlas.s/atlas.sMin));}
+/* 共通スケール雨温図：降水0-300mm / 気温-20-40℃ */
+function climateSVG(sp,mini){
+  var t=sp.temp,p=sp.prec;if(!t)return '<div style="padding:20px;text-align:center;color:#666;font-size:12px">雨温図データなし</div>';
+  var w=mini?300:340,h=mini?170:210,mL=34,mR=34,mT=16,mB=22,iw=w-mL-mR,ih=h-mT-mB;
+  var pHi=300,tLo=-20,tHi=40;
+  var X=function(i){return mL+iw*(i+.5)/12;},yP=function(v){return mT+ih*(1-v/pHi);},yT=function(v){return mT+ih*(1-(v-tLo)/(tHi-tLo));};
+  var s='<svg viewBox="0 0 '+w+' '+h+'" width="100%" class="'+(mini?'no-anim':'')+'">';
+  s+='<rect x="'+mL+'" y="'+mT+'" width="'+iw+'" height="'+ih+'" fill="#fff" stroke="#333" stroke-width="1"/>';
+  for(var i=0;i<=3;i++){var pv=pHi*i/3,y=yP(pv);s+='<line class="grid-l" x1="'+mL+'" y1="'+y+'" x2="'+(w-mR)+'" y2="'+y+'"/><text class="ax" x="'+(mL-4)+'" y="'+(y+3)+'" text-anchor="end">'+pv+'</text>';}
+  for(var i2=0;i2<=6;i2++){var tv=tLo+(tHi-tLo)*i2/6,y2=yT(tv);s+='<text class="ax" x="'+(w-mR+4)+'" y="'+(y2+3)+'">'+Math.round(tv)+'</text>';}
+  s+='<text class="axl" x="'+(mL-4)+'" y="'+(mT-5)+'" text-anchor="end">mm</text><text class="axl" x="'+(w-mR+4)+'" y="'+(mT-5)+'">℃</text>';
+  var bw=iw/12*.55;
+  p.forEach(function(v,i){var by=yP(Math.min(v,pHi)),bh=mT+ih-by;s+='<rect class="cbar" x="'+(X(i)-bw/2)+'" y="'+by+'" width="'+bw+'" height="'+Math.max(0,bh)+'" fill="#a8c4e0" style="animation-delay:'+(i*25)+'ms"/>';
+    if(v>pHi){s+='<path d="M'+(X(i)-4)+' '+(mT+2)+' L'+(X(i)+4)+' '+(mT+2)+' L'+X(i)+' '+(mT-5)+' Z" fill="#c0392b"/><text x="'+X(i)+'" y="'+(mT+11)+'" text-anchor="middle" font-size="7" fill="#c0392b">'+v+'</text>';}});
   s+='<path class="tline" d="'+t.map(function(v,i){return (i?'L':'M')+X(i).toFixed(1)+' '+yT(v).toFixed(1);}).join(' ')+'"/>';
   t.forEach(function(v,i){s+='<circle class="tdot" cx="'+X(i)+'" cy="'+yT(v)+'" r="2"/>';});
   for(var j=0;j<12;j++)s+='<text class="ax" x="'+X(j)+'" y="'+(h-6)+'" text-anchor="middle">'+(j+1)+'</text>';
-  return s+'</svg>';}
+  return s+'</svg>';
+}
+/* ハイサーグラフ：横軸=気温 / 縦軸=降水 / 12ヶ月を線で結ぶ */
+function hytherSVG(sp,mini){
+  var t=sp.temp,p=sp.prec;if(!t)return '';
+  var w=mini?300:340,h=mini?170:210,mL=34,mR=14,mT=16,mB=26,iw=w-mL-mR,ih=h-mT-mB;
+  var tLo=-20,tHi=40,pHi=300;
+  var X=function(v){return mL+iw*(v-tLo)/(tHi-tLo);},Y=function(v){return mT+ih*(1-Math.min(v,pHi)/pHi);};
+  var s='<svg viewBox="0 0 '+w+' '+h+'" width="100%" class="'+(mini?'no-anim':'')+'">';
+  s+='<rect x="'+mL+'" y="'+mT+'" width="'+iw+'" height="'+ih+'" fill="#fff" stroke="#333" stroke-width="1"/>';
+  for(var i=0;i<=3;i++){var pv=pHi*i/3,y=Y(pv);s+='<line class="grid-l" x1="'+mL+'" y1="'+y+'" x2="'+(w-mR)+'" y2="'+y+'"/><text class="ax" x="'+(mL-4)+'" y="'+(y+3)+'" text-anchor="end">'+pv+'</text>';}
+  for(var i2=0;i2<=6;i2++){var tv=tLo+(tHi-tLo)*i2/6,x=X(tv);s+='<line class="grid-l" x1="'+x+'" y1="'+mT+'" x2="'+x+'" y2="'+(mT+ih)+'"/><text class="ax" x="'+x+'" y="'+(h-8)+'" text-anchor="middle">'+Math.round(tv)+'</text>';}
+  s+='<text class="axl" x="'+(mL-4)+'" y="'+(mT-5)+'" text-anchor="end">mm</text><text class="axl" x="'+(w-mR)+'" y="'+(h-8)+'" text-anchor="end">℃</text>';
+  var pts=t.map(function(v,i){return [X(v),Y(p[i])];});
+  s+='<path class="hline" d="'+pts.map(function(q,i){return (i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1);}).join(' ')+'"/>';
+  var cols=['#1f5fa8','#2e7d32','#c62828','#ef6c00'];
+  pts.forEach(function(q,i){
+    var season=Math.floor(((i+1)%12)/3);
+    s+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="4" fill="'+cols[season]+'" stroke="#fff" stroke-width="1"/>';
+    s+='<text x="'+(q[0]+6)+'" y="'+(q[1]-4)+'" font-size="8" fill="#333" font-weight="700">'+(i+1)+'</text>';
+    if(p[i]>pHi){s+='<path d="M'+(q[0]-4)+' '+(mT+2)+' L'+(q[0]+4)+' '+(mT+2)+' L'+q[0]+' '+(mT-5)+' Z" fill="#c0392b"/>';}
+  });
+  return s+'</svg>';
+}
 function renderDetail(){var body=document.getElementById('tabBody');var sp=null;GEO_SPOTS.forEach(function(s){if(s.id===selectedId)sp=s;});
   if(!sp){body.innerHTML='<div class="empty"><div class="globe">🌍</div><p>地図上のピンまたは上のセレクトボックスから<br>学習したい地域・スポットを選んでください</p><p class="sub">気候帯・土壌・産業・共通テスト対策が連動して表示されます</p></div>';return;}
   var col=kopColor(sp.koppen);var hemi=sp.lat>=0?'北半球':'南半球';
-  var head='<div class="spotcard"><div class="nm">'+sp.name+'<span class="kbadge" style="background:'+col+'">'+sp.koppen+'</span></div><div class="meta"><span>'+sp.region+'</span><span class="mono">'+Math.abs(sp.lat).toFixed(1)+'°'+(sp.lat>=0?'N':'S')+', '+Math.abs(sp.lon).toFixed(1)+'°'+(sp.lon>=0?'E':'W')+'</span><span>'+(sp.kname||'')+'</span></div>';
+  var head='<div class="spotcard"><div class="nm">'+sp.name+(sp.kind==='desert'?'<span class="dbadge">砂漠・成因</span>':'<span class="kbadge" style="background:'+col+'">'+sp.koppen+'</span><span class="fbadge">'+sp.freq+'回</span>')+'</div><div class="meta"><span>'+sp.country+'／'+sp.region+'</span><span class="mono">'+Math.abs(sp.lat).toFixed(1)+'°'+(sp.lat>=0?'N':'S')+', '+Math.abs(sp.lon).toFixed(1)+'°'+(sp.lon>=0?'E':'W')+'</span><span>'+(sp.kname||'')+'</span></div>';
   var inner='';
   if(activeTab===0){var annualP=sp.prec?sp.prec.reduce(function(a,b){return a+b;},0):null;
-    inner='<div class="graphwrap"><div class="gt"><span>🌡 雨温図（月別気温・降水）</span><span class="hemi">'+hemi+'</span></div>'+climateSVG(sp,false)+'</div>'
+    if(sp.kind==='desert'){
+      inner='<div class="causecard"><div class="ct">🏜️ 砂漠の成因</div><div class="cb">'+sp.causeText+'</div><div class="tags">'+sp.causes.map(function(c){return '<span class="tag">'+c+'</span>';}).join('')+'</div></div>';
+    }
+    inner+='<div class="chartgrid"><div class="graphwrap"><div class="gt"><span>🌡 雨温図（共通スケール）</span><span class="hemi">'+hemi+'</span></div>'+climateSVG(sp,false)+'</div><div class="graphwrap"><div class="gt"><span>📈 ハイサーグラフ（気温×降水）</span><span class="hemi">1–12月</span></div>'+hytherSVG(sp,false)+'</div></div>'
     +'<div class="facts"><div class="fact"><div class="k">🌍 気候帯</div><div class="v">'+sp.koppen+' '+(sp.kname||'')+'</div></div><div class="fact"><div class="k">🪨 土壌</div><div class="v">'+(sp.soil||'—')+'</div></div><div class="fact"><div class="k">🌾 農業・産業</div><div class="v">'+(sp.agri||'—')+'</div></div><div class="fact"><div class="k">💧 年降水量</div><div class="v">'+(annualP!==null?annualP+' mm':'—')+'</div></div></div><div class="summary">'+(sp.summary||'')+'</div>';}
-  else if(activeTab===1){if(sp.logic&&sp.logic.length){inner='<ol class="chain">'+sp.logic.map(function(l,i){return '<li data-n="'+(i+1)+'" style="animation-delay:'+(i*90)+'ms"><div class="cause">'+l.c+'</div><div class="arrow">↓</div><div class="effect">'+l.e+'</div></li>';}).join('')+'</ol>';if(sp.note)inner+='<div class="examnote"><b>🎯 入試での問われ方</b>'+sp.note+'</div>';}else inner='<div class="empty"><p>因果ロジック未登録。</p></div>';}
+  else if(activeTab===1){if(sp.logic&&sp.logic.length){inner='<ol class="chain">'+sp.logic.map(function(l,i){return '<li data-n="'+(i+1)+'" style="animation-delay:'+(i*90)+'ms"><div class="cause">'+l.c+'</div><div class="arrow">↓</div><div class="effect">'+l.e+'</div></li>';}).join('')+'</ol>';inner+='<div class="examnote"><b>🎯 入試での問われ方</b>'+(sp.kind==='desert'?'成因（高圧帯・寒流・雨影・内陸性）の組合せを問う問題が頻出。':'出題'+sp.freq+'回。雨温図・ハイサーグラフの形から気候区分を判別する問題が頻出。')+'</div>';}else inner='<div class="empty"><p>因果ロジック未登録。</p></div>';}
   else{inner=renderQuiz(sp);}
   body.innerHTML=head+inner+'</div>';if(activeTab===2)wireQuiz(sp);}
 function renderQuiz(sp){if(!sp.quiz||!sp.quiz.length)return '<div class="empty"><p>入試演習未登録。</p></div>';
@@ -879,45 +1792,73 @@ function wireQuiz(sp){var body=document.getElementById('tabBody');var retry=body
     var fb=body.querySelector('#qFeedback');fb.innerHTML='<div class="expl"><b>'+(ok?'✅ 正解！':'❌ 不正解')+'</b> '+q.ex+'</div><button class="qnext" id="qNext">'+(quizState.idx+1<sp.quiz.length?'次の問題 →':'結果を見る 🏁')+'</button>';
     body.querySelector('#qNext').onclick=function(){quizState.idx++;quizState.answered=false;if(quizState.idx>=sp.quiz.length)quizState.done=true;renderDetail();};};});}
 
-var layerState={clim:true,soil:false,cur:true,label:true,grid:false,opClim:70,opSoil:70,curAnim:true};
+var layerState={clim:true,soil:false,water:true,cur:true,label:true,feature:true,grid:false,opClim:80,opSoil:75,curAnim:true};
 var focus=null;
 function applyLayers(){
-  gridGs.forEach(function(g){g.style.display=layerState.grid?'':'none';});
-  climGs.forEach(function(g){g.style.display=layerState.clim?'':'none';g.style.opacity=layerState.opClim/100;});
-  soilGs.forEach(function(g){g.style.display=layerState.soil?'':'none';g.style.opacity=layerState.opSoil/100;});
-  curGs.forEach(function(g){g.style.display=layerState.cur?'':'none';});
-  labelLayer.style.display=layerState.label?'':'none';
-  if(atlas){atlas.setAnims(layerState.curAnim&&!atlas._animsPaused?'running':'paused');if(!layerState.curAnim)atlas._animsPaused=false;}
+  if(labelLayer)labelLayer.style.display=(layerState.label||layerState.feature)?'':'none';
   buildLegend();saveState();
-  if(atlas)atlas.scheduleCommit(0);
+  if(atlas){atlas.scheduleRender(0);if(atlas.vw)atlas.updateOverlays();}
 }
-function clearFocus(){focus=null;qsa('.dim,.lit').forEach(function(el){el.classList.remove('dim');el.classList.remove('lit');});buildLegend();if(atlas)atlas.scheduleCommit(0);}
-function setFocus(layer,cat){clearFocus();focus={layer:layer,cat:cat};
-  var gs=layer==='clim'?climGs:layer==='soil'?soilGs:null;
-  if(gs){gs.forEach(function(g){Array.prototype.slice.call(g.querySelectorAll('[data-cat]')).forEach(function(el){var m=el.getAttribute('data-cat')===cat;el.classList.toggle('dim',!m);el.classList.toggle('lit',m);});});}
-  else{qsa('.current').forEach(function(el){var m=(layer==='warm'&&el.classList.contains('warm'))||(layer==='cold'&&el.classList.contains('cold'));el.classList.toggle('dim',!m);el.classList.toggle('lit',m);});}
-  buildLegend();if(atlas)atlas.scheduleCommit(0);}
-function buildLegend(){var lg=document.getElementById('legend');lg.innerHTML='';
-  var add=function(layer,cat,color,name){var b=document.createElement('button');b.className='chip'+(focus&&focus.layer===layer&&focus.cat===cat?' active':'');b.innerHTML='<span class="dot" style="background:'+color+'"></span>'+name;
-    b.onclick=function(){if(focus&&focus.layer===layer&&focus.cat===cat)clearFocus();else setFocus(layer,cat);};lg.appendChild(b);};
-  if(layerState.clim){var g1=document.createElement('div');g1.className='grp';g1.textContent='気候区分';lg.appendChild(g1);Object.keys(CLIM_META).forEach(function(k){add('clim',k,CLIM_META[k].c,CLIM_META[k].n);});}
-  if(layerState.soil){var g2=document.createElement('div');g2.className='grp';g2.textContent='土壌帯（農業連動）';lg.appendChild(g2);Object.keys(SOIL_META).forEach(function(k){add('soil',k,SOIL_META[k].c,SOIL_META[k].n);});}
-  if(layerState.cur){var g3=document.createElement('div');g3.className='grp';g3.textContent='海流';lg.appendChild(g3);add('warm','warm','#ff7a59','暖流');add('cold','cold','#4fc3f7','寒流');}
+function clearFocus(){focus=null;climateRaster=null;buildLegend();if(atlas)atlas.scheduleRender(0);}
+function setFocus(layer,cat){focus={layer:layer,cat:cat};climateRaster=null;buildLegend();if(atlas)atlas.scheduleRender(0);}
+function buildLegend(){
+  var lg=document.getElementById('legend');lg.innerHTML='';
+  var add=function(layer,cat,color,name,mesh){
+    var b=document.createElement('button');
+    b.className='chip'+(focus&&focus.layer===layer&&focus.cat===cat?' active':'');
+    b.innerHTML='<span class="dot'+(mesh?' mesh':'')+'" style="'+(mesh?'':'background:'+color)+'"></span>'+name;
+    b.onclick=function(){if(focus&&focus.layer===layer&&focus.cat===cat)clearFocus();else setFocus(layer,cat);};
+    lg.appendChild(b);
+  };
+  if(layerState.clim){
+    CLIM_GROUPS.forEach(function(gr){
+      var cats=CLIM_CLASSES.filter(function(k){return CLIM_META[k].g===gr[0];});
+      if(!cats.length)return;
+      var h=document.createElement('div');h.className='grp';h.textContent=gr[1];lg.appendChild(h);
+      cats.forEach(function(k){add('clim',k,CLIM_META[k].c,CLIM_META[k].n,k==='H');});
+    });
+  }
+  if(layerState.soil){
+    var g2=document.createElement('div');g2.className='grp';g2.textContent='土壌帯（写真準拠8分類）';lg.appendChild(g2);
+    Object.keys(SOIL_META).forEach(function(k){add('soil',k,SOIL_META[k].c,SOIL_META[k].n,false);});
+  }
+  if(layerState.cur){
+    var g3=document.createElement('div');g3.className='grp';g3.textContent='海流';lg.appendChild(g3);
+    add('warm','warm','#ff7a59','暖流',false);add('cold','cold','#4fc3f7','寒流',false);
+  }
   if(focus){var c=document.createElement('button');c.className='chip clear';c.textContent='✕ ハイライト解除';c.onclick=clearFocus;lg.appendChild(c);}
-  if(!lg.children.length)lg.innerHTML='<span style="font-size:11px;color:var(--dim)">レイヤーをONにすると凡例が表示されます</span>';}
+  if(!lg.children.length)lg.innerHTML='<span style="font-size:11px;color:var(--dim)">レイヤーをONにすると凡例が表示されます</span>';
+}
 function bindLayer(id,key){var el=document.getElementById(id);if(!el)return;el.checked=layerState[key];el.addEventListener('change',function(){layerState[key]=el.checked;applyLayers();});}
 function bindOp(id,key,out){var el=document.getElementById(id),o=document.getElementById(out);if(!el||!o)return;el.value=layerState[key];o.textContent=layerState[key]+'%';el.addEventListener('input',function(){layerState[key]=+el.value;o.textContent=el.value+'%';applyLayers();});}
 
 var zIn,zOut,zReset,curInfo;
 function wireControls(){
-  zIn=function(){atlas.zoomAt(atlas.vw/2,atlas.vh/2,1.5,true);};zOut=function(){atlas.zoomAt(atlas.vw/2,atlas.vh/2,1/1.5,true);};zReset=function(){atlas.tweenTo({s:atlas.fitS,cx:W/2,cy:H/2},450);};
+  zIn=function(){atlas.zoomAt(atlas.vw/2,atlas.vh/2,1.5,true);};
+  zOut=function(){atlas.zoomAt(atlas.vw/2,atlas.vh/2,1/1.5,true);};
+  zReset=function(){atlas.tweenTo({s:atlas.sMin,cx:WS/2,cy:WS/2},450);};
   ['zIn','mzIn'].forEach(function(id){document.getElementById(id).onclick=zIn;});
   ['zOut','mzOut'].forEach(function(id){document.getElementById(id).onclick=zOut;});
   ['zReset','mzReset'].forEach(function(id){document.getElementById(id).onclick=zReset;});
-  zoomSliderEl.addEventListener('input',function(){var mult=Math.pow(2,+zoomSliderEl.value);atlas.zoomAt(atlas.vw/2,atlas.vh/2,(atlas.fitS*mult)/atlas.s,false);});
+  zoomSliderEl.addEventListener('input',function(){var mult=Math.pow(2,+zoomSliderEl.value);atlas.zoomAt(atlas.vw/2,atlas.vh/2,(atlas.sMin*mult)/atlas.s,false);});
   curInfo=document.getElementById('curInfo');
-  mapsvg.addEventListener('click',function(e){var t=e.target;while(t&&t!==mapsvg){if(t.classList&&t.classList.contains('current-hit'))break;t=t.parentNode;}
-    if(!t||t===mapsvg)return;var c=CURRENTS[+t.getAttribute('data-i')];document.getElementById('ciName').innerHTML=c.n+' <span style="color:'+(c.t==='warm'?'#ff9a79':'#7fd3f7')+'">'+(c.t==='warm'?'暖流':'寒流')+'</span>';document.getElementById('ciNote').textContent=c.note;curInfo.classList.add('show');});
+  viewCanvas.addEventListener('click',function(e){
+    var p=atlas.posXY(e.clientX,e.clientY);
+    var wx=((p.x-atlas.vw/2)/atlas.s+atlas.cx);wx=((wx%WS)+WS)%WS;
+    var wy=(p.y-atlas.vh/2)/atlas.s+atlas.cy;
+    var best=-1,bd=1e9;
+    for(var i=0;i<CURRENTS.length;i++){
+      var pts=CURRENTS[i].pts;
+      for(var j=0;j<pts.length-1;j++){
+        var a=proj(pts[j][0],pts[j][1]),b=proj(pts[j+1][0],pts[j+1][1]);
+        var dx=b[0]-a[0],dy=b[1]-a[1],L2=dx*dx+dy*dy;if(!L2)continue;
+        var tt=clamp(((wx-a[0])*dx+(wy-a[1])*dy)/L2,0,1);
+        var qx=a[0]+tt*dx,qy=a[1]+tt*dy,dd=Math.hypot(wx-qx,wy-qy);
+        if(dd<bd){bd=dd;best=i;}
+      }
+    }
+    if(best>=0&&bd<14/atlas.s){var c=CURRENTS[best];document.getElementById('ciName').innerHTML=c.n+' <span style="color:'+(c.t==='warm'?'#ff9a79':'#7fd3f7')+'">'+(c.t==='warm'?'暖流':'寒流')+'</span>';document.getElementById('ciNote').textContent=c.note;curInfo.classList.add('show');}
+  });
   document.getElementById('curInfoX').onclick=function(){curInfo.classList.remove('show');};
   var rsBtn=document.getElementById('rsBtn');
   rsBtn.onclick=function(){var on=document.body.classList.toggle('rs-on');document.getElementById('rsState').textContent=on?'ON':'OFF';rsBtn.classList.toggle('red-on',on);
@@ -931,21 +1872,26 @@ function wireControls(){
   document.getElementById('layerFab').onclick=function(){document.body.classList.toggle('drawer-open');};
   document.getElementById('sheetHandle').onclick=function(){document.body.classList.remove('sheet-open');};
   document.getElementById('viewport').addEventListener('click',function(){if(window.innerWidth<=1100)document.body.classList.remove('drawer-open');});
-  var PRESETS=[['tokyo','rome'],['mumbai','singapore'],['lima','cairo'],['london','moscow'],['sydney','tokyo'],['capetown','rome']];
-  function fillCmpSelects(){['cmpA','cmpB'].forEach(function(id){var s=document.getElementById(id);s.innerHTML=GEO_SPOTS.map(function(x){return '<option value="'+x.id+'">'+x.name+'</option>';}).join('');});}
+  var PRESETS=[['city0','city12'],['city1','city12'],['city7','city31'],['city17','city12'],['city4','city5'],['city10','city35'],['desert0','desert4'],['desert4','desert5']];
+  function fillCmpSelects(){['cmpA','cmpB'].forEach(function(id){var s=document.getElementById(id);s.innerHTML=GEO_SPOTS.map(function(x){return '<option value="'+x.id+'">'+x.name+'（'+(x.kind==='desert'?'砂漠':x.koppen)+'）</option>';}).join('');});}
   function cmpCol(sp){var hemi=sp.lat>=0?'北半球':'南半球';var ap=sp.prec?sp.prec.reduce(function(a,b){return a+b;},0)+' mm':'—';
-    return '<div class="graphwrap"><div class="gt"><span>'+sp.name+'（'+sp.koppen+'）</span><span class="hemi">'+hemi+'</span></div>'+climateSVG(sp,true)+'</div><table class="cmptable"><tr><td>気候</td><td>'+sp.koppen+' '+(sp.kname||'')+'</td></tr><tr><td>土壌</td><td>'+(sp.soil||'—')+'</td></tr><tr><td>農業</td><td>'+(sp.agri||'—')+'</td></tr><tr><td>年降水量</td><td>'+ap+'</td></tr></table>';}
-  function renderCompare(){var a=null,b=null;GEO_SPOTS.forEach(function(s){if(s.id===document.getElementById('cmpA').value)a=s;if(s.id===document.getElementById('cmpB').value)b=s;});
+    return '<div class="graphwrap"><div class="gt"><span>'+sp.name+'（'+(sp.kind==='desert'?'砂漠':sp.koppen+'・'+sp.freq+'回')+'）</span><span class="hemi">'+hemi+'</span></div>'+climateSVG(sp,true)+'</div><div class="graphwrap"><div class="gt"><span>ハイサーグラフ</span><span class="hemi">1–12月</span></div>'+hytherSVG(sp,true)+'</div><table class="cmptable"><tr><td>気候</td><td>'+sp.koppen+' '+(sp.kname||'')+'</td></tr><tr><td>土壌</td><td>'+(sp.soil||'—')+'</td></tr><tr><td>農業</td><td>'+(sp.agri||'—')+'</td></tr><tr><td>年降水量</td><td>'+ap+'</td></tr></table>';}
+  function renderCompare(){
+    var a=null,b=null;
+    GEO_SPOTS.forEach(function(s){if(s.id===document.getElementById('cmpA').value)a=s;if(s.id===document.getElementById('cmpB').value)b=s;});
     if(!a||!b)return;
     document.getElementById('cmpAbody').innerHTML=cmpCol(a);document.getElementById('cmpBbody').innerHTML=cmpCol(b);
-    var ins=[];
+    var ga=(a.koppen||'C').charAt(0),gb=(b.koppen||'C').charAt(0),ins=[];
     if((a.lat>=0)!==(b.lat>=0))ins.push('南北半球が異なるため、雨温図の気温カーブの山が逆転（北半球7月／南半球1月）。');
-    if(a.koppen[0]===b.koppen[0]&&a.koppen!==b.koppen)ins.push('同じ'+CLIM_META[a.koppen[0]].n+'だが、'+a.koppen+'と'+b.koppen+'で降水パターンが異なる。');
-    if(a.koppen[0]!==b.koppen[0])ins.push('気候帯が異なる（'+a.koppen+' vs '+b.koppen+'）。気温・降水の成因を対比せよ。');
-    if(a.prec&&b.prec){var pa=a.prec.reduce(function(x,y){return x+y;},0),pb=b.prec.reduce(function(x,y){return x+y;},0);if(Math.max(pa,pb)>3*Math.min(pa,pb))ins.push('年降水量に大差（'+a.name+' '+pa+'mm / '+b.name+' '+pb+'mm）。乾燥の成因を確認。');}
+    if(ga===gb&&a.koppen!==b.koppen)ins.push('同じ'+(GROUP_NAME[ga]||ga)+'だが、'+a.koppen+'と'+b.koppen+'で降水パターンが異なる。');
+    if(ga!==gb)ins.push('気候帯が異なる（'+a.koppen+' vs '+b.koppen+'）。気温・降水の成因を対比せよ。');
+    if(a.prec&&b.prec){var pa=a.prec.reduce(function(x,y){return x+y;},0),pb=b.prec.reduce(function(x,y){return x+y;},0);
+      if(Math.max(pa,pb)>3*Math.min(pa,pb))ins.push('年降水量に大差（'+a.name+' '+pa+'mm / '+b.name+' '+pb+'mm）。乾燥の成因を確認。');}
+    if(a.kind==='desert'||b.kind==='desert')ins.push('砂漠の成因（高圧帯・寒流・雨影・内陸性）を、非砂漠地点の降水パターンと対比せよ。');
     if(!ins.length)ins.push('両地点の気候・農業を比較し、共通点と相違点を整理しよう。');
-    document.getElementById('insights').innerHTML=ins.map(function(i){return '<li>'+i+'</li>';}).join('');}
-  document.getElementById('cmpBtn').onclick=function(){fillCmpSelects();document.getElementById('cmpA').value='tokyo';document.getElementById('cmpB').value='rome';renderCompare();document.getElementById('cmpScrim').classList.add('show');};
+    document.getElementById('insights').innerHTML=ins.map(function(i){return '<li>'+i+'</li>';}).join('');
+  }
+  document.getElementById('cmpBtn').onclick=function(){fillCmpSelects();document.getElementById('cmpA').value='city0';document.getElementById('cmpB').value='city12';renderCompare();document.getElementById('cmpScrim').classList.add('show');};
   document.getElementById('presets').innerHTML=PRESETS.map(function(pp){var na='',nb='';GEO_SPOTS.forEach(function(s){if(s.id===pp[0])na=s.name;if(s.id===pp[1])nb=s.name;});return '<button class="preset" data-a="'+pp[0]+'" data-b="'+pp[1]+'">'+na+' ⇄ '+nb+'</button>';}).join('');
   document.getElementById('presets').onclick=function(e){var t=e.target;while(t&&!t.classList.contains('preset'))t=t.parentNode;if(!t)return;document.getElementById('cmpA').value=t.dataset.a;document.getElementById('cmpB').value=t.dataset.b;renderCompare();};
   ['cmpA','cmpB'].forEach(function(id){document.getElementById(id).onchange=renderCompare;});
@@ -961,7 +1907,7 @@ function wireControls(){
   document.getElementById('addSpotBtn').onclick=function(){
     var name=document.getElementById('fName').value.trim();var lat=+document.getElementById('fLat').value,lon=+document.getElementById('fLon').value;
     if(!name||!isFinite(lat)||!isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180){toast('地点名と正しい緯度経度を入力してください','warn');return;}
-    var sp={id:'c'+Date.now(),custom:true,name:name,region:document.getElementById('fRegion').value,lat:lat,lon:lon,koppen:(document.getElementById('fKoppen').value||'Cfa').trim(),kname:'',soil:document.getElementById('fSoil').value,agri:document.getElementById('fAgri').value,summary:document.getElementById('fSummary').value,temp:null,prec:null,logic:[],quiz:[]};
+    var sp={id:'c'+Date.now(),custom:true,kind:'city',name:name,country:'カスタム',region:document.getElementById('fRegion').value,lat:lat,lon:lon,koppen:(document.getElementById('fKoppen').value||'Cfa').trim(),freq:1,kname:(TYPE_INFO[(document.getElementById('fKoppen').value||'Cfa').trim()]||{}).kname||'',soil:document.getElementById('fSoil').value,agri:document.getElementById('fAgri').value,summary:document.getElementById('fSummary').value,temp:null,prec:null,logic:[],quiz:[]};
     GEO_SPOTS.push(sp);saveState();buildPins();buildSelect();refreshJson();toast('「'+name+'」を追加しました','success');
     ['fName','fLat','fLon','fSoil','fAgri','fSummary'].forEach(function(id){document.getElementById(id).value='';});
     selectSpot(sp.id);document.getElementById('jsonScrim').classList.remove('show');};
@@ -980,12 +1926,21 @@ function wireControls(){
     else if(e.key==='ArrowRight'){atlas.cx+=60/atlas.s;atlas.normalize();atlas.paint();}
     else if(e.key==='ArrowUp'){atlas.cy-=60/atlas.s;atlas.normalize();atlas.paint();}
     else if(e.key==='ArrowDown'){atlas.cy+=60/atlas.s;atlas.normalize();atlas.paint();}});
-  bindLayer('lyClim','clim');bindLayer('lySoil','soil');bindLayer('lyCur','cur');bindLayer('lyLabel','label');bindLayer('lyGrid','grid');bindLayer('curAnim','curAnim');
+  bindLayer('lyClim','clim');bindLayer('lySoil','soil');bindLayer('lyWater','water');bindLayer('lyCur','cur');bindLayer('lyLabel','label');bindLayer('lyFeature','feature');bindLayer('lyGrid','grid');bindLayer('curAnim','curAnim');
   bindOp('opClim','opClim','opClimV');bindOp('opSoil','opSoil','opSoilV');
 }
 function saveState(){try{localStorage.setItem('geoatlas.layers',JSON.stringify(layerState));localStorage.setItem('geoatlas.custom',JSON.stringify(GEO_SPOTS.filter(function(s){return s.custom;})));}catch(e){}}
-function loadState(){try{var l=JSON.parse(localStorage.getItem('geoatlas.layers')||'null');if(l)Object.keys(layerState).forEach(function(k){if(typeof l[k]!=='undefined')layerState[k]=l[k];});
-  var c=JSON.parse(localStorage.getItem('geoatlas.custom')||'null');if(c&&c.forEach)c.forEach(function(s){var dup=false;GEO_SPOTS.forEach(function(x){if(x.id===s.id)dup=true;});if(!dup)GEO_SPOTS.push(s);});}catch(e){}}
+function loadState(){
+  try{
+    var l=JSON.parse(localStorage.getItem('geoatlas.layers')||'null');
+    if(l)Object.keys(layerState).forEach(function(k){if(typeof l[k]!=='undefined')layerState[k]=l[k];});
+    if(typeof layerState.label!=='boolean')layerState.label=true;
+    if(typeof layerState.feature!=='boolean')layerState.feature=true;
+    if(typeof layerState.water!=='boolean')layerState.water=true;
+    var c=JSON.parse(localStorage.getItem('geoatlas.custom')||'null');
+    if(c&&c.forEach)c.forEach(function(s){var dup=false;GEO_SPOTS.forEach(function(x){if(x.id===s.id)dup=true;});if(!dup)GEO_SPOTS.push(s);});
+  }catch(e){layerState.label=true;layerState.feature=true;layerState.water=true;}
+}
 function toast(msg,type,undo){var t=document.createElement('div');t.className='toast '+(type||'info');t.innerHTML='<span>'+(type==='success'?'✅':type==='warn'?'⚠️':'ℹ️')+'</span><span>'+msg+'</span>';
   if(undo){var u=document.createElement('span');u.className='undo';u.textContent='元に戻す';u.onclick=function(){undo();t.remove();};t.appendChild(u);}
   document.getElementById('toasts').appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(function(){t.remove();},300);},undo?6000:3200);}
@@ -998,24 +1953,27 @@ window.addEventListener('load',fixLayout);
 try{
   fixLayout();
   loadState();
-  buildMap();
-  atlas=new Atlas(mapsvg,document.getElementById('viewport'));
+  buildClimateGrid();
+  buildFallback();
+  makeHatch();
+  atlas=new Atlas(document.getElementById('viewport'));
   buildLabels();
   buildPins();
   buildSelect();
   wireControls();
-  ['lyClim','lySoil','lyCur','lyLabel','lyGrid','curAnim'].forEach(function(id){var key={lyClim:'clim',lySoil:'soil',lyCur:'cur',lyLabel:'label',lyGrid:'grid',curAnim:'curAnim'}[id];var el=document.getElementById(id);if(el)el.checked=layerState[key];});
+  ['lyClim','lySoil','lyWater','lyCur','lyLabel','lyFeature','lyGrid','curAnim'].forEach(function(id){var key={lyClim:'clim',lySoil:'soil',lyWater:'water',lyCur:'cur',lyLabel:'label',lyFeature:'feature',lyGrid:'grid',curAnim:'curAnim'}[id];var el=document.getElementById(id);if(el)el.checked=layerState[key];});
   document.getElementById('opClim').value=layerState.opClim;document.getElementById('opClimV').textContent=layerState.opClim+'%';
   document.getElementById('opSoil').value=layerState.opSoil;document.getElementById('opSoilV').textContent=layerState.opSoil+'%';
-  applyLayers();
+  buildLegend();
+  if(labelLayer)labelLayer.style.display=(layerState.label||layerState.feature)?'':'none';
   atlas.resize(true);
-  prefetchLod(atlas.s/atlas.fitS);
+  atlas.updateOverlays();
+  prefetchLod(atlas.liNow());
   ensureLod('110m');
   setTimeout(function(){
-    var r=mapsvg.getBoundingClientRect();
-    if(r.width<50||r.height<50){showErr('地図領域が描画されていません（幅'+Math.round(r.width)+'px 高'+Math.round(r.height)+'px）。');}
-    else if(!document.querySelector('.js-land').getAttribute('d')){showErr('陸地データの生成に失敗しました。');}
-  },700);
+    if(viewCanvas.width<50||viewCanvas.height<50){showErr('地図キャンバスが描画されていません。');}
+    else if(!atlas.base.valid){showErr('ベースレンダーが完了していません。');}
+  },900);
 }catch(err){
   if(window.console)console.error(err);
   showErr('初期化エラー: '+(err&&err.message?err.message:err));
